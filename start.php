@@ -33,8 +33,7 @@
 		register_entity_url_handler('event_calendar_url','object', 'event_calendar');
 		
 		// Register granular notification for this type
-		if (is_callable('register_notification_object'))
-			register_notification_object('object', 'event_calendar', elgg_echo('event_calendar:new_event'));
+		register_notification_object('object', 'event_calendar', elgg_echo('event_calendar:new_event'));
 			
 		// Set up menu for users
 		if (isloggedin()) {
@@ -53,26 +52,24 @@
 		if (!$group_calendar || $group_calendar != 'no') {
 			$group_profile_display = get_plugin_setting('group_profile_display', 'event_calendar');
 			if (!$group_profile_display || $group_profile_display == 'right') {
-				extend_view('groups/right_column', 'event_calendar/groupprofile_calendar');
+				elgg_extend_view('groups/right_column', 'event_calendar/groupprofile_calendar');
 			} else if ($group_profile_display == 'left') {
-				extend_view('groups/left_column', 'event_calendar/groupprofile_calendar');
+				elgg_extend_view('groups/left_column', 'event_calendar/groupprofile_calendar');
 			}
 		}
 		
 		//add to the css
-		extend_view('css', 'event_calendar/css');
+		elgg_extend_view('css', 'event_calendar/css');
 		
 		//add a widget
 		add_widget_type('event_calendar',elgg_echo("event_calendar:widget_title"),elgg_echo('event_calendar:widget:description'));
 		
 		// add the event calendar group tool option
-		if (function_exists('add_group_tool_option')) {
-			$event_calendar_group_default = get_plugin_setting('group_default', 'event_calendar');
-			if (!$event_calendar_group_default || ($event_calendar_group_default == 'yes')) {
-				add_group_tool_option('event_calendar',elgg_echo('event_calendar:enable_event_calendar'),true);
-			} else {
-				add_group_tool_option('event_calendar',elgg_echo('event_calendar:enable_event_calendar'),false);
-			}
+		$event_calendar_group_default = get_plugin_setting('group_default', 'event_calendar');
+		if (!$event_calendar_group_default || ($event_calendar_group_default == 'yes')) {
+			add_group_tool_option('event_calendar',elgg_echo('event_calendar:enable_event_calendar'),true);
+		} else {
+			add_group_tool_option('event_calendar',elgg_echo('event_calendar:enable_event_calendar'),false);
 		}
 		
 		// if autogroup is set, listen and respond to join/leave events

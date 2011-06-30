@@ -156,7 +156,7 @@ if ($filter == 'all') {
 	$events = event_calendar_get_events_for_user_between($start_ts,$end_ts,false,$limit,$offset,$user_guid,$group_guid,$region);	
 }
 
-extend_view('metatags','event_calendar/metatags');
+elgg_extend_view('metatags','event_calendar/metatags');
 
 $vars = array(	'original_start_date' => $original_start_date,
 			'start_date'	=> $start_date,

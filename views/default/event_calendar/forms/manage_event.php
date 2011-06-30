@@ -11,7 +11,7 @@
  *
  */
 
-extend_view('metatags','event_calendar/metatags');
+elgg_extend_view('metatags','event_calendar/metatags');
 	 
 $body = elgg_view('event_calendar/forms/manage_event_content',$vars);
 
