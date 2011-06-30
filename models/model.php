@@ -491,7 +491,11 @@ function event_calendar_get_entities_from_metadata_between_related($meta_start_n
 		}
 	}
 	$related_list = array();
-	$related_events = get_entities_from_relationship("display_on_group", $container_guid, TRUE);
+	$related_events = elgg_get_entities_from_relationship(array(
+		'relationship' => 'display_on_group',
+		'relationship_guid' => $container_guid,
+		'inverse_relationship' => TRUE,
+	));
 	if ($related_events) {
 		foreach ($related_events as $event) {
 			$related_list[$event->guid] = $event;
@@ -719,7 +723,13 @@ function event_calendar_remove_personal_event($event_id,$user_id) {
 }
 
 function event_calendar_get_personal_events_for_user($user_id,$limit) {
-	$events = 	get_entities_from_annotations("object", "event_calendar", "personal_event", $user_id,0, 0, 1000);
+	$events = elgg_get_entities_from_annotations(array(
+		'type' => 'object',
+		'subtype' => 'event_calendar',
+		'annotation_names' => 'personal_event',
+		'annotation_value' => $user_id,
+		'limit' => 1000,
+	));
 	$final_events = array();
 	if ($events) {
 		$now = time();
@@ -759,7 +769,13 @@ function event_calendar_security_fields() {
 }
 
 function event_calendar_get_events_for_group($group_guid) {
-	return get_entities('object','event_calendar',0,"",0,0,false,0,$group_guid);
+	$options = array(
+		'type' => 'object',
+		'subtype' => 'event_calendar',
+		'container_guid' => $group_guid,
+		'limit' => 0,
+	);
+	return elgg_get_entities($options);
 }
 
 function event_calendar_handle_join($event, $object_type, $object) {
