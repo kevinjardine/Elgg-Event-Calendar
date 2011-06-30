@@ -10,16 +10,28 @@ $event_container = $vars['event']->container_guid;
 // get the list of all groups:
 
 if (isadminloggedin()) {
-	$groups = get_entities("group","",0,"",5000);
+	$groups = elgg_get_entities(array(
+		'type' => 'group',
+		'limit' => 5000,
+	));
 } else {
-	$groups = get_entities("group","",get_loggedin_userid(),"",5000);
+	$groups = elgg_get_entities(array(
+		'type' => 'group',
+		'owner_guid' => get_loggedin_userid(),
+		'limit' => 5000,
+	));
 }
 
 // split the group list into two lists
 
 $add_options = array();
 $remove_options = array();
-$remove_group = get_entities_from_relationship("display_on_group",$event_id,FALSE,"","",0,"",5000);
+$remove_group = elgg_get_entities_from_relationship(array(
+	'relationship' => 'display_on_group',
+	'relationship_guid' => $event_id,
+	'inverse_relationship' => FALSE,
+	'limit' => 5000,
+));
 $remove_group_ids = array();
 foreach ($remove_group as $group) {
 	$remove_group_ids[] = $group->guid;
