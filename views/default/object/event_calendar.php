@@ -13,11 +13,10 @@
 
 $event = $vars['entity'];
 
-
 if ($vars['full']) {
 	$body = elgg_view('event_calendar/strapline',$vars);
 	$event_items = event_calendar_get_formatted_full_items($event);
-	$body .= '<div class="contentWrapper" >';
+	$body .= '<br />';
 	
 	foreach($event_items as $item) {
 		$value = $item->value;
@@ -28,39 +27,70 @@ if ($vars['full']) {
 			$body .= "<p class=\"{$even_odd}\"><b>";
 			$body .= $item->title.':</b> ';
 			$body .= $item->value;
-
 		}
 	}
+	$metadata = elgg_view_menu('entity', array(
+		'entity' => $event,
+		'handler' => 'event_calendar',
+		'sort_by' => 'priority',
+		'class' => 'elgg-menu-hz',
+	));
+	
+	$tags = elgg_view('output/tags', array('tags' => $event->event_tags));
+	
+	$params = array(
+		'entity' => $event,
+		'metadata' => $metadata,
+		'tags' => $tags,
+		'title' => false,
+	);
+	$list_body = elgg_view('object/elements/summary', $params);
+	echo $list_body;
 	echo $body;
 	if ($event->long_description) {
 		echo '<p>'.$event->long_description.'</p>';
 	} else {
 		echo '<p>'.$event->description.'</p>';
 	}
-	echo '</div>';
-	if (get_plugin_setting('add_to_group_calendar', 'event_calendar') == 'yes') {
+	if (elgg_get_plugin_setting('add_to_group_calendar', 'event_calendar') == 'yes') {
 		echo elgg_view('event_calendar/forms/add_to_group',array('event' => $event));
 	}
 } else {
+	
 	$time_bit = event_calendar_get_formatted_time($event);
-	$icon = elgg_view(
-			"graphics/icon", array(
-			'entity' => $vars['entity'],
-			'size' => 'small',
-		  )
-		);
-	$info .= '<p><b><a href="'.$event->getUrl().'">'.$event->title.'</a></b>';
-	$info .= '<br />'.$time_bit;
+	$icon = '<img src="'.elgg_view("icon/object/event_calendar/small").'" />';
+	$extras = array($time_bit);
 	if ($event->description) {
-		$info .= '<br /><br />'.$event->description;
+		$extras[] = $event->description;
 	}
 	
-	if ($event_calendar_venue_view = get_plugin_setting('venue_view', 'event_calendar') == 'yes') {
-		$info .= '<br />'.$event->venue;
+	if ($event_calendar_venue_view = elgg_get_plugin_setting('venue_view', 'event_calendar') == 'yes') {
+		$extras[] = $event->venue;
 	}
-	$info .=  '</p>';
+	if ($extras) {
+		$info = "<p>".implode("<br />",$extras)."</p>";
+	} else {
+		$info = '';
+	}
 	
-	echo elgg_view_listing($icon, $info);
+	$metadata = elgg_view_menu('entity', array(
+		'entity' => $event,
+		'handler' => 'event_calendar',
+		'sort_by' => 'priority',
+		'class' => 'elgg-menu-hz',
+	));
+	
+	$tags = elgg_view('output/tags', array('tags' => $event->event_tags));
+	
+	$params = array(
+		'entity' => $event,
+		'metadata' => $metadata,
+		'subtitle' => $info,
+		'tags' => $tags,
+	);
+	$list_body = elgg_view('object/elements/summary', $params);
+	
+	echo elgg_view_image_block($icon, $list_body);
 }
 
 ?>

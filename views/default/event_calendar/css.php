@@ -6,18 +6,9 @@ $background_colour = '#F5F5F5';
 $highlight_colour = '#3874B7';
 ?>
 
-/* hide Today as it is not working as expected */
-.ui-datepicker-current { visibility:hidden }
-
-div#calendarmenucontainer {
-	position: relative;
-}
-
-ul#calendarmenu {
-	list-style: none;
-	position: absolute;
-	top: 0px;
-	left: -15px;
+#calendarmenucontainer {
+	position:relative;
+	left: 40px;
 }
 
 ul#calendarmenu li {
@@ -52,6 +43,12 @@ td.ui-datepicker-unselectable {
 	color: #888888 !important;
 }
 
+#my_datepicker .week-highlight a {
+	text-decoration: none;
+	color: #FFFFFF;
+	background: <?php echo $highlight_colour; ?>;
+}
+
 .river_object_event_calendar_create {
 	background: url(<?php echo $vars['url']; ?>mod/event_calendar/images/river_icon_event.gif) no-repeat left -1px;
 }
@@ -59,7 +56,7 @@ td.ui-datepicker-unselectable {
 	background: url(<?php echo $vars['url']; ?>mod/event_calendar/images/river_icon_event.gif) no-repeat left -1px;
 }
 #event_list {
-	width:440px;
+	width:510px;
 	margin:0;
 	float:left;
 	padding:5px 0 0 0;

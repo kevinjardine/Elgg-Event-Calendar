@@ -189,6 +189,12 @@
 	'event_calendar:add_to_group:success' => "Event added to group calendar",
 	'event_calendar:settings:add_to_group_calendar:title' => "Allow group admins to add any existing event to a group calendar",
 		
+	'event_calendar:group_breadcrumb' => "Group event calendar",
+	'event_calendar:no_group' => "There is no such group.",
+	'event_calendar:generic_error_title' => "Error",
+	'event_calendar:error_event_edit' => "Error: there is no such event or you do not have permission to edit it.",
+	'event_calendar:add' => "Add",
+		
 	/**
 	 * Event calendar river
 	 **/

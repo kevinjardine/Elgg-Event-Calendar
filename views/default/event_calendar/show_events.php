@@ -13,13 +13,22 @@
 $listing_format = $vars['listing_format'];
 
 if ($vars['events']) {
-	if (get_plugin_setting('agenda_view', 'event_calendar') == 'yes') {
+	if (elgg_get_plugin_setting('agenda_view', 'event_calendar') == 'yes') {
 		$event_list = elgg_view('event_calendar/agenda_view',$vars);
 	} else {
 		if ($listing_format == 'paged') {
 			$event_list = elgg_view('event_calendar/paged_view',$vars);
 		} else {
-			$event_list = elgg_view_entity_list($vars['events'], $vars['count'], $vars['offset'], $vars['limit'], false, false);
+			$options = array(
+				'list_class' => 'elgg-list-entity',
+				'full_view' => FALSE,
+				'pagination' => TRUE,
+				'list_type' => 'listing',
+				'list_type_toggle' => FALSE,
+				'offset' => $vars['offset'],
+				'limit' => $vars['limit'],
+			);
+			$event_list = elgg_view_entity_list($vars['events'], $options);
 		}
 	}
 } else {
@@ -28,26 +37,18 @@ if ($vars['events']) {
 if ($listing_format == 'paged') {
 	echo $event_list;
 } else {
-	if (isloggedin()) {
-		$nav = elgg_view('event_calendar/nav',$vars);
-	} else {
-		$nav = '';
-	}
 ?>
-<table width="100%">
-<tr><td>
-<div id="event_list">
+<div style="width:100%">
+<div id="event_list" style="float:left;">
 <?php
-echo $nav.'<br />'.$event_list;
+echo $event_list;
 ?>
 </div>
-</td>
-<td align="right">
+<div style="float:right;">
 <?php
 echo elgg_view('event_calendar/calendar',$vars);
 ?>
-</td></tr>
-</table>
+</div>
+</div>
 <?php
 }
-?>

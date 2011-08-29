@@ -10,6 +10,7 @@
  * @link http://radagast.biz/
  * 
  */
+
 if ($vars['dateformat']) {
 	$date_format = $vars['dateformat'];
 } else {

@@ -12,7 +12,7 @@
  */
 
 	// Load event calendar model
-	require_once(dirname(dirname(dirname(dirname(dirname(__FILE__)))))."/models/model.php");
+	elgg_load_library('elgg:event_calendar');
 
     //the number of events to display
 	$num = (int) $vars['entity']->num_display;
@@ -21,7 +21,7 @@
 		
     // Get the events
 
-	$events = event_calendar_get_personal_events_for_user(page_owner(),$num);
+	$events = event_calendar_get_personal_events_for_user(elgg_get_page_owner_guid(),$num);
 		
 	// If there are any events to view, view them
 	if (is_array($events) && sizeof($events) > 0) {

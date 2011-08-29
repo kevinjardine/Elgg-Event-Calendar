@@ -11,7 +11,9 @@
  *
  */
 
-$page_owner_entity = page_owner_entity();
+elgg_load_library('elgg:event_calendar');
+
+$page_owner_entity = elgg_get_page_owner_entity();
 
 if (event_calendar_activated_for_group($page_owner_entity)) {
     $num = 5;

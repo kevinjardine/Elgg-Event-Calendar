@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin_manifest>
         <field key="author" value="Kevin Jardine &lt;kevin@radagast.biz&gt;" />
-        <field key="version" value="0.8" />
+        <field key="version" value="0.81" />
         <field key="description" value="Elgg event calendar plugin" />
         <field key="website" value="http://radagast.biz/" />
-        <field key="copyright" value="(C) Radagast Solutions 2009" />
+        <field key="copyright" value="(C) Radagast Solutions 2009-2011" />
         <field key="licence" value="GNU Public License version 2" />
         <field key="elgg_version" value="2009030101" />
 </plugin_manifest>
