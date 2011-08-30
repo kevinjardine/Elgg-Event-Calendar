@@ -1,6 +1,6 @@
 <?php
 
-$time_format = get_plugin_setting('timeformat', 'event_calendar');
+$time_format = elgg_get_plugin_setting('timeformat', 'event_calendar');
 if (!$time_format) {
 	$time_format = 24;
 }
@@ -32,7 +32,7 @@ for($i=0;$i<60;$i=$i+5) {
 	$minutes[$i+1] = sprintf("%02d",$i);
 }
 
-echo elgg_view('input/pulldown',array('internalname'=>$vars['internalname'].'_h','value'=>$hour,'options_values'=>$hours));
-echo elgg_view('input/pulldown',array('internalname'=>$vars['internalname'].'_m','value'=>$minute,'options_values'=>$minutes));
+echo elgg_view('input/dropdown',array('name'=>$vars['name'].'_h','value'=>$hour,'options_values'=>$hours));
+echo elgg_view('input/dropdown',array('name'=>$vars['name'].'_m','value'=>$minute,'options_values'=>$minutes));
 
 ?>

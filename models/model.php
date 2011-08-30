@@ -81,14 +81,31 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	$event->end_date = get_input('end_date');
 
 	if ($event_calendar_times == 'yes') {
-		$event->start_time = get_input('start_time');
-		//$event->original_start_date = $event->start_date;
+		$sh = get_input('start_time_h','');
+		$sm = get_input('start_time_m','');
+		if (is_numeric($sh) && is_numeric($sm)) {
+			// workaround for pulldown zero value bug
+			$sh--;
+			$sm--;
+			$event->start_time = $sh*60+$sm;
+		} else {
+			$event->start_time = '';
+		}
+		$eh = get_input('end_time_h','');
+		$em = get_input('end_time_m','');
+		if (is_numeric($eh) && is_numeric($em)) {
+			// workaround for pulldown zero value bug
+			$eh--;
+			$em--;
+			$event->end_time = $eh*60+$em;
+		} else {
+			$event->end_time = '';
+		}
 		if (is_numeric($event->start_time)) {
 			// Set start date to the Unix start time, if set.
 			// This allows sorting by date *and* time.
 			$event->start_date += $event->start_time*60;
 		}
-		$event->end_time = get_input('end_time');
 	}
 	if ($event_calendar_spots_display == 'yes') {
 		$event->spots = trim(get_input('spots'));
@@ -377,7 +394,7 @@ function event_calendar_get_entities_from_metadata_between($meta_start_name, $me
 	if (!$count) {
 		$query .= " order by $order_by limit $offset, $limit"; // Add order and limit
 		$entities = get_data($query, "entity_row_to_elggstar");
-		if (get_plugin_setting('add_to_group_calendar', 'event_calendar') == 'yes') {
+		if (elgg_get_plugin_setting('add_to_group_calendar', 'event_calendar') == 'yes') {
 			if (get_entity($container_guid) instanceOf ElggGroup) {
 				$entities = event_calendar_get_entities_from_metadata_between_related($meta_start_name, $meta_end_name, 
 					$meta_start_value, $meta_end_value, $entity_type, 
@@ -1011,7 +1028,7 @@ function event_calendar_get_page_content_list($page_type,$group_guid,$start_date
 			forward();
 		}
 		elgg_push_breadcrumb(elgg_echo('event_calendar:group_breadcrumb'));
-		elgg_set_context('groups');
+		elgg_push_context('groups');
 		elgg_set_page_owner_guid($group_guid);
 		$user_guid = elgg_get_logged_in_user_guid();
 		$group_calendar = elgg_get_plugin_setting('group_calendar', 'event_calendar');

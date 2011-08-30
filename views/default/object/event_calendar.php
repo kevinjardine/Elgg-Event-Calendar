@@ -36,7 +36,7 @@ if ($vars['full']) {
 		'class' => 'elgg-menu-hz',
 	));
 	
-	$tags = elgg_view('output/tags', array('tags' => $event->event_tags));
+	$tags = elgg_view('output/tags', array('tags' => $event->tags));
 	
 	$params = array(
 		'entity' => $event,
@@ -73,14 +73,18 @@ if ($vars['full']) {
 		$info = '';
 	}
 	
-	$metadata = elgg_view_menu('entity', array(
-		'entity' => $event,
-		'handler' => 'event_calendar',
-		'sort_by' => 'priority',
-		'class' => 'elgg-menu-hz',
-	));
+	if (elgg_in_context('widgets')) {
+		$metadata = '';
+	} else {	
+		$metadata = elgg_view_menu('entity', array(
+			'entity' => $event,
+			'handler' => 'event_calendar',
+			'sort_by' => 'priority',
+			'class' => 'elgg-menu-hz',
+		));
+	}
 	
-	$tags = elgg_view('output/tags', array('tags' => $event->event_tags));
+	$tags = elgg_view('output/tags', array('tags' => $event->tags));
 	
 	$params = array(
 		'entity' => $event,
