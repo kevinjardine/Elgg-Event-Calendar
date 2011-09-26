@@ -74,14 +74,19 @@
 				."(Perhaps the event is full or is scheduled at the same time as another event in your personal calendar?)",
 	'event_calendar:remove_from_my_calendar_response' => "This event has been removed from your personal calendar.",
 	'event_calendar:add_to_the_calendar' => "Add to calendar",
-	'event_calendar:remove_from_the_calendar' => "Remove from calendar",
+	'event_calendar:remove_from_the_calendar' => "Remove",
+	'event_calendar:remove_from_the_calendar_button' => "Remove from calendar",
+	'event_calendar:added_to_the_calendar' => "Added to calendar",
+	'event_calendar:removed_from_the_calendar' => "Removed calendar",
 	'event_calendar:add_to_the_calendar_response' => "Event added to this person's calendar.",
 	'event_calendar:add_to_the_calendar_error' => "This event could not added to this person's calendar. "
 				."(Perhaps the event is full or is scheduled at the same time as another event in this person's calendar?)",
 	'event_calendar:remove_from_the_calendar_response' => "Event removed from this person's calendar.",
 				
-	'event_calendar:users_for_event_title' => "People interested in event \"%s\"",
-	'event_calendar:personal_event_calendars_link' => "Personal event calendars (%s)",
+	'event_calendar:users_for_event_menu_title' => "People listing this event on their personal calendars",
+	'event_calendar:users_for_event_title' => "Personal calendars for \"%s'\"",
+	'event_calendar:personal_event_calendars_link' => "Calendars (%s)",
+	'event_calendar:users_for_event_breadcrumb' => "Personal calendars",
 	'event_calendar:settings:group_profile_display:title' => "Group calendar profile display (if group calendars are enabled)",
 	'event_calendar:settings:group_profile_display_option:left' => "left column",
 	'event_calendar:settings:group_profile_display_option:right' => "right column",
@@ -112,7 +117,7 @@
 	'event_calendar:type_label' => "Type of event",
 	'event_calendar:type_description' => "Select the type of event.",
 	'event_calendar:all' => "All",
-	'event_calendar:region_filter_by_label' => "Filter by region:",
+	'event_calendar:region_filter_by_label' => "Filter by region: ",
 	'event_calendar:settings:first_date:title' => "First allowable date (in YYYY-MM-DD format)",
 	'event_calendar:settings:last_date:title' => "Last allowable date (in YYYY-MM-DD format)",
 	'event_calendar:enable_event_calendar' => "Enable group event calendar",
@@ -125,6 +130,7 @@
 	'event_calendar:agenda:column:venue' => "Location",
 	'event_calendar:upcoming_events_title' => "Upcoming events",
 	'event_calendar:settings:paged' => "paged",
+	'event_calendar:settings:agenda' => "agenda",
 	'event_calendar:settings:month' => "by month",
 	'event_calendar:settings:listing_format:title' => "Event listing format",
 	'event_calendar:paged:column:date' => "Date",
@@ -158,23 +164,31 @@
 	'event_calendar:request_event_response' => "Your request to be added to this event has been sent.",
 	'event_calendar:request_event_error' => "Error: Could not send your request to be added to this event.",
 	'event_calendar:request_subject' => "You have received an event request",
-	'event_calendar:request_message' => " %s has asked to have the event \"%s\", here:
-	
-	%s
-	
-	added to his/her personal calendar.
-	
-	You can manage calendar requests here:
-	
-	%s",
+	'event_calendar:request_message' => "%s has asked to have the event \"%s\", here:
+
+%s
+
+added to his/her personal calendar.
+
+You can manage calendar requests for this event here:
+
+%s
+",
 		
 	'event_calendar:review_requests_error' => "This event either does not exist or you do not have the authority to approve requests for it.",
 	'event_calendar:review_requests_request_none' => "There are no requests to review for this event.",
 	'event_calendar:request:remove:check' => 'Are you sure you want to reject this request?',
-	'event_calendar:requestkilled' => 'The request has been removed.',
+	'event_calendar:requestkilled' => 'This request has been rejected.',
 	'event_calendar:request_approved' => "This request has been approved.",
-	'event_calendar:review_requests_title' => 'Review requests',
+	'event_calendar:review_requests_title' => "Review requests for \"%s\"",
+	'event_calendar:review_requests_menu_title' => "Review requests",
 	'event_calendar:make_request_title' => 'Request this event',
+	'event_calendar:review_requests:reject' => "Reject",
+	'event_calendar:review_requests:reject:title' => "Reject this request",
+	'event_calendar:review_requests:accept' => "Accept",
+	'event_calendar:review_requests:accept:title' => "Accept this request",
+	'event_calendar:review_requests:error:approve' => "Error: could not approve this request.",
+	'event_calendar:review_requests:error:reject' => "Error: could not reject this request.",
 		
 	'event_calendar:settings:hide_access:title' => "Hide event access drop down",
 	'event_calendar:settings:default_access:title' => "If the event access is hidden, what should it default to?",
@@ -200,6 +214,9 @@
 	 **/
 			 
 	//generic terms to use
+
+	'river:update:object:event_calendar' => "%s updated the event %s",
+	'river:create:object:event_calendar' => "%s added the event %s",
     'event_calendar:river:created' => "%s added",
     'event_calendar:river:updated' => "%s updated",
     'event_calendar:river:annotated1' => "%s added",

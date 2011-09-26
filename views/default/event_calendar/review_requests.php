@@ -10,16 +10,21 @@ foreach($vars['requests'] as $request) {
 		$info .= '<div style="margin-top: 5px;" ></div>';
 		$info .=  elgg_view('output/confirmlink',
 			array(
-			'class' => "cancel_button",
-			'href' => $vars['url'] . 'action/event_calendar/killrequest?user_guid='.$request->guid.'&event_id=' . $vars['entity']->guid,
+			'class' => "elgg-button elgg-button-delete",
+			'href' => 'action/event_calendar/killrequest?user_guid='.$request->guid.'&event_guid=' . $vars['entity']->guid,
 			'confirm' => elgg_echo('event_calendar:request:remove:check'),
-			'text' => elgg_echo('delete'),
+			'text' => elgg_echo('event_calendar:review_requests:reject'),
+			'title' => elgg_echo('event_calendar:review_requests:reject:title'),
 		));
 		$info .= '&nbsp;&nbsp;';
-		$url = elgg_add_action_tokens_to_url("{$vars['url']}action/event_calendar/addtocalendar?user_guid={$request->guid}&event_id={$vars['entity']->guid}");
-		$info .= '<a href="'.$url.'" class="add_topic_button">'.elgg_echo('accept').'</a>';
-		echo elgg_view_listing($icon,$info);
+		$info .= elgg_view('output/url', array(
+			'text' => elgg_echo('event_calendar:review_requests:accept'),
+			'title' => elgg_echo('event_calendar:review_requests:accept:title'),
+			'href' => "action/event_calendar/addtocalendar?user_guid={$request->guid}&event_guid={$vars['entity']->guid}",
+			'class' => "elgg-button elgg-button-submit",
+			'is_action' => TRUE,
+		));
+		//$url = elgg_add_action_tokens_to_url("{$vars['url']}action/event_calendar/addtocalendar?user_guid={$request->guid}&event_guid={$vars['entity']->guid}");
+		echo elgg_view_image_block($icon,$info);
 	}
 }
-
-?>

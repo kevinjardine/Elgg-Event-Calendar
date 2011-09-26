@@ -25,10 +25,19 @@ if (event_calendar_activated_for_group($page_owner_entity)) {
 	// If there are any events to view, view them
 	if (is_array($events) && sizeof($events) > 0) {
 
+		echo '<div id="group_pages_widget">';
+		echo '<h2>'.elgg_echo("event_calendar:groupprofile").'</h2>';
 		foreach($events as $event) {
 			echo elgg_view("object/event_calendar",array('entity' => $event));
 		}
+		echo '<div class="forum_latest"><a href="'.$vars['url'].'pg/event_calendar/group/'.page_owner().'">'.elgg_echo('event_calendar:view_calendar').'</a></div>';
+		echo "</div>";
 			
+    } else if (elgg_get_plugin_setting('group_always_display', 'event_calendar') == 'yes') {
+    	echo '<div id="group_pages_widget">';
+		echo '<h2>'.elgg_echo("event_calendar:groupprofile").'</h2>';
+    	echo '<div class="forum_latest">'.elgg_echo('event_calendar:no_events_found').'</div>';
+    	echo "</div>";
     }
 }
 	

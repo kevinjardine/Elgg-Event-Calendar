@@ -13,23 +13,21 @@
 $listing_format = $vars['listing_format'];
 
 if ($vars['events']) {
-	if (elgg_get_plugin_setting('agenda_view', 'event_calendar') == 'yes') {
+	if ($listing_format == 'agenda') {
 		$event_list = elgg_view('event_calendar/agenda_view',$vars);
+	} else if ($listing_format == 'paged') {
+		$event_list = elgg_view('event_calendar/paged_view',$vars);
 	} else {
-		if ($listing_format == 'paged') {
-			$event_list = elgg_view('event_calendar/paged_view',$vars);
-		} else {
-			$options = array(
-				'list_class' => 'elgg-list-entity',
-				'full_view' => FALSE,
-				'pagination' => TRUE,
-				'list_type' => 'listing',
-				'list_type_toggle' => FALSE,
-				'offset' => $vars['offset'],
-				'limit' => $vars['limit'],
-			);
-			$event_list = elgg_view_entity_list($vars['events'], $options);
-		}
+		$options = array(
+			'list_class' => 'elgg-list-entity',
+			'full_view' => FALSE,
+			'pagination' => TRUE,
+			'list_type' => 'listing',
+			'list_type_toggle' => FALSE,
+			'offset' => $vars['offset'],
+			'limit' => $vars['limit'],
+		);
+		$event_list = elgg_view_entity_list($vars['events'], $options);
 	}
 } else {
 	$event_list = '<p>'.elgg_echo('event_calendar:no_events_found').'</p>';

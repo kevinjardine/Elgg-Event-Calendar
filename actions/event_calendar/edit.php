@@ -29,9 +29,9 @@ if ($event) {
 	} else {
 		$event_calendar_autopersonal = elgg_get_plugin_setting('autopersonal', 'event_calendar');
 		if (!$event_calendar_autopersonal || ($event_calendar_autopersonal == 'yes')) {
-			event_calendar_add_personal_event($event_guid,$user_guid);
+			event_calendar_add_personal_event($event->guid,$user_guid);
 		}
-		add_to_river('river/object/event_calendar/create','create',$user_guid,$event_guid);
+		add_to_river('river/object/event_calendar/create','create',$user_guid,$event->guid);
 		system_message(elgg_echo('event_calendar:add_event_response'));
 	}
 	 

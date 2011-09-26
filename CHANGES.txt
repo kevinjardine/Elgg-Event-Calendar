@@ -1,4 +1,8 @@
 CHANGE LOG
+0.85
+
+First version for Elgg 1.8
+
 0.84
 
 Fixed tag search so it works for Elgg 1.7.x.

@@ -8,7 +8,7 @@ $highlight_colour = '#3874B7';
 
 #calendarmenucontainer {
 	position:relative;
-	left: 40px;
+	left: 25px;
 }
 
 ul#calendarmenu li {
@@ -117,6 +117,10 @@ td.event_calendar_paged_title {
 	width: 280px;
 }
 
+td.event_calendar_paged_calendar {
+	padding-left: 30px;
+}
+
 table.event_calendar_paged_table {
 	width:100%;
 	border-collapse:collapse;
@@ -144,4 +148,13 @@ table.event_calendar_paged_table th {
 
 .event_calendar_strapline {
 	font-size: 85%;
+}
+
+.event-calendar-personal-calendar-toggle-wrapper {
+	width: 100%;
+	margin-bottom: 30px;
+}
+
+.event-calendar-personal-calendar-toggle {
+	float: right;
 }

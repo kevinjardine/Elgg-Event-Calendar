@@ -12,8 +12,9 @@
  */
 
 $event = $vars['entity'];
+$full = elgg_extract('full_view', $vars, FALSE);
 
-if ($vars['full']) {
+if ($full) {
 	$body = elgg_view('event_calendar/strapline',$vars);
 	$event_items = event_calendar_get_formatted_full_items($event);
 	$body .= '<br />';

@@ -1,4 +1,5 @@
 <?php
+elgg_load_js('elgg.event_calendar');
 $nav = elgg_view('navigation/pagination',array(
 			
 //												'baseurl' => $_SERVER['REQUEST_URI'],
@@ -8,8 +9,8 @@ $nav = elgg_view('navigation/pagination',array(
 												'limit' => $vars['limit'],
 			
 														));
-$event_calendar_times = get_plugin_setting('times', 'event_calendar');
-$event_calendar_personal_manage = get_plugin_setting('personal_manage', 'event_calendar');
+$event_calendar_times = elgg_get_plugin_setting('times', 'event_calendar');
+$event_calendar_personal_manage = elgg_get_plugin_setting('personal_manage', 'event_calendar');
 $events = $vars['events'];
 $html = '';
 $date_format = 'F Y';
@@ -33,19 +34,3 @@ $msgs = '<div id="event_calendar_paged_messages"></div>';
 $html = $msgs.$nav.'<div class="event_calendar_paged">'.$html.'</div>'.$nav;
 
 echo $html;
-?>
-<script type="text/javascript">
-function event_calendar_personal_toggle(guid) {
-	$.get("<?php echo $vars['url'].'action/event_calendar/toggle_personal_calendar?'.event_calendar_security_fields().'&event_id='; ?>"+guid,
-		function (res) {
-			var flag = res.substring(0,3);
-			var msg = res.substring(3);
-			$('#event_calendar_paged_messages').html(msg);
-			if (flag == '@f@') {
-				// action failed so toggle checkbox
-				$("#event_calendar_paged_checkbox_"+guid).attr('checked',!$("#event_calendar_paged_checkbox_"+guid).attr('checked'));
-			}
-	    }
-	);
-}
-</script>

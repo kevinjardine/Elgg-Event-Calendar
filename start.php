@@ -40,17 +40,23 @@ function event_calendar_init() {
 	if (function_exists('elgg_register_tag_metadata_name')) {
 		elgg_register_tag_metadata_name('event_tags');
 	}
+	
+	// register the plugin's JavaScript
+	$plugin_js = elgg_get_simplecache_url('js', 'event_calendar/event_calendar');
+	elgg_register_js('elgg.event_calendar', $plugin_js);
 
 	//add to group profile page
 	// TODO - are the left and right values still relevant for Elgg 1.8?
 	$group_calendar = elgg_get_plugin_setting('group_calendar', 'event_calendar');
 	if (!$group_calendar || $group_calendar != 'no') {
+		// add blog link to
+		elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'event_calendar_owner_block_menu');
 		$group_profile_display = elgg_get_plugin_setting('group_profile_display', 'event_calendar');
 		if (!$group_profile_display || $group_profile_display == 'right') {
 			//elgg_extend_view('groups/right_column', 'event_calendar/groupprofile_calendar');
-			elgg_extend_view('groups/tool_latest', 'event_calendar/groupprofile_calendar');
+			elgg_extend_view('groups/tool_latest', 'event_calendar/group_module');
 		} else if ($group_profile_display == 'left') {
-			elgg_extend_view('groups/tool_latest', 'event_calendar/groupprofile_calendar');
+			elgg_extend_view('groups/tool_latest', 'event_calendar/group_module');
 			//elgg_extend_view('groups/left_column', 'event_calendar/groupprofile_calendar');
 		}
 	}
@@ -92,6 +98,21 @@ function event_calendar_init() {
 	elgg_register_action("event_calendar/add_to_group","$action_path/add_to_group.php");
 	elgg_register_action("event_calendar/remove_from_group","$action_path/remove_from_group.php");
 
+}
+
+/**
+ * Add a menu item to an ownerblock
+ */
+function event_calendar_owner_block_menu($hook, $type, $return, $params) {
+	if (elgg_instanceof($params['entity'], 'group')) {
+		if ($params['entity']->event_calendar_enable != "no") {
+			$url = "event_calendar/group/{$params['entity']->guid}";
+			$item = new ElggMenuItem('event_calendar', elgg_echo('event_calendar:group'), $url);
+			$return[] = $item;
+		}
+	}
+
+	return $return;
 }
 
 // TODO: delete this once everything is recoded
@@ -156,13 +177,14 @@ function event_calendar_url($entity) {
  * Dispatches event calendar pages.
  *
  * URLs take the form of
- *  Site event calendar:	event_calendar/list/<start_date>/<display_mode>/<filter_context>/<region>
- *  Single event:       	event_calendar/view/<event_guid>/<title>
- *  New event:        		event_calendar/add
- *  Edit event:       		event_calendar/edit/<event_guid>
- *  Group event calendar:   event_calendar/group/<group_guid>/<start_date>/<display_mode>
- *  Add group event:   		event_calendar/add/<group_guid>
- *  Review requests:		event_calendar/review_requests/<event_guid>
+ *  Site event calendar:			event_calendar/list/<start_date>/<display_mode>/<filter_context>/<region>
+ *  Single event:       			event_calendar/view/<event_guid>/<title>
+ *  New event:        				event_calendar/add
+ *  Edit event:       				event_calendar/edit/<event_guid>
+ *  Group event calendar:  			event_calendar/group/<group_guid>/<start_date>/<display_mode>/<filter_context>/<region>
+ *  Add group event:   				event_calendar/add/<group_guid>
+ *  Review requests:				event_calendar/review_requests/<event_guid>
+ *  Display event subscribers:		event_calendar/display_users/<event_guid>
  *
  * Title is ignored
  *
@@ -200,6 +222,9 @@ function event_calendar_page_handler($page) {
 		case 'view':
 			echo event_calendar_get_page_content_view($page[1]);
 			break;
+		case 'display_users':
+			echo event_calendar_get_page_content_display_users($page[1]);
+			break;
 		case 'add':
 			if (isset($page[1])) {
 				group_gatekeeper();
@@ -221,7 +246,17 @@ function event_calendar_page_handler($page) {
 				if (isset($page[2])) {
 					$start_date = $page[2];
 					if (isset($page[3])) {
-						$display_mode = $page[3];
+					$display_mode = $page[2];
+					if (isset($page[3])) {
+						$filter_mode = $page[3];
+						if (isset($page[4])) {
+							$region = $page[4];
+						} else {
+							$region = '';
+						}
+					} else {
+						$filter_mode = '';
+					}
 					} else {
 						$display_mode = '';
 					}
@@ -231,11 +266,11 @@ function event_calendar_page_handler($page) {
 			} else {
 				$group_guid = 0;
 			}
-			echo event_calendar_get_page_content_list($page_type,$group_guid,$start_date,$display_mode,'');
+			echo event_calendar_get_page_content_list($page_type,$group_guid,$start_date,$display_mode,$filter_mode,$region);
 			break;
 		case 'review_requests':
 			gatekeeper();
-			$params = event_calendar_get_page_content_review_requests($page_type, $page[1], $page[2]);
+			echo event_calendar_get_page_content_review_requests($page[1]);
 			break;
 	}
 }
@@ -276,7 +311,7 @@ function event_calendar_entity_menu_setup($hook, $type, $return, $params) {
 				$return[] = ElggMenuItem::factory($options);			}
 		}
 	} else {
-		if (!check_entity_relationship($user_guid, 'event_calendar_request', $entity->guid)) {
+		if (!event_calendar_has_personal_event($entity->guid,$user_guid) && !check_entity_relationship($user_guid, 'event_calendar_request', $entity->guid)) {
 			$options = array(
 				'name' => 'personal_calendar',
 				'text' => elgg_echo('event_calendar:make_request_title'),
@@ -287,6 +322,23 @@ function event_calendar_entity_menu_setup($hook, $type, $return, $params) {
 			$return[] = ElggMenuItem::factory($options);
 		}		
 	}
+	
+	$options = array(
+		'name' => 'calendar_listing',
+		'text' => elgg_echo('event_calendar:personal_event_calendars_link',array(event_calendar_get_users_for_event($entity->guid,0,0,true))),
+		'title' => elgg_echo('event_calendar:users_for_event_menu_title'),
+		'href' => "event_calendar/display_users/{$entity->guid}",
+		'priority' => 150,
+	);
+	$return[] = ElggMenuItem::factory($options);
+	
+	/*if (elgg_is_admin_logged_in() && (elgg_get_plugin_setting('allow_featured', 'event_calendar') == 'yes')) {
+		if ($event->featured) {
+			add_submenu_item(elgg_echo('event_calendar:unfeature'), $CONFIG->url . "action/event_calendar/unfeature?event_id=".$event_id.'&'.event_calendar_security_fields(), 'eventcalendaractions');
+		} else {
+			add_submenu_item(elgg_echo('event_calendar:feature'), $CONFIG->url . "action/event_calendar/feature?event_id=".$event_id.'&'.event_calendar_security_fields(), 'eventcalendaractions');
+		}
+	}*/
 
 	return $return;
 }
