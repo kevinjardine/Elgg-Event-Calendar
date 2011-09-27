@@ -4,7 +4,7 @@
  * @package event_calendar
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  * @author Kevin Jardine <kevin@radagast.biz>
- * @copyright Radagast Solutions 2008
+ * @copyright Radagast Solutions 2008-2011
  * @link http://radagast.biz/
  * 
  */
@@ -13,9 +13,11 @@
  recently added features. For more information, check the CHANGES.txt file
  or look at the event calendar settings available through Tools Administration.
  
-Version: 0.8
+Version: 0.85
 
-Requires: Elgg 1.5 or higher
+Requires: Elgg 1.8 or higher
+
+Should be installed in mod/event_calendar
 
 *Description*
 
