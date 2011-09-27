@@ -12,7 +12,6 @@ if ($other) {
 	$add_response = elgg_echo('event_calendar:add_to_my_calendar_response');
 	$add_error = elgg_echo('event_calendar:add_to_my_calendar_error');
 }
-// three character prefix to indicate success or failure
 
 if (event_calendar_has_personal_event($event_guid,$user_guid)) {
 	$button_text = elgg_echo('event_calendar:add_to_the_calendar');

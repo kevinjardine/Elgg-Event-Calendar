@@ -115,59 +115,6 @@ function event_calendar_owner_block_menu($hook, $type, $return, $params) {
 	return $return;
 }
 
-// TODO: delete this once everything is recoded
-
-function event_calendar_pagesetup() {
-
-	global $CONFIG;
-
-	$page_owner = page_owner_entity();
-
-	$context = get_context();
-
-	// Group submenu option
-	if ($page_owner instanceof ElggGroup && $context == 'groups') {
-		if (event_calendar_activated_for_group($page_owner)) {
-			add_submenu_item(elgg_echo("event_calendar:group"), $CONFIG->wwwroot . "pg/event_calendar/group/" . $page_owner->getGUID());
-		}
-	} else if ($context == 'event_calendar'){
-		add_submenu_item(elgg_echo("event_calendar:site_wide_link"), $CONFIG->wwwroot . "pg/event_calendar/");
-		$site_calendar = get_plugin_setting('site_calendar', 'event_calendar');
-		if (!$site_calendar || $site_calendar == 'admin') {
-			if (isadminloggedin()) {
-				// only admins can post directly to the site-wide calendar
-				add_submenu_item(elgg_echo('event_calendar:new'), $CONFIG->url . "pg/event_calendar/new/", 'eventcalendaractions');
-			}
-		} else if ($site_calendar == 'loggedin') {
-			// any logged-in user can post to the site calendar
-			if (isloggedin()) {
-				add_submenu_item(elgg_echo('event_calendar:new'), $CONFIG->url . "pg/event_calendar/new/", 'eventcalendaractions');
-			}
-		}
-	}
-
-	if (($context == 'groups') || ($context == 'event_calendar')) {
-		if (($event_id = get_input('event_id',0)) && ($event = get_entity($event_id))) {
-			if (isadminloggedin() && (get_plugin_setting('allow_featured', 'event_calendar') == 'yes')) {
-				if ($event->featured) {
-					add_submenu_item(elgg_echo('event_calendar:unfeature'), $CONFIG->url . "action/event_calendar/unfeature?event_id=".$event_id.'&'.event_calendar_security_fields(), 'eventcalendaractions');
-				} else {
-					add_submenu_item(elgg_echo('event_calendar:feature'), $CONFIG->url . "action/event_calendar/feature?event_id=".$event_id.'&'.event_calendar_security_fields(), 'eventcalendaractions');
-				}
-			}
-			add_submenu_item(elgg_echo("event_calendar:view_link"), $CONFIG->wwwroot . "pg/event_calendar/view/" . $event_id,'0eventcalendaradmin');
-			if ($event->canEdit()) {
-				add_submenu_item(elgg_echo("event_calendar:edit_link"), $CONFIG->wwwroot . "mod/event_calendar/manage_event.php?event_id=" . $event_id,'0eventcalendaradmin');
-				add_submenu_item(elgg_echo("event_calendar:delete_link"), $CONFIG->wwwroot . "mod/event_calendar/delete_confirm.php?event_id=" . $event_id,'0eventcalendaradmin');
-				$event_calendar_personal_manage = get_plugin_setting('personal_manage', 'event_calendar');
-				if ($event_calendar_personal_manage == 'no') {
-					add_submenu_item(elgg_echo('event_calendar:review_requests_title'), $CONFIG->wwwroot . "pg/event_calendar/review_requests/".$event_id, '0eventcalendaradmin');
-				}
-			}
-		}
-	}
-}
-
 function event_calendar_url($entity) {
 	$friendly_title = elgg_get_friendly_title($entity->title);
 	return "event_calendar/view/{$entity->guid}/$friendly_title";
@@ -246,11 +193,11 @@ function event_calendar_page_handler($page) {
 				if (isset($page[2])) {
 					$start_date = $page[2];
 					if (isset($page[3])) {
-					$display_mode = $page[2];
-					if (isset($page[3])) {
-						$filter_mode = $page[3];
-						if (isset($page[4])) {
-							$region = $page[4];
+					$display_mode = $page[3];
+					if (isset($page[4])) {
+						$filter_mode = $page[4];
+						if (isset($page[5])) {
+							$region = $page[5];
 						} else {
 							$region = '';
 						}
