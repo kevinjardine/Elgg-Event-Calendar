@@ -21,6 +21,12 @@ if ($vars['mode'] == 'week') {
 } else {
 	$selected_week = '';
 }
+
+if ($vars['mode']) {
+	$wrapper_class = "event-calendar-filter-period-".$vars['mode'];
+} else {
+	$wrapper_class = "event-calendar-filter-period-month";
+}
 // TODO - figure out how to move this JavaScript
 ?>
 
@@ -74,5 +80,5 @@ var done_loading = true;
 });
 
 </script>
-<div style="position:relative;" id="<?php echo $vars['name']; ?>" ></div>
+<div style="position:relative;" id="<?php echo $vars['name']; ?>" class="<?php echo $wrapper_class; ?>" ></div>
 <p style="clear: both;"><!-- See day-by-day example for highlighting days code --></p>
