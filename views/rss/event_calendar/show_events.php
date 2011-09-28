@@ -9,7 +9,6 @@
  * @link http://radagast.biz/
  * 
  */
-
 if ($vars['events']) {
 	echo elgg_view_entity_list($vars['events'], $vars['count'], $vars['offset'], $vars['limit'], false, false);
 }

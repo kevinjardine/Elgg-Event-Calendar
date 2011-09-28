@@ -209,6 +209,8 @@ You can manage calendar requests for this event here:
 	'event_calendar:error_event_edit' => "Error: there is no such event or you do not have permission to edit it.",
 	'event_calendar:add' => "Add",
 		
+	'feed:ical' => "iCal feed for this page",
+		
 	/**
 	 * Event calendar river
 	 **/

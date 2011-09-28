@@ -1096,6 +1096,8 @@ function event_calendar_send_event_request($event,$user_guid) {
 // pages
 
 function event_calendar_get_page_content_list($page_type,$group_guid,$start_date,$display_mode,$filter,$region='-') {
+	global $autofeed;
+	$autofeed = true;
 	if ($page_type == 'group') {
 		if (!event_calendar_activated_for_group($group_guid)) {
 			forward();
@@ -1149,8 +1151,26 @@ function event_calendar_get_page_content_list($page_type,$group_guid,$start_date
 			}
 		}
 	}
+	
+	$url = full_url();
+	if (substr_count($url, '?')) {
+		$url .= "&view=ical";
+	} else {
+		$url .= "?view=ical";
+	}
 
 	$params = event_calendar_generate_listing_params($page_type,$group_guid,$start_date,$display_mode,$filter,$region);
+	
+	$url = elgg_format_url($url);
+	$menu_options = array(
+		'name' => 'ical',
+		'text' => '<img src="'.elgg_get_site_url().'mod/event_calendar/images/ics.png" />',
+		'href' => $url,
+		'title' => elgg_echo('feed:ical'),
+		'priority' => 800,
+	);
+	$menu_item = ElggMenuItem::factory($menu_options);
+	elgg_register_menu_item('extras', $menu_item);
 
 	$body = elgg_view_layout("content", $params);
 
@@ -1348,8 +1368,8 @@ function event_calendar_generate_listing_params($page_type,$group_guid,$original
 	$user_guid = elgg_get_logged_in_user_guid();
 
 	$offset = get_input('offset');
+	$limit = get_input('limit',15);
 
-	$limit = 15;
 	if ($event_calendar_spots_display == 'yes') {
 		if (!$filter) {
 			$filter = 'open';
@@ -1391,6 +1411,7 @@ function event_calendar_generate_listing_params($page_type,$group_guid,$original
 	);
 
 	$content = elgg_view('event_calendar/show_events', $vars);
+
 	$filter_override = elgg_view('event_calendar/filter_menu',$vars);
 
 	if ($event_calendar_listing_format == 'paged') {
