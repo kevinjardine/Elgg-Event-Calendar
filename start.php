@@ -132,6 +132,7 @@ function event_calendar_url($entity) {
  *  Add group event:   				event_calendar/add/<group_guid>
  *  Review requests:				event_calendar/review_requests/<event_guid>
  *  Display event subscribers:		event_calendar/display_users/<event_guid>
+ *  Events for a user's calendar:	event_calendar/owner/<username>/<start_date>/<display_mode>/<filter_context>/<region>
  *
  * Title is ignored
  *
@@ -214,6 +215,36 @@ function event_calendar_page_handler($page) {
 				$group_guid = 0;
 			}
 			echo event_calendar_get_page_content_list($page_type,$group_guid,$start_date,$display_mode,$filter_mode,$region);
+			break;
+		case 'owner':
+			if (isset($page[1])) {
+				$username = $page[1];
+				$user = get_user_by_username($username);
+				$user_guid = $user->guid;
+				if (isset($page[2])) {
+					$start_date = $page[2];
+					if (isset($page[3])) {
+					$display_mode = $page[3];
+					if (isset($page[4])) {
+						$filter_mode = $page[4];
+						if (isset($page[5])) {
+							$region = $page[5];
+						} else {
+							$region = '';
+						}
+					} else {
+						$filter_mode = '';
+					}
+					} else {
+						$display_mode = '';
+					}
+				} else {
+					$start_date = '';
+				}
+			} else {
+				$group_guid = 0;
+			}
+			echo event_calendar_get_page_content_list($page_type,$user_guid,$start_date,$display_mode,$filter_mode,$region);
 			break;
 		case 'review_requests':
 			gatekeeper();

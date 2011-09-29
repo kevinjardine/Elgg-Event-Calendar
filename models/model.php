@@ -1095,23 +1095,23 @@ function event_calendar_send_event_request($event,$user_guid) {
 
 // pages
 
-function event_calendar_get_page_content_list($page_type,$group_guid,$start_date,$display_mode,$filter,$region='-') {
+function event_calendar_get_page_content_list($page_type,$container_guid,$start_date,$display_mode,$filter,$region='-') {
 	global $autofeed;
 	$autofeed = true;
 	if ($page_type == 'group') {
-		if (!event_calendar_activated_for_group($group_guid)) {
+		if (!event_calendar_activated_for_group($container__guid)) {
 			forward();
 		}
 		elgg_push_breadcrumb(elgg_echo('event_calendar:group_breadcrumb'));
 		elgg_push_context('groups');
-		elgg_set_page_owner_guid($group_guid);
+		elgg_set_page_owner_guid($container_guid);
 		$user_guid = elgg_get_logged_in_user_guid();
 		$group_calendar = elgg_get_plugin_setting('group_calendar', 'event_calendar');
 		if (!$group_calendar || $group_calendar == 'members') {
 			if (elgg_get_page_owner_entity()->canWriteToContainer($user_guid)){
 				elgg_register_menu_item('title', array(
 					'name' => 'add',
-					'href' => "event_calendar/add/".$group_guid,
+					'href' => "event_calendar/add/".$container_guid,
 					'text' => elgg_echo('event_calendar:add'),
 					'class' => 'elgg-button elgg-button-action',
 				));
@@ -1120,7 +1120,7 @@ function event_calendar_get_page_content_list($page_type,$group_guid,$start_date
 			if (elgg_is_admin_logged_in() || ($group->owner_guid == $user_guid)) {
 				elgg_register_menu_item('title', array(
 					'name' => 'add',
-					'href' => "event_calendar/add/".$group_guid,
+					'href' => "event_calendar/add/".$container_guid,
 					'text' => elgg_echo('event_calendar:add'),
 					'class' => 'elgg-button elgg-button-action',
 				));
@@ -1151,6 +1151,8 @@ function event_calendar_get_page_content_list($page_type,$group_guid,$start_date
 			}
 		}
 	}
+
+	$params = event_calendar_generate_listing_params($page_type,$container_guid,$start_date,$display_mode,$filter,$region);
 	
 	$url = full_url();
 	if (substr_count($url, '?')) {
@@ -1158,8 +1160,6 @@ function event_calendar_get_page_content_list($page_type,$group_guid,$start_date
 	} else {
 		$url .= "?view=ical";
 	}
-
-	$params = event_calendar_generate_listing_params($page_type,$group_guid,$start_date,$display_mode,$filter,$region);
 	
 	$url = elgg_format_url($url);
 	$menu_options = array(
@@ -1284,7 +1284,7 @@ function event_calendar_prepare_edit_form_vars($event = NULL) {
 	return $values;
 }
 
-function event_calendar_generate_listing_params($page_type,$group_guid,$original_start_date,$display_mode,$filter,$region='-') {
+function event_calendar_generate_listing_params($page_type,$container_guid,$original_start_date,$display_mode,$filter,$region='-') {
 	$event_calendar_listing_format = elgg_get_plugin_setting('listing_format', 'event_calendar');
 	$event_calendar_spots_display = trim(elgg_get_plugin_setting('spots_display', 'event_calendar'));
 	$event_calendar_first_date = trim(elgg_get_plugin_setting('first_date', 'event_calendar'));
@@ -1364,8 +1364,38 @@ function event_calendar_generate_listing_params($page_type,$group_guid,$original
 			$subtitle = date('F Y',$start_ts);
 		}
 	}
-
-	$user_guid = elgg_get_logged_in_user_guid();
+	
+	$current_user_guid = elgg_get_logged_in_user_guid();
+	
+	$access_status = elgg_get_ignore_access();
+	
+	if ($page_type == 'owner') {
+		$container = get_entity($container_guid);
+		if (elgg_instanceof($container, 'user')) {
+			$auth_token = get_input('auth_token');
+			if ($auth_token) {
+				$secret_key = event_calendar_get_secret_key();
+				if ($secret_key && ($auth_token === sha1($container->username . $secret_key))) {
+					elgg_set_ignore_access(TRUE);
+				}
+			}
+			if ($container->canEdit()) {
+				$user_guid = $container_guid;
+				$group_guid = 0;
+			} else {
+				register_error('event_calendar:owner:permissions_error');
+				forward();
+				exit;
+			}
+		} else {
+			register_error('event_calendar:owner:permissions_error');
+			forward();
+			exit;
+		}		
+	} else {
+		$user_guid = $current_user_guid;
+		$group_guid = $container_guid;
+	}
 
 	$offset = get_input('offset');
 	$limit = get_input('limit',15);
@@ -1380,17 +1410,17 @@ function event_calendar_generate_listing_params($page_type,$group_guid,$original
 		}
 	}
 	if ($filter == 'all') {
-		$count = event_calendar_get_events_between($start_ts,$end_ts,true,$limit,$offset,$group_guid,$region);
-		$events = event_calendar_get_events_between($start_ts,$end_ts,false,$limit,$offset,$group_guid,$region);
+		$count = event_calendar_get_events_between($start_ts,$end_ts,true,$limit,$offset,$container_guid,$region);
+		$events = event_calendar_get_events_between($start_ts,$end_ts,false,$limit,$offset,$container_guid,$region);
 	} else if ($filter == 'open') {
-		$count = event_calendar_get_open_events_between($start_ts,$end_ts,true,$limit,$offset,$group_guid,$region);
-		$events = event_calendar_get_open_events_between($start_ts,$end_ts,false,$limit,$offset,$group_guid,$region);
+		$count = event_calendar_get_open_events_between($start_ts,$end_ts,true,$limit,$offset,$container_guid,$region);
+		$events = event_calendar_get_open_events_between($start_ts,$end_ts,false,$limit,$offset,$container_guid,$region);
 	} else if ($filter == 'friends') {
-		$count = event_calendar_get_events_for_friends_between($start_ts,$end_ts,true,$limit,$offset,$user_guid,$group_guid,$region);
-		$events = event_calendar_get_events_for_friends_between($start_ts,$end_ts,false,$limit,$offset,$user_guid,$group_guid,$region);
+		$count = event_calendar_get_events_for_friends_between($start_ts,$end_ts,true,$limit,$offset,$user_guid,$container_guid,$region);
+		$events = event_calendar_get_events_for_friends_between($start_ts,$end_ts,false,$limit,$offset,$user_guid,$container_guid,$region);
 	} else if ($filter == 'mine') {
-		$count = event_calendar_get_events_for_user_between2($start_ts,$end_ts,true,$limit,$offset,$user_guid,$group_guid,$region);
-		$events = event_calendar_get_events_for_user_between2($start_ts,$end_ts,false,$limit,$offset,$user_guid,$group_guid,$region);
+		$count = event_calendar_get_events_for_user_between2($start_ts,$end_ts,true,$limit,$offset,$user_guid,$container_guid,$region);
+		$events = event_calendar_get_events_for_user_between2($start_ts,$end_ts,false,$limit,$offset,$user_guid,$container_guid,$region);
 	}
 
 	$vars = array(
@@ -1411,8 +1441,11 @@ function event_calendar_generate_listing_params($page_type,$group_guid,$original
 	);
 
 	$content = elgg_view('event_calendar/show_events', $vars);
-
-	$filter_override = elgg_view('event_calendar/filter_menu',$vars);
+	if ($page_type == 'owner') {
+		$filter_override = '';
+	} else {
+		$filter_override = elgg_view('event_calendar/filter_menu',$vars);
+	}
 
 	if ($event_calendar_listing_format == 'paged') {
 		$title = elgg_echo('event_calendar:upcoming_events_title');
@@ -1421,7 +1454,7 @@ function event_calendar_generate_listing_params($page_type,$group_guid,$original
 	}
 
 	$params = array('title' => $title, 'content' => $content, 'filter_override'=>$filter_override);
-
+	elgg_set_ignore_access($access_status);
 	return $params;
 }
 
@@ -1550,7 +1583,18 @@ function event_calendar_handle_menu($event_guid) {
 		//add_submenu_item(elgg_echo('event_calendar:review_requests_title'), $CONFIG->wwwroot . "pg/event_calendar/review_requests/".$event_id, '0eventcalendaradmin');
 	}
 }
+function event_calendar_get_secret_key() {
+	$key_file_name = elgg_get_plugin_setting('ical_auth_file_name','event_calendar');
+	if ($key_file_name && file_exists($key_file_name)) {	
+		$key = (require($key_file_name));
+		
+		return $key['tokenSecretKey'];
+	} else {
+		return FALSE;
+	}
+}
 
 function getLastDayOfMonth($month,$year) {
 	return idate('d', mktime(0, 0, 0, ($month + 1), 0, $year));
 }
+

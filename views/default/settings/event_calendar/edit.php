@@ -364,5 +364,13 @@ $body .= elgg_echo('event_calendar:settings:more_required:title');
 $body .= '<br />';
 $body .= elgg_view('input/radio',array('internalname'=>'params[more_required]','value'=>$event_calendar_more_required,'options'=>$yn_options));
 
+$body .= '<br />';
+
+$ical_auth_file_name = elgg_get_plugin_setting('ical_auth_file_name', 'event_calendar');
+
+$body .= elgg_echo('event_calendar:ical_auth_file_name:title');
+$body .= '<br />';
+$body .= elgg_view('input/text',array('name'=>'params[ical_auth_file_name]','value'=>$ical_auth_file_name, 'class'=>'event-calendar-ical-auth-setting'));
+
 echo $body;
 ?>
