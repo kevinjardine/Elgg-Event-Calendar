@@ -158,3 +158,10 @@ table.event_calendar_paged_table th {
 .event-calendar-personal-calendar-toggle {
 	float: right;
 }
+
+li.event-calendar-filter-menu-show-only {
+	border:0;
+	padding-top:.4em;
+	background:#fff;
+	margin:0 -.3em 0 1.5em;
+}

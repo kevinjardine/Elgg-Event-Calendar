@@ -214,6 +214,12 @@ You can manage calendar requests for this event here:
 
 	'event_calendar:owner:permissions_error' => "You do not have permission to view that page.",
 		
+	'event_calendar:show_all' => "Show all",
+	'event_calendar:show_open' => "Show open",
+	'event_calendar:show_mine' => "My calendar",
+	'event_calendar:show_friends' => "My friends' calendars",
+	'event_calendar:show_only' => "Show only those on:",
+		
 	/**
 	 * Event calendar river
 	 **/

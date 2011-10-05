@@ -10,42 +10,65 @@ if ($group_guid) {
 
 $tabs = array(
 	'all' => array(
-		'text' => elgg_echo('all'),
+		'text' => elgg_echo('event_calendar:show_all'),
 		'href' => "$url_start/all",
 		'selected' => ($filter_context == 'all'),
 		'priority' => 200,
 	),
 	'mine' => array(
-		'text' => elgg_echo('mine'),
+		'text' => elgg_echo('event_calendar:show_mine'),
 		'href' => "$url_start/mine",
 		'selected' => ($filter_context == 'mine'),
 		'priority' => 300,
 	),
 	'friend' => array(
-		'text' => elgg_echo('friends'),
+		'text' => elgg_echo('event_calendar:show_friends'),
 		'href' =>  "$url_start/friends",
 		'selected' => ($filter_context == 'friends'),
 		'priority' => 400,
 	),
 );
 
+$tab_rendered = array();
+
 $event_calendar_spots_display = elgg_get_plugin_setting('spots_display', 'event_calendar');
 if ($event_calendar_spots_display == "yes") {
 	$tabs['open'] = array(
-		'text' => elgg_echo('event_calendar:open'),
+		'text' => elgg_echo('event_calendar:show_open'),
 		'href' => "$url_start/open",
 		'selected' => ($filter_context == 'open'),
 		'priority' => 100,
 	);
+} else {
+	$tab_rendered['open'] = '';
 }
 
 foreach ($tabs as $name => $tab) {
-	$tab['name'] = $name;
+	if ($tab['selected']) {
+		$state_selected = ' class="elgg-state-selected"';
+	} else {
+		$state_selected = '';
+	}
+	$tab_rendered[$name] = '<li'.$state_selected.'><a href="'.elgg_normalize_url($tab['href']).'">'.$tab['text'].'</a></li>';
 	
-	elgg_register_menu_item('filter', $tab);
+	//elgg_register_menu_item('filter', $tab);
 }
 
-echo elgg_view_menu('filter', array('sort_by' => 'priority', 'class' => 'elgg-menu-hz'));
+//echo elgg_view_menu('filter', array('sort_by' => 'priority', 'class' => 'elgg-menu-hz'));
+
+$text_bit = '<li class="event-calendar-filter-menu-show-only">'.elgg_echo('event_calendar:show_only').'</li>';
+
+$menu = <<<__MENU
+<ul class="elgg-menu elgg-menu-filter elgg-menu-hz elgg-menu-filter-default">
+	{$tab_rendered['open']}
+	{$tab_rendered['all']}
+	$text_bit
+	{$tab_rendered['mine']}
+	{$tab_rendered['friend']}
+</ul>
+__MENU;
+
+echo $menu;
 
 $event_calendar_region_display = elgg_get_plugin_setting('region_display', 'event_calendar');
 if ($event_calendar_region_display == 'yes') {
