@@ -17,7 +17,7 @@ if ($vars['group_guid']) {
 }
 
 if ($vars['mode'] == 'week') {
-	$selected_week = date('W',strtotime($vars['start_date']))+1;
+	$selected_week = date('W',strtotime($vars['start_date'].' UTC'))+1;
 } else {
 	$selected_week = '';
 }
