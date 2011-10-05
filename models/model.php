@@ -1099,7 +1099,7 @@ function event_calendar_get_page_content_list($page_type,$container_guid,$start_
 	global $autofeed;
 	$autofeed = true;
 	if ($page_type == 'group') {
-		if (!event_calendar_activated_for_group($container__guid)) {
+		if (!event_calendar_activated_for_group($container_guid)) {
 			forward();
 		}
 		elgg_push_breadcrumb(elgg_echo('event_calendar:group_breadcrumb'));
@@ -1150,7 +1150,7 @@ function event_calendar_get_page_content_list($page_type,$container_guid,$start_
 				));
 			}
 		}
-	}
+	}	
 
 	$params = event_calendar_generate_listing_params($page_type,$container_guid,$start_date,$display_mode,$filter,$region);
 	
@@ -1449,8 +1449,10 @@ function event_calendar_generate_listing_params($page_type,$container_guid,$orig
 
 	if ($event_calendar_listing_format == 'paged') {
 		$title = elgg_echo('event_calendar:upcoming_events_title');
+	} else if ($page_type == 'group') {
+		$title = elgg_echo('event_calendar:group'). ' ('.$subtitle.')';
 	} else {
-		$title = elgg_echo('event_calendar:show_events_title'). ' ('.$subtitle.')';
+		$title = elgg_echo('event_calendar:listing_title:'.$filter). ' ('.$subtitle.')';
 	}
 
 	$params = array('title' => $title, 'content' => $content, 'filter_override'=>$filter_override);
@@ -1460,6 +1462,7 @@ function event_calendar_generate_listing_params($page_type,$container_guid,$orig
 
 function event_calendar_get_page_content_view($event_guid) {
 	// add personal calendar button and links
+	elgg_push_context('event_calendar:view');
 	$event = get_entity($event_guid);
 
 	if (!elgg_instanceof($event, 'object', 'event_calendar')) {

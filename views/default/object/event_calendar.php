@@ -76,7 +76,7 @@ if ($full) {
 	
 	if (elgg_in_context('widgets')) {
 		$metadata = '';
-	} else {	
+	} else {
 		$metadata = elgg_view_menu('entity', array(
 			'entity' => $event,
 			'handler' => 'event_calendar',

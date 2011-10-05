@@ -75,6 +75,8 @@
 	'event_calendar:remove_from_my_calendar_response' => "This event has been removed from your personal calendar.",
 	'event_calendar:add_to_the_calendar' => "Add to calendar",
 	'event_calendar:remove_from_the_calendar' => "Remove",
+	'event_calendar:add_to_the_calendar_menu_text' => "Add to mine",
+	'event_calendar:remove_from_the_calendar_menu_text' => "Remove from mine",
 	'event_calendar:remove_from_the_calendar_button' => "Remove from calendar",
 	'event_calendar:added_to_the_calendar' => "Added to calendar",
 	'event_calendar:removed_from_the_calendar' => "Removed calendar",
@@ -85,7 +87,8 @@
 				
 	'event_calendar:users_for_event_menu_title' => "People listing this event on their personal calendars",
 	'event_calendar:users_for_event_title' => "Personal calendars for \"%s'\"",
-	'event_calendar:personal_event_calendars_link' => "Calendars (%s)",
+	'event_calendar:personal_event_calendars_link' => "On %s calendars",
+	'event_calendar:personal_event_calendars_link_one' => "On 1 calendar",
 	'event_calendar:users_for_event_breadcrumb' => "Personal calendars",
 	'event_calendar:settings:group_profile_display:title' => "Group calendar profile display (if group calendars are enabled)",
 	'event_calendar:settings:group_profile_display_option:left' => "left column",
@@ -203,7 +206,7 @@ You can manage calendar requests for this event here:
 	'event_calendar:add_to_group:success' => "Event added to group calendar",
 	'event_calendar:settings:add_to_group_calendar:title' => "Allow group admins to add any existing event to a group calendar",
 		
-	'event_calendar:group_breadcrumb' => "Group event calendar",
+	'event_calendar:group_breadcrumb' => "Group calendar",
 	'event_calendar:no_group' => "There is no such group.",
 	'event_calendar:generic_error_title' => "Error",
 	'event_calendar:error_event_edit' => "Error: there is no such event or you do not have permission to edit it.",
@@ -219,6 +222,11 @@ You can manage calendar requests for this event here:
 	'event_calendar:show_mine' => "My calendar",
 	'event_calendar:show_friends' => "My friends' calendars",
 	'event_calendar:show_only' => "Show only those on:",
+		
+	'event_calendar:listing_title:all' => "All events",
+	'event_calendar:listing_title:open' => "Open events",
+	'event_calendar:listing_title:mine' => "My calendar",
+	'event_calendar:listing_title:friends' => "Friends' calendars",		
 		
 	/**
 	 * Event calendar river

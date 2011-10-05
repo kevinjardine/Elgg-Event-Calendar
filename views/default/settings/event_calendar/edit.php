@@ -7,8 +7,6 @@ $access_options = array(	ACCESS_PRIVATE => elgg_echo("PRIVATE"),
 								ACCESS_LOGGED_IN => elgg_echo("LOGGED_IN"),
 								ACCESS_PUBLIC => elgg_echo("PUBLIC"));
 
-// TODO - merge the agenda view into the list format options
-
 $listing_options = array(elgg_echo('event_calendar:settings:paged')=>'paged',
 	elgg_echo('event_calendar:settings:agenda')=>'agenda',
 	elgg_echo('event_calendar:settings:month')=>'month',
@@ -373,4 +371,3 @@ $body .= '<br />';
 $body .= elgg_view('input/text',array('name'=>'params[ical_auth_file_name]','value'=>$ical_auth_file_name, 'class'=>'event-calendar-ical-auth-setting'));
 
 echo $body;
-?>
