@@ -859,8 +859,8 @@ function event_calendar_format_time($date,$time1,$time2='') {
 }
 
 function event_calendar_activated_for_group($group) {
-	$group_calendar = get_plugin_setting('group_calendar', 'event_calendar');
-	$group_default = get_plugin_setting('group_default', 'event_calendar');
+	$group_calendar = elgg_get_plugin_setting('group_calendar', 'event_calendar');
+	$group_default = elgg_get_plugin_setting('group_default', 'event_calendar');
 	if ($group && ($group_calendar != 'no')) {
 		if ( ($group->event_calendar_enable == 'yes') || ((!$group->event_calendar_enable && (!$group_default || $group_default == 'yes')))) {
 			return true;
@@ -870,7 +870,7 @@ function event_calendar_activated_for_group($group) {
 }
 
 function event_calendar_get_region($event) {
-	$event_calendar_region_list_handles = get_plugin_setting('region_list_handles', 'event_calendar');
+	$event_calendar_region_list_handles = elgg_get_plugin_setting('region_list_handles', 'event_calendar');
 	$region = trim($event->region);
 	if ($event_calendar_region_list_handles == 'yes') {
 		$region = elgg_echo('event_calendar:region:'.$region);
@@ -879,7 +879,7 @@ function event_calendar_get_region($event) {
 }
 
 function event_calendar_get_type($event) {
-	$event_calendar_type_list_handles = get_plugin_setting('type_list_handles', 'event_calendar');
+	$event_calendar_type_list_handles = elgg_get_plugin_setting('type_list_handles', 'event_calendar');
 	$type = trim($event->event_type);
 	if ($event_calendar_type_list_handles == 'yes') {
 		$type = elgg_echo('event_calendar:type:'.$type);

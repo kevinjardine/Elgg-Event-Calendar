@@ -107,8 +107,9 @@ function event_calendar_init() {
  * Add a menu item to an ownerblock
  */
 function event_calendar_owner_block_menu($hook, $type, $return, $params) {
+	elgg_load_library('elgg:event_calendar');
 	if (elgg_instanceof($params['entity'], 'group')) {
-		if ($params['entity']->event_calendar_enable != "no") {
+		if (event_calendar_activated_for_group($params['entity'])) {
 			$url = "event_calendar/group/{$params['entity']->guid}";
 			$item = new ElggMenuItem('event_calendar', elgg_echo('event_calendar:group'), $url);
 			$return[] = $item;
