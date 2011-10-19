@@ -1469,12 +1469,17 @@ function event_calendar_get_page_content_view($event_guid) {
 		$content = elgg_echo('event_calendar:error_nosuchevent');
 		$title = elgg_echo('event_calendar:generic_error_title');
 	} else {
-		event_calendar_handle_menu($event_guid);
 		$title = htmlspecialchars($event->title);
 		$event_container = get_entity($event->container_guid);
 		if (elgg_instanceof($event_container, 'group')) {
+			if ($event_container->canEdit()) {
+				event_calendar_handle_menu($event_guid);
+			}
 			elgg_push_breadcrumb(elgg_echo('event_calendar:group_breadcrumb'), 'event_calendar/group/'.$event->container_guid);
 		} else {
+			if ($event->canEdit()) {
+				event_calendar_handle_menu($event_guid);
+			}
 			elgg_push_breadcrumb(elgg_echo('event_calendar:show_events_title'),'event_calendar/list');
 		}
 
