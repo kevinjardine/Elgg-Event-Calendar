@@ -1556,6 +1556,18 @@ function event_calendar_get_page_content_manage_users($event_guid) {
 				elgg_push_breadcrumb(elgg_echo('event_calendar:group_breadcrumb'), 'event_calendar/group/'.$event->container_guid);
 				$users = $event_container->getMembers($limit,$offset);
 				$count = $event_container->getMembers($limit,$offset,TRUE);
+				elgg_register_menu_item('title', array(
+					'name' => 'remove_from_group_members',
+					'href' => elgg_add_action_tokens_to_url('action/event_calendar/remove_from_group_members?event_guid='.$event_guid),
+					'text' => elgg_echo('event_calendar:remove_from_group_members:button'),
+					'class' => 'elgg-button elgg-button-action',
+				));
+				elgg_register_menu_item('title', array(
+					'name' => 'add_to_group_members',
+					'href' => elgg_add_action_tokens_to_url('action/event_calendar/add_to_group_members?event_guid='.$event_guid),
+					'text' => elgg_echo('event_calendar:add_to_group_members:button'),
+					'class' => 'elgg-button elgg-button-action',
+				));
 			} else {
 				elgg_push_breadcrumb(elgg_echo('event_calendar:show_events_title'),'event_calendar/list');
 				$users = elgg_get_entities(array('type'=>'user','limit'=>$limit,'offset'=>$offset));
@@ -1635,11 +1647,13 @@ function event_calendar_handle_menu($event_guid) {
 	if ($event_calendar_personal_manage == 'no') {
 		$url =  "event_calendar/review_requests/$event_guid";
 		$item = new ElggMenuItem('event-calendar-0review_requests', elgg_echo('event_calendar:review_requests_menu_title'), $url);
+		$item->setSection('event_calendar');
 		elgg_register_menu_item('page', $item);
 		//add_submenu_item(elgg_echo('event_calendar:review_requests_title'), $CONFIG->wwwroot . "pg/event_calendar/review_requests/".$event_id, '0eventcalendaradmin');
 	}
 	$url =  "event_calendar/manage_users/$event_guid";
 	$item = new ElggMenuItem('event-calendar-1manage_users', elgg_echo('event_calendar:manage_users:breadcrumb'), $url);
+	$item->setSection('event_calendar');
 	elgg_register_menu_item('page', $item);
 }
 function event_calendar_get_secret_key() {

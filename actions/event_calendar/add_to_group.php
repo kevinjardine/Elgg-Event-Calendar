@@ -8,4 +8,3 @@ if ($group && $group->canEdit()) {
 	system_message(elgg_echo('event_calendar:add_to_group:success'));
 }
 forward($event->getUrl());
-?>

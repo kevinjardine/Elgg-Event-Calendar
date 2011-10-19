@@ -98,6 +98,8 @@ function event_calendar_init() {
 	elgg_register_action("event_calendar/addtocalendar","$action_path/addtocalendar.php");
 	elgg_register_action("event_calendar/add_to_group","$action_path/add_to_group.php");
 	elgg_register_action("event_calendar/remove_from_group","$action_path/remove_from_group.php");
+	elgg_register_action("event_calendar/add_to_group_members","$action_path/add_to_group_members.php");
+	elgg_register_action("event_calendar/remove_from_group_members","$action_path/remove_from_group_members.php");
 
 }
 
