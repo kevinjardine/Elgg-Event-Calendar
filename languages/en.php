@@ -226,7 +226,11 @@ You can manage calendar requests for this event here:
 	'event_calendar:listing_title:all' => "All events",
 	'event_calendar:listing_title:open' => "Open events",
 	'event_calendar:listing_title:mine' => "My calendar",
-	'event_calendar:listing_title:friends' => "Friends' calendars",		
+	'event_calendar:listing_title:friends' => "Friends' calendars",	
+	'event_calendar:manage_users:title' => "Manage subscribers for \"%s\"",
+	'event_calendar:manage_users:breadcrumb' => "Manage subscribers",
+	'event_calendar:manage_users:description' => "You can add or remove events from personal calendars using the buttons below.",
+	'event_calendar:manage_users:unauthorized' => "Error: you are not authorised to manage personal calendars for this event.",
 		
 	/**
 	 * Event calendar river

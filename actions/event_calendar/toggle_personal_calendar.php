@@ -1,8 +1,9 @@
 <?php
 elgg_load_library('elgg:event_calendar');
 $event_guid = get_input('event_guid',0);
-$user_guid = get_input('user_id',elgg_get_logged_in_user_guid());
+$user_guid = get_input('user_guid',elgg_get_logged_in_user_guid());
 $other = get_input('other','');
+error_log("in toggle_personal_calendar: $event_guid, $user_guid, $other");
 if ($other) {
 	$remove_response = elgg_echo('event_calendar:added_to_the_calendar');
 	$add_response = elgg_echo('event_calendar:removed_from_the_calendar');

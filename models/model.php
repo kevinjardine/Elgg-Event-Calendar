@@ -701,9 +701,9 @@ function event_calendar_has_personal_event($event_guid,$user_guid) {
 		// use old method for now
 		$annotations = 	get_annotations($event_guid, "object", "event_calendar", "personal_event", (int) $user_guid, $user_guid);
 		if ($annotations && count($annotations) > 0) {
-			return true;
+			return TRUE;
 		} else {
-			return false;
+			return FALSE;
 		}
 	}
 }
@@ -1532,6 +1532,59 @@ function event_calendar_get_page_content_display_users($event_guid) {
 	return elgg_view_page($title,$body);
 }
 
+// display a list of all the members of the container of $event_guid and allowing
+// adding or removing them
+
+function event_calendar_get_page_content_manage_users($event_guid) {
+	// TODO: make this an optional feature, toggled off
+	elgg_load_js('elgg.event_calendar');
+	$event = get_entity($event_guid);
+	$limit = 10;
+	$offset = get_input('offset', 0);
+
+	if (!elgg_instanceof($event, 'object', 'event_calendar')) {
+		$content = elgg_echo('event_calendar:error_nosuchevent');
+		$title = elgg_echo('event_calendar:generic_error_title');
+	} else {
+		event_calendar_handle_menu($event_guid);
+		$title = elgg_echo('event_calendar:manage_users:title',array($event->title));
+		$event_container = get_entity($event->container_guid);
+		if ($event_container->canEdit()) {
+			if (elgg_instanceof($event_container, 'group')) {
+				elgg_push_context('groups');
+				elgg_set_page_owner_guid($event->container_guid);
+				elgg_push_breadcrumb(elgg_echo('event_calendar:group_breadcrumb'), 'event_calendar/group/'.$event->container_guid);
+				$users = $event_container->getMembers($limit,$offset);
+				$count = $event_container->getMembers($limit,$offset,TRUE);
+			} else {
+				elgg_push_breadcrumb(elgg_echo('event_calendar:show_events_title'),'event_calendar/list');
+				$users = elgg_get_entities(array('type'=>'user','limit'=>$limit,'offset'=>$offset));
+				$count = elgg_get_entities(array('type'=>'user','count'=>TRUE));
+			}
+			elgg_push_breadcrumb($event->title,$event->getURL());
+			elgg_push_breadcrumb(elgg_echo('event_calendar:manage_users:breadcrumb'));
+			$options = array(
+				'full_view' => FALSE,
+				'list_type_toggle' => FALSE,
+				'limit'=>$limit,
+				'event_calendar_event'=>$event,
+				'pagination' => TRUE,
+				'count'=>$count,
+			);
+			elgg_extend_view('user/default','event_calendar/calendar_toggle');
+			$content = '<p>'.elgg_echo('event_calendar:manage_users:description').'</p>';
+			$content .= elgg_view_entity_list($users,$options,$offset,$limit);
+		} else {
+			$content = elgg_echo('event_calendar:manage_users:unauthorized');
+		}
+	}
+	$params = array('title' => $title, 'content' => $content,'filter' => '');
+
+	$body = elgg_view_layout("content", $params);
+
+	return elgg_view_page($title,$body);
+}
+
 function event_calendar_get_page_content_review_requests($event_guid) {
 	$event = get_entity($event_guid);
 
@@ -1581,10 +1634,13 @@ function event_calendar_handle_menu($event_guid) {
 	$event_calendar_personal_manage = elgg_get_plugin_setting('personal_manage', 'event_calendar');
 	if ($event_calendar_personal_manage == 'no') {
 		$url =  "event_calendar/review_requests/$event_guid";
-		$item = new ElggMenuItem('event-calendar-menu', elgg_echo('event_calendar:review_requests_menu_title'), $url);
+		$item = new ElggMenuItem('event-calendar-0review_requests', elgg_echo('event_calendar:review_requests_menu_title'), $url);
 		elgg_register_menu_item('page', $item);
 		//add_submenu_item(elgg_echo('event_calendar:review_requests_title'), $CONFIG->wwwroot . "pg/event_calendar/review_requests/".$event_id, '0eventcalendaradmin');
 	}
+	$url =  "event_calendar/manage_users/$event_guid";
+	$item = new ElggMenuItem('event-calendar-1manage_users', elgg_echo('event_calendar:manage_users:breadcrumb'), $url);
+	elgg_register_menu_item('page', $item);
 }
 function event_calendar_get_secret_key() {
 	$key_file_name = elgg_get_plugin_setting('ical_auth_file_name','event_calendar');
