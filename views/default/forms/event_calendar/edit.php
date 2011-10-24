@@ -118,7 +118,7 @@ if ($event_calendar_times == 'yes') {
 }
 
 $body .= '<p><label>'.elgg_echo("event_calendar:start_date_label").'<br />';
-$body .= elgg_view("input/date",array('timestamp'=>TRUE, 'autocomplete'=>'off','name' => 'start_date','value'=>$start_date));
+$body .= elgg_view("event_calendar/input/date_local",array('timestamp'=>TRUE, 'autocomplete'=>'off','name' => 'start_date','value'=>$start_date));
 $body .= '</label></p>';
 $body .= '<p class="description">'.$prefix['start_date'].elgg_echo('event_calendar:start_date_description').'</p>';
 
@@ -131,7 +131,7 @@ if ($event_calendar_hide_end != 'yes') {
 	}
 	
 	$body .= '<p><label>'.elgg_echo("event_calendar:end_date_label").'<br />';
-	$body .= elgg_view("input/date",array('timestamp'=>TRUE,'autocomplete'=>'off','name' => 'end_date','value'=>$end_date));
+	$body .= elgg_view("event_calendar/input/date_local",array('timestamp'=>TRUE,'autocomplete'=>'off','name' => 'end_date','value'=>$end_date));
 	$body .= '</label></p>';
 	$body .= '<p class="description">'.$prefix['end_date'].elgg_echo('event_calendar:end_date_description').'</p>';
 }
