@@ -213,6 +213,7 @@ You can manage calendar requests for this event here:
 	'event_calendar:add' => "Add",
 		
 	'feed:ical' => "iCal feed for this page",
+	'event_calendar:ical_popup_message' => "You can use the following URL to get an iCalendar feed of the public events from this listing page: ",
 	'event_calendar:ical_auth_file_name:title' => "Location of iCal authentication file on local file system (experimental - not needed for public feeds)",
 
 	'event_calendar:owner:permissions_error' => "You do not have permission to view that page.",

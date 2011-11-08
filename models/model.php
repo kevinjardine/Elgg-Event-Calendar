@@ -160,11 +160,11 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 
 function event_calendar_get_events_between($start_date,$end_date,$is_count,$limit=10,$offset=0,$container_guid=0,$region='-') {
 	if ($is_count) {
-		$count = event_calendar_get_entities_from_metadata_between('start_date','end_date',
+		$count = event_calendar_get_entities_from_metadata_between2('start_date','end_date',
 		$start_date, $end_date, "object", "event_calendar", 0, $container_guid, $limit,$offset,"",0,false,true,$region);
 		return $count;
 	} else {
-		$events = event_calendar_get_entities_from_metadata_between('start_date','end_date',
+		$events = event_calendar_get_entities_from_metadata_between2('start_date','end_date',
 		$start_date, $end_date, "object", "event_calendar", 0, $container_guid, $limit,$offset,"",0,false,false,$region);
 		//return event_calendar_vsort($events,'start_date');
 		return $events;
@@ -1096,6 +1096,7 @@ function event_calendar_send_event_request($event,$user_guid) {
 // pages
 
 function event_calendar_get_page_content_list($page_type,$container_guid,$start_date,$display_mode,$filter,$region='-') {
+	elgg_load_js('elgg.event_calendar');
 	global $autofeed;
 	$autofeed = true;
 	if ($page_type == 'group') {
@@ -1164,6 +1165,7 @@ function event_calendar_get_page_content_list($page_type,$container_guid,$start_
 	$url = elgg_format_url($url);
 	$menu_options = array(
 		'name' => 'ical',
+		'id' => 'event-calendar-ical-link',
 		'text' => '<img src="'.elgg_get_site_url().'mod/event_calendar/images/ics.png" />',
 		'href' => $url,
 		'title' => elgg_echo('feed:ical'),

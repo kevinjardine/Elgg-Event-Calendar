@@ -5,11 +5,18 @@ elgg.event_calendar.init = function () {
 	$('.event_calendar_paged_checkbox').click(elgg.event_calendar.handlePagedPersonalCalendarToggle);
 	$('.event-calendar-personal-calendar-toggle').click(elgg.event_calendar.handleDisplayPagePersonalCalendarToggle);
 	$('#event-calendar-region').change(elgg.event_calendar.handleRegionChange);
+	$('#event-calendar-ical-link').click(elgg.event_calendar.handleIcalPopup);
 }
 
 elgg.event_calendar.handleRegionChange = function(e) {
 	url = $('#event-calendar-region-url-start').val()+"/"+escape($('#event-calendar-region').val());
 	elgg.forward(url);
+}
+
+elgg.event_calendar.handleIcalPopup = function(e) {
+	var message = elgg.echo('event_calendar:ical_popup_message')+"\n"+this.href;
+	alert(message);
+	return false;
 }
 
 elgg.event_calendar.handlePagedPersonalCalendarToggle = function() {

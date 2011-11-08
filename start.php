@@ -337,11 +337,13 @@ function event_calendar_entity_menu_setup($hook, $type, $return, $params) {
 
 function event_calendar_entity_menu_prepare($hook, $type, $return, $params) {
 	// remove access level from listings
-	if (!elgg_in_context('event_calendar:view')) {
+	if (elgg_in_context('event_calendar') && !elgg_in_context('event_calendar:view')) {
 		$new_return = array();
-		foreach($return['default'] AS $item) {
-			if ($item->getName() != 'access') {
-				$new_return[] = $item;
+		if ($return['default']) {
+			foreach($return['default'] AS $item) {
+				if ($item->getName() != 'access') {
+					$new_return[] = $item;
+				}
 			}
 		}
 		$return['default'] = $new_return;

@@ -8,7 +8,7 @@
  */
 
 header("Content-Type: text/calendar");
-//header("Content-Disposition: attachment; filename=\"calendar.ics\"");
+header("Content-Disposition: inline; filename=\"calendar.ics\"");
 ?>
 BEGIN:VCALENDAR
 VERSION:2.0

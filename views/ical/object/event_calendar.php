@@ -29,9 +29,9 @@ CREATED:<?php echo date("Ymd\THis\Z", $event->getTimeCreated())?>
 
 LAST-MODIFIED:<?php echo date("Ymd\THis\Z", $event->getTimeUpdated())  ?>
 
-DTSTART:<?php echo date("Ymd\THis\Z", $event->start_date);  ?>
+DTSTART;VALUE=DATE:<?php echo date("Ymd\THis\Z", $event->start_date);  ?>
 
-DTEND:<?php echo date("Ymd\THis\Z", $event->real_end_time);  ?>
+DTEND;VALUE=DATE:<?php echo date("Ymd\THis\Z", $event->real_end_time);  ?>
 
 SUMMARY:<?php echo $event->title;  ?>
 
