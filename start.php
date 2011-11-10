@@ -49,7 +49,6 @@ function event_calendar_init() {
 	// TODO - are the left and right values still relevant for Elgg 1.8?
 	$group_calendar = elgg_get_plugin_setting('group_calendar', 'event_calendar');
 	if (!$group_calendar || $group_calendar != 'no') {
-		// add blog link to
 		elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'event_calendar_owner_block_menu');
 		$group_profile_display = elgg_get_plugin_setting('group_profile_display', 'event_calendar');
 		if (!$group_profile_display || $group_profile_display == 'right') {
@@ -339,7 +338,7 @@ function event_calendar_entity_menu_prepare($hook, $type, $return, $params) {
 	// remove access level from listings
 	if (elgg_in_context('event_calendar') && !elgg_in_context('event_calendar:view')) {
 		$new_return = array();
-		if ($return['default']) {
+		if (isset($return['default']) && is_array($return['default'])) {
 			foreach($return['default'] AS $item) {
 				if ($item->getName() != 'access') {
 					$new_return[] = $item;
