@@ -1561,8 +1561,6 @@ function event_calendar_get_page_content_manage_users($event_guid) {
 				elgg_push_context('groups');
 				elgg_set_page_owner_guid($event->container_guid);
 				elgg_push_breadcrumb(elgg_echo('event_calendar:group_breadcrumb'), 'event_calendar/group/'.$event->container_guid);
-				$users = $event_container->getMembers($limit,$offset);
-				$count = $event_container->getMembers($limit,$offset,TRUE);
 				elgg_register_menu_item('title', array(
 					'name' => 'remove_from_group_members',
 					'href' => elgg_add_action_tokens_to_url('action/event_calendar/remove_from_group_members?event_guid='.$event_guid),
@@ -1575,24 +1573,26 @@ function event_calendar_get_page_content_manage_users($event_guid) {
 					'text' => elgg_echo('event_calendar:add_to_group_members:button'),
 					'class' => 'elgg-button elgg-button-action',
 				));
+				$users = $event_container->getMembers($limit,$offset);
+				$count = $event_container->getMembers($limit,$offset,TRUE);
+				elgg_extend_view('user/default','event_calendar/calendar_toggle');
+				$options = array(
+					'full_view' => FALSE,
+					'list_type_toggle' => FALSE,
+					'limit'=>$limit,
+					'event_calendar_event'=>$event,
+					'pagination' => TRUE,
+					'count'=>$count,
+				);				
+				$content .= elgg_view_entity_list($users,$options,$offset,$limit);
 			} else {
 				elgg_push_breadcrumb(elgg_echo('event_calendar:show_events_title'),'event_calendar/list');
-				$users = elgg_get_entities(array('type'=>'user','limit'=>$limit,'offset'=>$offset));
-				$count = elgg_get_entities(array('type'=>'user','count'=>TRUE));
+				$content = '<p>'.elgg_echo('event_calendar:manage_users:description').'</p>';
+				$content .= elgg_view_form('event_calendar/manage_subscribers',array(),array('event'=>$event));	
 			}
 			elgg_push_breadcrumb($event->title,$event->getURL());
 			elgg_push_breadcrumb(elgg_echo('event_calendar:manage_users:breadcrumb'));
-			$options = array(
-				'full_view' => FALSE,
-				'list_type_toggle' => FALSE,
-				'limit'=>$limit,
-				'event_calendar_event'=>$event,
-				'pagination' => TRUE,
-				'count'=>$count,
-			);
-			elgg_extend_view('user/default','event_calendar/calendar_toggle');
-			$content = '<p>'.elgg_echo('event_calendar:manage_users:description').'</p>';
-			$content .= elgg_view_entity_list($users,$options,$offset,$limit);
+			
 		} else {
 			$content = elgg_echo('event_calendar:manage_users:unauthorized');
 		}

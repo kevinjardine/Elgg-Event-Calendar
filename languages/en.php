@@ -230,7 +230,7 @@ You can manage calendar requests for this event here:
 	'event_calendar:listing_title:friends' => "Friends' calendars",	
 	'event_calendar:manage_users:title' => "Manage subscribers for \"%s\"",
 	'event_calendar:manage_users:breadcrumb' => "Manage subscribers",
-	'event_calendar:manage_users:description' => "You can add or remove events from personal calendars using the buttons below.",
+	'event_calendar:manage_users:description' => "Add or remove events from personal calendars.",
 	'event_calendar:manage_users:unauthorized' => "Error: you are not authorised to manage personal calendars for this event.",
 	'event_calendar:add_to_group_members:success' => "This event has been added to the personal calendars of all group members.",
 	'event_calendar:add_to_group_members:error' => "Error: could not add this event to the personal calendars of group members.",
@@ -238,6 +238,9 @@ You can manage calendar requests for this event here:
 	'event_calendar:remove_from_group_members:error' => "Error: could not remove this event from the personal calendars of group members.",
 	'event_calendar:add_to_group_members:button' => "Add to all",
 	'event_calendar:remove_from_group_members:button' => "Remove from all",
+		
+	'event_calendar:manage_subscribers:success' => "Personal calendars updated.",
+	'event_calendar:manage_subscribers:error' => "Error: could not update personal calendars.",
 		
 	/**
 	 * Event calendar river
