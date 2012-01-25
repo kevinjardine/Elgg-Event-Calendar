@@ -6,7 +6,7 @@ $event_calendar_times = elgg_get_plugin_setting('times', 'event_calendar');
 $event_calendar_region_display = elgg_get_plugin_setting('region_display', 'event_calendar');
 $event_calendar_type_display = elgg_get_plugin_setting('type_display', 'event_calendar');
 $event_calendar_spots_display = elgg_get_plugin_setting('spots_display', 'event_calendar');
-$event_calendar_add_users = elgg_get_plugin_setting('add_users', 'event_calendar');
+//$event_calendar_add_users = elgg_get_plugin_setting('add_users', 'event_calendar');
 $event_calendar_hide_access = elgg_get_plugin_setting('hide_access', 'event_calendar');
 $event_calendar_hide_end = elgg_get_plugin_setting('hide_end', 'event_calendar');
 $event_calendar_more_required = elgg_get_plugin_setting('more_required', 'event_calendar');
@@ -143,12 +143,14 @@ if ($event_calendar_spots_display == 'yes') {
 	$body .= '<p class="description">'.$prefix['spots'].elgg_echo('event_calendar:spots_description').'</p>';
 }
 
-if ($event_calendar_add_users == 'yes') {
+// the following feature has been superceded by the manage subscribers feature
+
+/*if ($event_calendar_add_users == 'yes') {
 	$body .= '<p><label>'.elgg_echo("event_calendar:add_user_label").'<br />';
 	$body .= elgg_view("input/adduser",array('name' => 'adduser','internalid' => 'do_adduser','width'=> 200, 'minChars'=>2));
 	$body .= '</label></p><br /><br />';
 	$body .= '<p class="description">'.elgg_echo('event_calendar:add_user_description').'</p>';
-}
+}*/
 
 $body .= '<p><label>'.elgg_echo("event_calendar:brief_description_label").'<br />';
 $body .= elgg_view("input/text",array('name' => 'description','value'=>$brief_description));

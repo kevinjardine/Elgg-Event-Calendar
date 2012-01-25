@@ -19,6 +19,15 @@ if (event_calendar_has_personal_event($event_guid,$user_guid)) {
 	$response = array('success'=>TRUE, 'message' => $remove_response, 'button_text'=>$button_text);
 } else {
 	if (event_calendar_add_personal_event($event_guid,$user_guid)) {
+		$event_calendar_add_users_notify = elgg_get_plugin_setting('add_users_notify', 'event_calendar');
+		if ($event_calendar_add_users_notify == 'yes') {
+			$subject = elgg_echo('event_calendar:add_users_notify:subject');
+			$user = get_user($user_guid);
+			$event = get_entity($event_guid);
+			$site_guid = elgg_get_site_entity()->guid;
+			$message = elgg_echo('event_calendar:add_users_notify:body',array($user->name,$event->title,$event->getURL()));
+			notify_user($user_guid, $site_guid, $subject, $message, NULL, 'email');
+		}
 		$button_text = elgg_echo('event_calendar:remove_from_the_calendar_button');
 		$response = array('success'=>TRUE, 'message' => $add_response, 'button_text'=>$button_text);
 	} else {

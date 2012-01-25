@@ -15,7 +15,7 @@ if (($event_calendar_add_users == 'yes') && elgg_instanceof($event,'object','eve
 			$subject = elgg_echo('event_calendar:add_users_notify:subject');
 			$user = get_user($user_guid);
 			$message = elgg_echo('event_calendar:add_users_notify:body',array($user->name,$event->title,$event->getURL()));
-			notify_user($user_guid, $site_guid, $subject, $message);
+			notify_user($user_guid, $site_guid, $subject, $message, NULL, 'email');
 		}
 	}
 	system_message(elgg_echo('event_calendar:manage_subscribers:success'));
