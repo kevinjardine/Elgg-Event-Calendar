@@ -1548,6 +1548,13 @@ function event_calendar_get_page_content_manage_users($event_guid) {
 	$event = get_entity($event_guid);
 	$limit = 10;
 	$offset = get_input('offset', 0);
+	
+	$event_calendar_add_users = elgg_get_plugin_setting('add_users', 'event_calendar');
+	if ($event_calendar_add_users != 'yes') {
+		register_error(elgg_echo('event_calendar:feature_not_activated'));
+		forward();
+		exit;
+	}
 
 	if (!elgg_instanceof($event, 'object', 'event_calendar')) {
 		$content = elgg_echo('event_calendar:error_nosuchevent');
@@ -1658,10 +1665,13 @@ function event_calendar_handle_menu($event_guid) {
 		elgg_register_menu_item('page', $item);
 		//add_submenu_item(elgg_echo('event_calendar:review_requests_title'), $CONFIG->wwwroot . "pg/event_calendar/review_requests/".$event_id, '0eventcalendaradmin');
 	}
-	$url =  "event_calendar/manage_users/$event_guid";
-	$item = new ElggMenuItem('event-calendar-1manage_users', elgg_echo('event_calendar:manage_users:breadcrumb'), $url);
-	$item->setSection('event_calendar');
-	elgg_register_menu_item('page', $item);
+	$event_calendar_add_users = elgg_get_plugin_setting('add_users', 'event_calendar');
+	if ($event_calendar_add_users == 'yes') {
+		$url =  "event_calendar/manage_users/$event_guid";
+		$item = new ElggMenuItem('event-calendar-1manage_users', elgg_echo('event_calendar:manage_users:breadcrumb'), $url);
+		$item->setSection('event_calendar');
+		elgg_register_menu_item('page', $item);
+	}
 }
 function event_calendar_get_secret_key() {
 	$key_file_name = elgg_get_plugin_setting('ical_auth_file_name','event_calendar');

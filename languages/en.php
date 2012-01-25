@@ -149,11 +149,11 @@
 	'event_calendar:spots_label' => "Spots",
 	'event_calendar:spots_description' => "How many people are allowed to add this event to their personal calendars?",
 	'event_calendar:open' => "Open",
-	'event_calendar:settings:add_users:title' => "Allow event creators to add their event to other personal calendars (requires autocomplete plugin).",
+	'event_calendar:settings:add_users:title' => "Allow event creators and site admins to add their event to other personal calendars.",
 	'event_calendar:add_user_label' => "Add users",
 	'event_calendar:add_user_description' => "Add this event to personal calendars by typing two or more characters in the above text autocomplete field to select a user. "
 		."You can add multiple users by clicking the \"+\" link. (You must submit this form to actually add the event to the calendars.)",		
-	'event_calendar:settings:add_users_notify:title' => "Notify users who have had an event added to their personal calendar by an admin or event creator.",
+	'event_calendar:settings:add_users_notify:title' => "Email users who have had an event added to their personal calendar by an admin or event creator.",
 	'event_calendar:add_users_notify:subject' => "A new event has been added to your personal calendar",
 	'event_calendar:add_users_notify:body' => "%s,\n\nThe \"%s\" event has been added to your calendar.\n\nYou can view it here: \n\n%s\n",
 		
@@ -217,6 +217,7 @@ You can manage calendar requests for this event here:
 	'event_calendar:ical_auth_file_name:title' => "Location of iCal authentication file on local file system (experimental - not needed for public feeds)",
 
 	'event_calendar:owner:permissions_error' => "You do not have permission to view that page.",
+	'event_calendar:feature_not_activated' => "This feature is not activated",
 		
 	'event_calendar:show_all' => "Show all",
 	'event_calendar:show_open' => "Show open",
@@ -250,6 +251,7 @@ You can manage calendar requests for this event here:
 
 	'river:update:object:event_calendar' => "%s updated the event %s",
 	'river:create:object:event_calendar' => "%s added the event %s",
+	'river:comment:object:event_calendar' => '%s commented on the event %s',
     'event_calendar:river:created' => "%s added",
     'event_calendar:river:updated' => "%s updated",
     'event_calendar:river:annotated1' => "%s added",
