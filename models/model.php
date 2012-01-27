@@ -699,8 +699,9 @@ function event_calendar_has_personal_event($event_guid,$user_guid) {
 		return TRUE;
 	} else {
 		// use old method for now
-		$annotations = 	get_annotations($event_guid, "object", "event_calendar", "personal_event", (int) $user_guid, $user_guid);
-		if ($annotations && count($annotations) > 0) {
+		$options = array('guid'=>$event_guid,'annotation_name' => 'personal_event', 'annotation_value' => $user_guid,'count'=>TRUE);
+		//$annotations = 	get_annotations($event_guid, "object", "event_calendar", "personal_event", (int) $user_guid, $user_guid);
+		if (elgg_get_annotations($options)) {
 			return TRUE;
 		} else {
 			return FALSE;
@@ -774,6 +775,9 @@ function event_calendar_get_personal_events_for_user($user_guid,$limit) {
 	return array_slice($sorted,0,$limit);
 }
 
+// the old way used annotations, and the new Elgg 1.8 way uses relationships
+// for now this version attempts to bridge the gap by using both methods for older sites
+
 function event_calendar_get_users_for_event($event_guid,$limit,$offset,$is_count) {
 	$options = array(
 		'type' => 'user',
@@ -783,13 +787,28 @@ function event_calendar_get_users_for_event($event_guid,$limit,$offset,$is_count
 		'limit' => 0,
 	);
 	if ($is_count) {
-		$count_old_way = count_annotations($event_guid, "object", "event_calendar", "personal_event");
+		//$count_old_way = count_annotations($event_guid, "object", "event_calendar", "personal_event");
+		$count_old_way = elgg_get_annotations(array(
+			'guid'=>$event_guid, 
+			'type'=>"object", 
+			'subtype'=>"event_calendar", 
+			'annotation_name' => "personal_event",
+			'count'=>TRUE)
+		);
 		$options ['count'] = TRUE;
 		$count_new_way = elgg_get_entities_from_relationship($options);
 		return $count_old_way + $count_new_way;
 	} else {
 		$users_old_way = array();
-		$annotations = get_annotations($event_id, "object", "event_calendar", "personal_event", "", 0, $limit, $offset);
+		//$annotations = get_annotations($event_id, "object", "event_calendar", "personal_event", "", 0, $limit, $offset);
+		$annotations = elgg_get_annotations(array(
+			'guid'=>$event_guid, 
+			'type'=>"object", 
+			'subtype'=>"event_calendar", 
+			'annotation_name' => "personal_event",
+			'limit' => $limit,
+			'offset' => $offset)
+		);
 		if ($annotations) {
 			foreach($annotations as $annotation) {
 				if (($user = get_entity($annotation->value)) && ($user instanceOf ElggUser)) {
