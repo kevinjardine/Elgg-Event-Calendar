@@ -1378,10 +1378,14 @@ function event_calendar_generate_listing_params($page_type,$container_guid,$orig
 			$end_ts = strtotime($end_date)+$day-1;
 			$subtitle = elgg_echo('event_calendar:day_label').': '.date('j F Y',strtotime($start_date));
 		} else if ($mode == "week") {
-			$end_ts = $start_ts + 6*$day;
+			// KJ - fix for end date bug
+			//$end_ts = $start_ts + 6*$day;
+			$end_ts = $start_ts + 7*$day;
 			$subtitle = elgg_echo('event_calendar:week_label').': '.date('j F',$start_ts) . ' - '.date('j F Y',$end_ts);
 		} else {
-			$end_ts = strtotime($end_date);
+			// KJ - fix for end date bug
+			//$end_ts = strtotime($end_date);
+			$end_ts = strtotime($end_date)+24*60*60-1;
 			$subtitle = date('F Y',$start_ts);
 		}
 	}
