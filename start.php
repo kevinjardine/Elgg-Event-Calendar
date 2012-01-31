@@ -257,7 +257,10 @@ function event_calendar_page_handler($page) {
 			gatekeeper();
 			echo event_calendar_get_page_content_review_requests($page[1]);
 			break;
+		default:
+			return FALSE;
 	}
+	return TRUE;
 }
 
 /**
