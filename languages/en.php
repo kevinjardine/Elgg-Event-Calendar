@@ -160,8 +160,11 @@
 	'event_calendar:settings:region_list_handles:title' => "The region strings above are string handles. Use the Elgg translation system to resolve them.",
 	'event_calendar:settings:type_list_handles:title' => "The type strings above are string handles. Use the Elgg translation system to resolve them.",
 		
-	'event_calendar:settings:personal_manage:title' => "Allow users to add/remove any event they can see to/from their personal calendars. (If no, only admins and the event creator can add/remove them).",
-		
+	'event_calendar:settings:personal_manage:title' => "Calendar permissions",
+	'event_calendar:settings:personal_manage:description' => "Determines whether people can add events to their personal calendars (open), "
+			."need to request the event creator to do so (closed), have no option at all (private), or allow event creators to determine this for each event (by event). "
+			."Note if you set this to private you should probably activate the option above to allow event creators and site admins to "
+			."add their events to other personal calendars.",
 	'event_calendar:strapline' => "Posted %s by %s",
 		
 	'event_calendar:request_event_response' => "Your request to be added to this event has been sent.",
@@ -242,6 +245,13 @@ You can manage calendar requests for this event here:
 		
 	'event_calendar:manage_subscribers:success' => "Personal calendars updated.",
 	'event_calendar:manage_subscribers:error' => "Error: could not update personal calendars.",
+	'event_calendar:personal_manage:open' => "open",
+	'event_calendar:personal_manage:closed' => "closed",
+	'event_calendar:personal_manage:private' => "private",
+	'event_calendar:personal_manage:by_event' => "by event",
+	'event_calendar:personal_manage:label' => "Calendar permission",
+	'event_calendar:personal_manage:description' => "Determines whether people can add this event to their calendars (open), "
+			."need to apply to do so (closed) or have no option at all (private - so only you or a site admin can add the event to calendars).",
 		
 	/**
 	 * Event calendar river

@@ -31,6 +31,7 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	$event_calendar_spots_display = elgg_get_plugin_setting('spots_display', 'event_calendar');
 	$event_calendar_hide_end = elgg_get_plugin_setting('hide_end', 'event_calendar');
 	$event_calendar_more_required = elgg_get_plugin_setting('more_required', 'event_calendar');
+	$event_calendar_personal_manage = elgg_get_plugin_setting('personal_manage', 'event_calendar');
 
 	if ($event_calendar_more_required == 'yes') {
 		$required_fields = array('title','venue','start_date',
@@ -115,6 +116,9 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	}
 	if ($event_calendar_type_display == 'yes') {
 		$event->event_type = get_input('event_type');
+	}
+	if ($event_calendar_personal_manage == 'by_event') {
+		$event->personal_manage = get_input('personal_manage');
 	}
 	$event->fees = get_input('fees');
 	$event->contact = get_input('contact');
@@ -1078,23 +1082,29 @@ function event_calendar_view_entity_list($entities, $count, $offset, $limit, $fu
 	return $html;
 }
 
+// returns open, closed or private for the given event and user
 function event_calendar_personal_can_manage($event,$user_id) {
-	$authorised = FALSE;
+	$status = 'private';
 	$event_calendar_personal_manage = elgg_get_plugin_setting('personal_manage', 'event_calendar');
-	if ($event_calendar_personal_manage != 'no') {
-		$authorised = TRUE;
+	if (!$event_calendar_personal_manage 
+		|| $event_calendar_personal_manage == 'open' 
+		|| $event_calendar_personal_manage == 'yes'
+		|| (($event_calendar_personal_manage == 'by_event' && (!$event->personal_manage || ($event->personal_manage == 'open'))))) {
+		$status = 'open';
 	} else {
+		// in this case only admins or event owners can manage events on their personal calendars
 		if(elgg_is_admin_logged_in()) {
-			$authorised = TRUE;
-		} else {
-			// load the event from the database
-			if ($event && ($event->owner_guid == $user_id)) {
-				$authorised = TRUE;
-			}
+			$status = 'open';
+		} else if ($event && ($event->owner_guid == $user_id)) {
+			$status = 'open';
+		} else if (($event_calendar_personal_manage == 'closed') 
+			|| ($event_calendar_personal_manage == 'no')
+			|| (($event_calendar_personal_manage == 'by_event') && ($event->personal_manage == 'closed'))) {
+			$status = 'closed';
 		}
 	}
 
-	return $authorised;
+	return $status;
 }
 
 function event_calendar_send_event_request($event,$user_guid) {
@@ -1280,6 +1290,7 @@ function event_calendar_prepare_edit_form_vars($event = NULL) {
 		'contact' => NULL,
 		'organiser' => NULL,
 		'tags' => NULL,
+		'personal_manage' => NULL,
 		'long_description' => NULL,
 		'access_id' => ACCESS_DEFAULT,
 		'group_guid' => NULL,
@@ -1653,9 +1664,8 @@ function event_calendar_get_page_content_review_requests($event_guid) {
 		}
 		elgg_push_breadcrumb($event->title,$event->getURL());
 		elgg_push_breadcrumb(elgg_echo('event_calendar:review_requests_menu_title'));
-		$user_guid = elgg_get_logged_in_user_guid();
 
-		if (event_calendar_personal_can_manage($event,$user_guid)) {
+		if ($event->canEdit()) {
 			$requests = elgg_get_entities_from_relationship(
 			array(
 					'relationship' => 'event_calendar_request', 
@@ -1680,8 +1690,10 @@ function event_calendar_get_page_content_review_requests($event_guid) {
 }
 
 function event_calendar_handle_menu($event_guid) {
+	$event = get_entity($event_guid);
 	$event_calendar_personal_manage = elgg_get_plugin_setting('personal_manage', 'event_calendar');
-	if ($event_calendar_personal_manage == 'no') {
+	if ((($event_calendar_personal_manage == 'by_event') && ($event->personal_manage == 'closed')) 
+		|| (($event_calendar_personal_manage == 'closed') || ($event_calendar_personal_manage == 'no'))) {
 		$url =  "event_calendar/review_requests/$event_guid";
 		$item = new ElggMenuItem('event-calendar-0review_requests', elgg_echo('event_calendar:review_requests_menu_title'), $url);
 		$item->setSection('event_calendar');

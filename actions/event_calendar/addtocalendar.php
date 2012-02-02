@@ -11,7 +11,7 @@ $event = get_entity($event_guid);
 
 if (elgg_instanceof($event, 'object', 'event_calendar') 
 	&& elgg_instanceof($user, 'user') 
-	&& event_calendar_personal_can_manage($event,$user_guid) 
+	&& $event->canEdit() 
 	&& check_entity_relationship($user_guid, 'event_calendar_request', $event_guid))	{
 		
 	if (event_calendar_add_personal_event($event_guid,$user_guid)) {

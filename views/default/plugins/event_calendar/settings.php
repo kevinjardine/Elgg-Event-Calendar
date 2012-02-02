@@ -3,6 +3,13 @@ $yn_options = array(elgg_echo('event_calendar:settings:yes')=>'yes',
 	elgg_echo('event_calendar:settings:no')=>'no',
 );
 
+$membership_options = array(
+	elgg_echo('event_calendar:personal_manage:open') => 'open' ,
+	elgg_echo('event_calendar:personal_manage:closed') => 'closed',
+	elgg_echo('event_calendar:personal_manage:private') => 'private',
+	elgg_echo('event_calendar:personal_manage:by_event') => 'by_event',
+);
+
 $access_options = array(	ACCESS_PRIVATE => elgg_echo("PRIVATE"),
 								ACCESS_LOGGED_IN => elgg_echo("LOGGED_IN"),
 								ACCESS_PUBLIC => elgg_echo("PUBLIC"));
@@ -222,15 +229,14 @@ $body .= elgg_view('input/radio',array('name'=>'params[add_users_notify]','value
 $body .= '<br />';
 
 $event_calendar_personal_manage = elgg_get_plugin_setting('personal_manage', 'event_calendar');
-if (!$event_calendar_personal_manage) {
-	$event_calendar_personal_manage = 'yes';
+if (!$event_calendar_personal_manage && $personal_manage == 'yes') {
+	$event_calendar_personal_manage = 'open';
 }
 
 $body .= elgg_echo('event_calendar:settings:personal_manage:title');
 $body .= '<br />';
-$body .= elgg_view('input/radio',array('name'=>'params[personal_manage]','value'=>$event_calendar_personal_manage,'options'=>$yn_options));
-
-$body .= '<br />';
+$body .= elgg_view('input/radio',array('name'=>'params[personal_manage]','value'=>$event_calendar_personal_manage,'options'=>$membership_options));
+$body .= '<p>'.elgg_echo('event_calendar:settings:personal_manage:description').'</p>';
 
 $event_calendar_spots_display = elgg_get_plugin_setting('spots_display', 'event_calendar');
 if (!$event_calendar_spots_display) {

@@ -278,7 +278,8 @@ function event_calendar_entity_menu_setup($hook, $type, $return, $params) {
 	}
 	$user_guid = elgg_get_logged_in_user_guid();
 	if ($user_guid) {
-		if (event_calendar_personal_can_manage($entity,$user_guid)) {
+		$calendar_status = event_calendar_personal_can_manage($entity,$user_guid);
+		if ($calendar_status == 'open') {
 			if (event_calendar_has_personal_event($entity->guid,$user_guid)) {
 				$options = array(
 					'name' => 'personal_calendar',
@@ -299,7 +300,7 @@ function event_calendar_entity_menu_setup($hook, $type, $return, $params) {
 					);
 					$return[] = ElggMenuItem::factory($options);			}
 			}
-		} else {
+		} else if ($calendar_status == 'closed') {
 			if (!event_calendar_has_personal_event($entity->guid,$user_guid) && !check_entity_relationship($user_guid, 'event_calendar_request', $entity->guid)) {
 				$options = array(
 					'name' => 'personal_calendar',
