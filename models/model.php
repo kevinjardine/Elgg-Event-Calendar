@@ -78,7 +78,11 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	$event->title = get_input('title');
 	$event->description = get_input('description');
 	$event->venue = get_input('venue');
-	$event->start_date = get_input('start_date');
+	// convert start date from current server time to GMT
+	$start_date = get_input('start_date');
+	$start_date_text = date("Y-m-d",$start_date);
+	
+	$event->start_date = strtotime($start_date_text." ".date_default_timezone_get());
 	$event->end_date = get_input('end_date','');
 
 	if ($event_calendar_times == 'yes') {
@@ -881,6 +885,10 @@ function event_calendar_format_time($date,$time1,$time2='') {
 	}
 }
 
+function event_calender_get_gmt_from_server_time($server_time) {
+	$gmtime = $server_time - (int)substr(date('O'),0,3)*60*60;
+}
+
 function event_calendar_activated_for_group($group) {
 	$group_calendar = elgg_get_plugin_setting('group_calendar', 'event_calendar');
 	$group_default = elgg_get_plugin_setting('group_default', 'event_calendar');
@@ -953,7 +961,7 @@ function event_calendar_get_formatted_full_items($event) {
 
 function event_calendar_get_formatted_time($event) {
 	$date_format = 'j M Y';
-	$event_calendar_times = elgg_get_plugin_setting('times', 'event_calendar');
+	$event_calendar_times = elgg_get_plugin_setting('times', 'event_calendar') == 'yes';
 
 	$start_date = date($date_format,$event->start_date);
 	if ((!$event->end_date) || ($event->end_date == $event->start_date)) {

@@ -17,9 +17,21 @@ $access_options = array(	ACCESS_PRIVATE => elgg_echo("PRIVATE"),
 $listing_options = array(elgg_echo('event_calendar:settings:paged')=>'paged',
 	elgg_echo('event_calendar:settings:agenda')=>'agenda',
 	elgg_echo('event_calendar:settings:month')=>'month',
+	elgg_echo('event_calendar:settings:full')=>'full',
 );
 
 $body = '';
+
+/*$event_calendar_full_calendar = elgg_get_plugin_setting('full_calendar', 'event_calendar');
+if (!$event_calendar_full_calendar) {
+	$event_calendar_full_calendar = 'no';
+}
+
+$body .= elgg_echo('event_calendar:settings:full_calendar:title');
+$body .= '<br />';
+$body .= elgg_view('input/radio',array('name'=>'params[full_calendar]','value'=>$event_calendar_full_calendar,'options'=>$yn_options));
+
+$body .= '<br />';*/
 
 $event_calendar_hide_access = elgg_get_plugin_setting('hide_access', 'event_calendar');
 if (!$event_calendar_hide_access) {

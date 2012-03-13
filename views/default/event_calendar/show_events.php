@@ -5,7 +5,7 @@
  * @package event_calendar
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
  * @author Kevin Jardine <kevin@radagast.biz>
- * @copyright Radagast Solutions 2008
+ * @copyright Radagast Solutions 2008-12
  * @link http://radagast.biz/
  * 
  */
@@ -17,6 +17,8 @@ if ($vars['events']) {
 		$event_list = elgg_view('event_calendar/agenda_view',$vars);
 	} else if ($listing_format == 'paged') {
 		$event_list = elgg_view('event_calendar/paged_view',$vars);
+	} else if ($listing_format == 'full') {
+		$event_list = elgg_view('event_calendar/full_calendar_view',$vars);
 	} else {
 		$options = array(
 			'list_class' => 'elgg-list-entity',
@@ -32,7 +34,7 @@ if ($vars['events']) {
 } else {
 	$event_list = '<p>'.elgg_echo('event_calendar:no_events_found').'</p>';
 }
-if ($listing_format == 'paged') {
+if ($listing_format == 'paged' || $listing_format == 'full') {
 	echo $event_list;
 } else {
 ?>

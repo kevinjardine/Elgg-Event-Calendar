@@ -135,6 +135,7 @@
 	'event_calendar:settings:paged' => "paged",
 	'event_calendar:settings:agenda' => "agenda",
 	'event_calendar:settings:month' => "by month",
+	'event_calendar:settings:full' => "full view",
 	'event_calendar:settings:listing_format:title' => "Event listing format",
 	'event_calendar:paged:column:date' => "Date",
 	'event_calendar:paged:column:time'	=> "Time",
@@ -252,6 +253,8 @@ You can manage calendar requests for this event here:
 	'event_calendar:personal_manage:label' => "Calendar permission",
 	'event_calendar:personal_manage:description' => "Determines whether people can add this event to their calendars (open), "
 			."need to apply to do so (closed) or have no option at all (private - so only you or a site admin can add the event to calendars).",
+			
+	'event_calendar:settings:full_calendar:title' => "Support full calendar",
 		
 	/**
 	 * Event calendar river

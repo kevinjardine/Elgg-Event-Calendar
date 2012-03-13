@@ -14,7 +14,7 @@
 if ($vars['dateformat']) {
 	$date_format = $vars['dateformat'];
 } else {
-	$date_format = "DD, MM d, yy";
+	$date_format = "yy/mm/dd";
 }
 ?>
 

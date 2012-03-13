@@ -62,6 +62,13 @@ function event_calendar_init() {
 
 	//add to the css
 	elgg_extend_view('css/elgg', 'event_calendar/css');
+	
+	$event_calendar_listing_format = elgg_get_plugin_setting('listing_format', 'event_calendar');
+	if ($event_calendar_listing_format == 'full') {
+		elgg_extend_view('css/elgg', 'fullcalendar/css');
+		$plugin_js = elgg_get_simplecache_url('js', 'event_calendar/fullcalendar');
+		elgg_register_js('elgg.full_calendar', $plugin_js);
+	}
 
 	//add a widget
 	elgg_register_widget_type('event_calendar',elgg_echo("event_calendar:widget_title"),elgg_echo('event_calendar:widget:description'));
