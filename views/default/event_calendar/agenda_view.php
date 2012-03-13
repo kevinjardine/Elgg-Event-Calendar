@@ -8,7 +8,7 @@ $nav = elgg_view('navigation/pagination',array(
 												'limit' => $vars['limit'],
 			
 														));
-$event_calendar_times = get_plugin_setting('times', 'event_calendar');
+$event_calendar_times = elgg_get_plugin_setting('times', 'event_calendar');
 $events = $vars['events'];
 $html = '';
 $date_format = 'j M Y';

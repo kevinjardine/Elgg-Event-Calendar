@@ -68,7 +68,7 @@ if ($event) {
 	$event_tags = $event->event_tags;
 	$long_description = $event->long_description;
 	$access = $event->access_id;
-	if ($event_calendar_times == 'yes') {
+	if ($event_calendar_times != 'no') {
 		$start_time = $event->start_time;
 		$end_time = $event->end_time;
 	}
@@ -101,7 +101,7 @@ if ($event) {
 	$event_tags = $fd['event_tags'];
 	$long_description = $fd['long_description'];
 	$access = $fd['access_id'];
-	if ($event_calendar_times == 'yes') {
+	if ($event_calendar_times != 'no') {
 		$start_time = $fd['start_time'];
 		$end_time = $fd['end_time'];
 	}
@@ -127,7 +127,7 @@ $body .= elgg_view("input/text",array('name' => 'venue','value'=>$venue));
 $body .= '</label></p>';
 $body .= '<p class="description">'.$prefix['venue'].elgg_echo('event_calendar:venue_description').'</p>';
 
-if ($event_calendar_times == 'yes') {
+if ($event_calendar_times != 'no') {
 	$body .= '<p><label>'.elgg_echo("event_calendar:start_time_label").'</label><br />';
 	$body .= elgg_view("input/timepicker",array('name' => 'start_time','value'=>$start_time));
 	$body .= '</p>';
@@ -140,7 +140,7 @@ $body .= '</label></p>';
 $body .= '<p class="description">'.$prefix['start_date'].elgg_echo('event_calendar:start_date_description').'</p>';
 
 if ($event_calendar_hide_end != 'yes') {
-	if ($event_calendar_times == 'yes') {
+	if ($event_calendar_times != 'no') {
 		$body .= '<p><label>'.elgg_echo("event_calendar:end_time_label").'</label><br />';
 		$body .= elgg_view("input/timepicker",array('name' => 'end_time','value'=>$end_time));
 		$body .= '</p>';

@@ -4,14 +4,22 @@ elgg_load_js('elgg.full_calendar');
 $events = $vars['events'];
 
 $event_array = array();
+$times_supported = elgg_get_plugin_setting('times','event_calendar') != 'no';
 
 foreach($events as $e) {
-	$event_array[] = array(
+	$event_item = array(
 		'id' => $e->guid,
 		'title' => $e->title,
 		'start_date' => $e->start_date,
 		'end_date' => $e->real_end_time,
 	);
+	if ($times_supported) {
+		$event_item['allDay'] = FALSE;
+	} else {
+		$event_item['allDay'] = TRUE;
+	}
+	
+	$event_array[] = $event_item;
 }
 
 $json_events_string = json_encode($event_array);
@@ -28,7 +36,7 @@ $(document).ready(function() {
 			title : events[i].title,
 			start : new Date(1000*events[i].start_date),
 			end : new Date(1000*events[i].end_date),
-			allDay: false
+			allDay: events[i].allDay
 		});
 	}
 	

@@ -2,7 +2,7 @@
 $event = $vars['event'];
 $times = $vars['times'];
 $time_bit = '';
-if ($times) {
+if ($times != 'no') {
 	if (is_numeric($event->start_time)) {
 		$time_bit = event_calendar_convert_time($event->start_time);
 	}

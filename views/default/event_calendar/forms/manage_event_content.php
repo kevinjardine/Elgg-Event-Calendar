@@ -119,7 +119,7 @@ $body .= elgg_view("input/text",array('internalname' => 'venue','value'=>$venue)
 $body .= '</label></p>';
 $body .= '<p class="description">'.$prefix['venue'].elgg_echo('event_calendar:venue_description').'</p>';
 
-if ($event_calendar_times == 'yes') {
+if ($event_calendar_times != 'no') {
 	$body .= '<p><label>'.elgg_echo("event_calendar:start_time_label").'</label><br />';
 	$body .= elgg_view("input/timepicker",array('internalname' => 'start_time','value'=>$start_time));
 	$body .= '</p>';
@@ -132,7 +132,7 @@ $body .= '</label></p>';
 $body .= '<p class="description">'.$prefix['start_date'].elgg_echo('event_calendar:start_date_description').'</p>';
 
 if ($event_calendar_hide_end != 'yes') {
-	if ($event_calendar_times == 'yes') {
+	if ($event_calendar_times != 'no') {
 		$body .= '<p><label>'.elgg_echo("event_calendar:end_time_label").'</label><br />';
 		$body .= elgg_view("input/timepicker",array('internalname' => 'end_time','value'=>$end_time));
 		$body .= '</p>';

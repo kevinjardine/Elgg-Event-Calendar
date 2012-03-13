@@ -79,7 +79,7 @@ $body .= '<br />';
 
 $event_calendar_times = elgg_get_plugin_setting('times', 'event_calendar');
 if (!$event_calendar_times) {
-	$event_calendar_times = 'no';
+	$event_calendar_times = 'yes';
 }
 
 $body .= elgg_echo('event_calendar:settings:times:title');
