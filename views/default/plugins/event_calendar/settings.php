@@ -51,7 +51,7 @@ if (!$event_calendar_default_access) {
 
 $body .= elgg_echo('event_calendar:settings:default_access:title');
 $body .= '<br />';
-$body .= elgg_view('input/pulldown',array('name'=>'params[default_access]','value'=>$event_calendar_default_access,'options_values'=>$access_options));
+$body .= elgg_view('input/dropdown',array('name'=>'params[default_access]','value'=>$event_calendar_default_access,'options_values'=>$access_options));
 
 $body .= '<br /><br />';
 

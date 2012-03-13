@@ -165,8 +165,8 @@ $body .= '</label></p>';
 $body .= '<p class="description">'.$prefix['brief_description'].elgg_echo('event_calendar:brief_description_description').'</p>';
 
 if ($event_calendar_region_display == 'yes') {
-	$region_list = trim(get_plugin_setting('region_list', 'event_calendar'));
-	$region_list_handles = get_plugin_setting('region_list_handles', 'event_calendar');
+	$region_list = trim(elgg_get_plugin_setting('region_list', 'event_calendar'));
+	$region_list_handles = elgg_get_plugin_setting('region_list_handles', 'event_calendar');
 	// make sure that we are using Unix line endings
 	$region_list = str_replace("\r\n","\n",$region_list);
 	$region_list = str_replace("\r","\n",$region_list);
@@ -182,15 +182,15 @@ if ($event_calendar_region_display == 'yes') {
 			}
 		}
 		$body .= '<p><label>'.elgg_echo("event_calendar:region_label").'<br />';
-		$body .= elgg_view("input/pulldown",array('internalname' => 'region','value'=>$region,'options_values'=>$options));
+		$body .= elgg_view("input/dropdown",array('internalname' => 'region','value'=>$region,'options_values'=>$options));
 		$body .= '</label></p>';
 		$body .= '<p class="description">'.$prefix['region'].elgg_echo('event_calendar:region_description').'</p>';
 	}
 }
 
 if ($event_calendar_type_display == 'yes') {
-	$type_list = trim(get_plugin_setting('type_list', 'event_calendar'));
-	$type_list_handles = get_plugin_setting('type_list_handles', 'event_calendar');
+	$type_list = trim(elgg_get_plugin_setting('type_list', 'event_calendar'));
+	$type_list_handles = elgg_get_plugin_setting('type_list_handles', 'event_calendar');
 	// make sure that we are using Unix line endings
 	$type_list = str_replace("\r\n","\n",$type_list);
 	$type_list = str_replace("\r","\n",$type_list);
@@ -206,7 +206,7 @@ if ($event_calendar_type_display == 'yes') {
 			}			
 		}
 		$body .= '<p><label>'.elgg_echo("event_calendar:type_label").'<br />';
-		$body .= elgg_view("input/pulldown",array('internalname' => 'event_type','value'=>$event_type,'options_values'=>$options));
+		$body .= elgg_view("input/dropdown",array('internalname' => 'event_type','value'=>$event_type,'options_values'=>$options));
 		$body .= '</label></p>';
 		$body .= '<p class="description">'.$prefix['event_type'].elgg_echo('event_calendar:type_description').'</p>';
 	}
