@@ -38,7 +38,7 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 			'brief_description','fees','contact','organiser',
 			'tags');
 
-		if ($event_calendar_times == 'yes') {
+		if ($event_calendar_times != 'no') {
 			$required_fields[] = 'start_time';
 			if ($event_calendar_hide_end != 'yes') {
 				$required_fields[] = 'end_time';
@@ -83,9 +83,15 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	$start_date_text = date("Y-m-d",$start_date);
 	
 	$event->start_date = strtotime($start_date_text." ".date_default_timezone_get());
-	$event->end_date = get_input('end_date','');
+	$end_date = trim(get_input('end_date',''));
+	if ($end_date) {
+		$end_date_text = date("Y-m-d",$end_date);		
+		$event->end_date = strtotime($end_date_text." ".date_default_timezone_get());
+	} else {
+		$event->end_date = '';
+	}
 
-	if ($event_calendar_times == 'yes') {
+	if ($event_calendar_times != 'no') {
 		$sh = get_input('start_time_h','');
 		$sm = get_input('start_time_m','');
 		if (is_numeric($sh) && is_numeric($sm)) {
@@ -961,7 +967,7 @@ function event_calendar_get_formatted_full_items($event) {
 
 function event_calendar_get_formatted_time($event) {
 	$date_format = 'j M Y';
-	$event_calendar_times = elgg_get_plugin_setting('times', 'event_calendar') == 'yes';
+	$event_calendar_times = elgg_get_plugin_setting('times', 'event_calendar') != 'no';
 
 	$start_date = date($date_format,$event->start_date);
 	if ((!$event->end_date) || ($event->end_date == $event->start_date)) {
@@ -1731,3 +1737,28 @@ function getLastDayOfMonth($month,$year) {
 	return idate('d', mktime(0, 0, 0, ($month + 1), 0, $year));
 }
 
+// TODO - this is not quite right across daylight savings time divides
+// Possible solution: convert stored date to server date, do inc and then convert back to GMT
+
+function event_calendar_modify_full_calendar($event_guid,$day_delta,$minute_delta) {
+	$event = get_entity($event_guid);
+	if (elgg_instanceof($event,'object','event_calendar') && $event->canEdit()) {
+		$event->start_date = strtotime("$day_delta days",$event->start_date)+60*$minute_delta;
+		if ($event->end_date) {
+			$event->end_date = strtotime("$day_delta days",$event->end_date);
+		}
+		$times = elgg_get_plugin_setting('times','event_calendar');
+		//$inc = 24*60*60*$day_delta+60*$minute_delta;
+		
+		//$event->real_end_time += $inc;
+		$event->real_end_time = strtotime("$day_delta days",$event->real_end_time)+60*$minute_delta;
+		if ($times != 'no') {
+			$event->start_time += $minute_delta;
+			if ($event->end_time) {
+				$event->end_time += $minute_delta;
+			}
+		}
+		return TRUE;
+	}
+	return FALSE;
+}

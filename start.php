@@ -107,6 +107,7 @@ function event_calendar_init() {
 	elgg_register_action("event_calendar/add_to_group_members","$action_path/add_to_group_members.php");
 	elgg_register_action("event_calendar/remove_from_group_members","$action_path/remove_from_group_members.php");
 	elgg_register_action("event_calendar/manage_subscribers","$action_path/manage_subscribers.php");
+	elgg_register_action("event_calendar/modify_full_calendar","$action_path/modify_full_calendar.php");
 
 }
 

@@ -255,6 +255,7 @@ You can manage calendar requests for this event here:
 			."need to apply to do so (closed) or have no option at all (private - so only you or a site admin can add the event to calendars).",
 			
 	'event_calendar:settings:full_calendar:title' => "Support full calendar",
+	'event_calendar:modify_full_calendar:error' => "Error: could not modify full calendar",
 		
 	/**
 	 * Event calendar river
