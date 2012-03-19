@@ -9,7 +9,9 @@ $times_supported = elgg_get_plugin_setting('times','event_calendar') != 'no';
 foreach($events as $e) {
 	$event_item = array(
 		'guid' => $e->guid,
+		//'title' => '<a href="'.$e->url.'">'.$e->title.'</a>',
 		'title' => $e->title,
+		'url' => $e->getURL(),
 		'start_date' => $e->start_date,
 		'end_date' => $e->real_end_time,
 	);
@@ -28,13 +30,14 @@ $json_events_string = json_encode($event_array);
 ?>
 <script>
 
-handleEventDrop = function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+handleEventClick = function(event) {
+    if (event.url) {
+        window.location.href = event.url;
+        return false;
+    }
+};
 
-    alert(
-        event.title + "(" + event.guid + ") was moved " +
-        dayDelta + " days and " +
-        minuteDelta + " minutes."
-    );
+handleEventDrop = function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 
     if (!confirm("Are you sure about this change?")) {
         revertFunc();
@@ -53,7 +56,8 @@ handleEventDrop = function(event,dayDelta,minuteDelta,allDay,revertFunc) {
     		}
     	);
     }
-}
+};
+
 $(document).ready(function() {
 	var events = <?php echo $json_events_string; ?>;
 	var cal_events = [];
@@ -61,6 +65,7 @@ $(document).ready(function() {
 		cal_events.push({
 			guid: events[i].guid,
 			title : events[i].title,
+			url: events[i].url,
 			start : new Date(1000*events[i].start_date),
 			end : new Date(1000*events[i].end_date),
 			allDay: events[i].allDay
@@ -74,8 +79,9 @@ $(document).ready(function() {
 			right: 'month,agendaWeek,agendaDay'
 		},
 		editable: true,
-		slotMinutes: 5,
+		slotMinutes: 15,
 		eventDrop: handleEventDrop,
+		eventClick: handleEventClick,
 		events: cal_events
 	});
 });

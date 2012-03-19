@@ -3,6 +3,8 @@ $yn_options = array(elgg_echo('event_calendar:settings:yes')=>'yes',
 	elgg_echo('event_calendar:settings:no')=>'no',
 );
 
+$time_format_options = array(elgg_echo('event_calendar:time_format:12hour')=>'12',elgg_echo('event_calendar:time_format:24hour')=>'24');
+
 $membership_options = array(
 	elgg_echo('event_calendar:personal_manage:open') => 'open' ,
 	elgg_echo('event_calendar:personal_manage:closed') => 'closed',
@@ -85,6 +87,17 @@ if (!$event_calendar_times) {
 $body .= elgg_echo('event_calendar:settings:times:title');
 $body .= '<br />';
 $body .= elgg_view('input/radio',array('name'=>'params[times]','value'=>$event_calendar_times,'options'=>$yn_options));
+
+$body .= '<br />';
+
+$event_calendar_time_format = elgg_get_plugin_setting('timeformat', 'event_calendar');
+if (!$event_calendar_time_format) {
+	$event_calendar_time_format = '24';
+}
+
+$body .= elgg_echo('event_calendar:settings:timeformat:title');
+$body .= '<br />';
+$body .= elgg_view('input/radio',array('name'=>'params[timeformat]','value'=>$event_calendar_time_format,'options'=>$time_format_options));
 
 $body .= '<br />';
 

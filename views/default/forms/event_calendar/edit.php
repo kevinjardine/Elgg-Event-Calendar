@@ -128,29 +128,32 @@ $body .= '</label></p>';
 $body .= '<p class="description">'.$prefix['venue'].elgg_echo('event_calendar:venue_description').'</p>';
 
 if ($event_calendar_times != 'no') {
-	$body .= '<p><label>'.elgg_echo("event_calendar:start_time_label").'</label><br />';
-	$body .= elgg_view("input/timepicker",array('name' => 'start_time','value'=>$start_time));
-	$body .= '</p>';
-	$body .= '<p class="description">'.$prefix['start_time'].elgg_echo('event_calendar:start_time_description').'</p>';
-}
-
-$body .= '<p><label>'.elgg_echo("event_calendar:start_date_label").'<br />';
-$body .= elgg_view("event_calendar/input/date_local",array('timestamp'=>TRUE, 'autocomplete'=>'off','name' => 'start_date','value'=>$start_date));
-$body .= '</label></p>';
-$body .= '<p class="description">'.$prefix['start_date'].elgg_echo('event_calendar:start_date_description').'</p>';
-
-if ($event_calendar_hide_end != 'yes') {
-	if ($event_calendar_times != 'no') {
-		$body .= '<p><label>'.elgg_echo("event_calendar:end_time_label").'</label><br />';
-		$body .= elgg_view("input/timepicker",array('name' => 'end_time','value'=>$end_time));
-		$body .= '</p>';
-		$body .= '<p class="description">'.$prefix['end_time'].elgg_echo('event_calendar:end_time_description').'</p>';
+	$body .= '<div class="event-calendar-date-time-setter">';
+	if ($event_calendar_hide_end != 'yes') {
+		$body .= '<p><label>'.elgg_echo('event_calendar:from_label').'</label>';
 	}
-	
-	$body .= '<p><label>'.elgg_echo("event_calendar:end_date_label").'<br />';
-	$body .= elgg_view("event_calendar/input/date_local",array('timestamp'=>TRUE,'autocomplete'=>'off','name' => 'end_date','value'=>$end_date));
+	$body .= elgg_view("event_calendar/input/date_local",array('timestamp'=>TRUE, 'autocomplete'=>'off','class'=>'event-calendar-compressed-date','name' => 'start_date','value'=>$start_date));
+	$body .= elgg_view("input/timepicker",array('name' => 'start_time','value'=>$start_time));
+	if ($event_calendar_hide_end != 'yes') {
+		$body .= '</p><p><label>'.elgg_echo('event_calendar:to_label').'</label>';
+		$body .= elgg_view("event_calendar/input/date_local",array('timestamp'=>TRUE,'autocomplete'=>'off','class'=>'event-calendar-compressed-date','name' => 'end_date','value'=>$end_date));
+		$body .= elgg_view("input/timepicker",array('name' => 'end_time','value'=>$end_time));
+	}
+	$body .= '</p>';
+	$body .= '</div>';
+} else {
+
+	$body .= '<p><label>'.elgg_echo("event_calendar:start_date_label").'<br />';
+	$body .= elgg_view("event_calendar/input/date_local",array('timestamp'=>TRUE, 'autocomplete'=>'off','name' => 'start_date','value'=>$start_date));
 	$body .= '</label></p>';
-	$body .= '<p class="description">'.$prefix['end_date'].elgg_echo('event_calendar:end_date_description').'</p>';
+	$body .= '<p class="description">'.$prefix['start_date'].elgg_echo('event_calendar:start_date_description').'</p>';
+	
+	if ($event_calendar_hide_end != 'yes') {		
+		$body .= '<p><label>'.elgg_echo("event_calendar:end_date_label").'<br />';
+		$body .= elgg_view("event_calendar/input/date_local",array('timestamp'=>TRUE,'autocomplete'=>'off','name' => 'end_date','value'=>$end_date));
+		$body .= '</label></p>';
+		$body .= '<p class="description">'.$prefix['end_date'].elgg_echo('event_calendar:end_date_description').'</p>';
+	}
 }
 
 if ($event_calendar_spots_display == 'yes') {

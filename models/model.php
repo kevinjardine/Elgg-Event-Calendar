@@ -92,23 +92,15 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	}
 
 	if ($event_calendar_times != 'no') {
-		$sh = get_input('start_time_h','');
-		$sm = get_input('start_time_m','');
-		if (is_numeric($sh) && is_numeric($sm)) {
-			// workaround for pulldown zero value bug
-			$sh--;
-			$sm--;
-			$event->start_time = $sh*60+$sm;
+		$st = get_input('start_time','');
+		if (is_numeric($st)) {
+			$event->start_time = $st;
 		} else {
 			$event->start_time = '';
 		}
-		$eh = get_input('end_time_h','');
-		$em = get_input('end_time_m','');
-		if (is_numeric($eh) && is_numeric($em)) {
-			// workaround for pulldown zero value bug
-			$eh--;
-			$em--;
-			$event->end_time = $eh*60+$em;
+		$et = get_input('end_time','');
+		if (is_numeric($et)) {
+			$event->end_time = $et;
 		} else {
 			$event->end_time = '';
 		}
@@ -874,9 +866,21 @@ function event_calendar_handle_leave($event, $object_type, $object) {
 }
 
 function event_calendar_convert_time($time) {
-	$hour = floor($time/60);
-	$minute = sprintf("%02d",$time-60*$hour);
-	return "$hour:$minute";
+	$event_calendar_time_format = elgg_get_plugin_setting('timeformat','event_calendar');
+	if ($event_calendar_time_format == '12') {
+		$hour = floor($time/60);
+		$minute = sprintf("%02d",$time-60*$hour);
+		if ($hour < 12) {
+			return "$hour:$minute am";
+		} else {
+			$hour -= 12;
+			return "$hour:$minute pm";
+		}
+	} else {
+		$hour = floor($time/60);
+		$minute = sprintf("%02d",$time-60*$hour);
+		return "$hour:$minute";
+	}
 }
 
 function event_calendar_format_time($date,$time1,$time2='') {
@@ -970,13 +974,15 @@ function event_calendar_get_formatted_time($event) {
 	$event_calendar_times = elgg_get_plugin_setting('times', 'event_calendar') != 'no';
 
 	$start_date = date($date_format,$event->start_date);
-	if ((!$event->end_date) || ($event->end_date == $event->start_date)) {
+	if ($event->end_date) {
+		$end_date = date($date_format,$event->end_date);
+	}
+	if ((!$event->end_date) || ($end_date == $start_date)) {
 		if ($event_calendar_times) {
 			$start_date = event_calendar_format_time($start_date,$event->start_time,$event->end_time);
 		}
 		$time_bit = $start_date;
 	} else {
-		$end_date = date($date_format,$event->end_date);
 		if ($event_calendar_times) {
 			$start_date = event_calendar_format_time($start_date,$event->start_time);
 			$end_date = event_calendar_format_time($end_date,$event->end_time);
@@ -1243,6 +1249,7 @@ function event_calendar_get_page_content_edit($page_type,$guid) {
 			} else {
 				elgg_push_breadcrumb(elgg_echo('event_calendar:show_events_title'),'event_calendar/list');
 			}
+			elgg_push_breadcrumb($event->title,$event->getURL());
 			elgg_push_breadcrumb(elgg_echo('event_calendar:manage_event_title'));
 
 			$content = elgg_view_form('event_calendar/edit', $vars,$body_vars);

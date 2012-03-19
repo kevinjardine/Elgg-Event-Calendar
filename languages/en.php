@@ -256,6 +256,11 @@ You can manage calendar requests for this event here:
 			
 	'event_calendar:settings:full_calendar:title' => "Support full calendar",
 	'event_calendar:modify_full_calendar:error' => "Error: could not modify full calendar",
+	'event_calendar:from_label' => "From:",
+	'event_calendar:to_label' => "To:",
+	'event_calendar:settings:timeformat:title' => "Time format",
+	'event_calendar:time_format:12hour' => "12 hour (am/pm)",
+	'event_calendar:time_format:24hour' => "24 hour",
 		
 	/**
 	 * Event calendar river

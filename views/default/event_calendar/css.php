@@ -165,3 +165,14 @@ li.event-calendar-filter-menu-show-only {
 	background:#fff;
 	margin:0 -.3em 0 1.5em;
 }
+
+.event-calendar-compressed-date {
+	width: 150px !important;
+	margin-right: 10px;
+}
+
+.event-calendar-date-time-setter label {
+	float: left;
+	width: 50px;
+	margin-top: 5px;
+}
