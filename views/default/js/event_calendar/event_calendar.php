@@ -6,6 +6,64 @@ elgg.event_calendar.init = function () {
 	$('.event-calendar-personal-calendar-toggle').click(elgg.event_calendar.handleDisplayPagePersonalCalendarToggle);
 	$('#event-calendar-region').change(elgg.event_calendar.handleRegionChange);
 	$('#event-calendar-ical-link').click(elgg.event_calendar.handleIcalPopup);
+	$('.event-calendar-repeating-unselected').each(elgg.event_calendar.setRepeatingClass);
+	$('.event-calendar-repeating-unselected').live('click',elgg.event_calendar.handleRepeatingSelect);
+	$('.event-calendar-repeating-selected').live('click',elgg.event_calendar.handleRepeatingUnselect);
+	$('#event-calendar-edit').submit(elgg.event_calendar.handleEditFormSubmit);
+
+	var all_day_field = $('[name="all_day"][type="checkbox"]');
+	if (all_day_field.is(':checked')) {
+		$('[name="start_time"]').val(0);
+		$('[name="start_time"]').attr('disabled','disabled');
+		$('[name="end_time"]').val(0);
+		$('[name="end_time"]').attr('disabled','disabled');
+	}
+	all_day_field.change(elgg.event_calendar.handleAllDayField);
+}
+
+elgg.event_calendar.handleAllDayField = function(e) {
+	var field = $('[name="start_time"]');
+	if (field.attr('disabled') == 'disabled') {
+		field.removeAttr('disabled');
+	} else {
+		field.attr('disabled','disabled');
+	}
+
+	field = $('[name="end_time"]');
+	if (field.attr('disabled') == 'disabled') {
+		field.removeAttr('disabled');
+	} else {
+		field.attr('disabled','disabled');
+	}
+}
+
+elgg.event_calendar.handleEditFormSubmit = function(e) {
+	if ($.trim($('[name="title"]').val()) == '') {
+		alert(elgg.echo('event_calendar:edit_form:error:missing_title'));
+		e.preventDefault();
+	}
+}
+
+elgg.event_calendar.setRepeatingClass = function(e) {
+	var id = $(this).attr('id');
+	if ($("[name='"+id+"-value']").val() == 1) {
+		$(this).removeClass('event-calendar-repeating-unselected');
+		$(this).addClass('event-calendar-repeating-selected');
+	}
+}
+
+elgg.event_calendar.handleRepeatingSelect = function(e) {
+	$(this).removeClass('event-calendar-repeating-unselected');
+	$(this).addClass('event-calendar-repeating-selected');
+	var id = $(this).attr('id');
+	$("[name='"+id+"-value']").val(1);
+}
+
+elgg.event_calendar.handleRepeatingUnselect = function(e) {
+	$(this).removeClass('event-calendar-repeating-selected');
+	$(this).addClass('event-calendar-repeating-unselected');
+	var id = $(this).attr('id');
+	$("[name='"+id+"-value']").val(0);
 }
 
 elgg.event_calendar.handleRegionChange = function(e) {

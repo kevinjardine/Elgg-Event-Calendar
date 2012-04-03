@@ -265,6 +265,9 @@ function event_calendar_page_handler($page) {
 			gatekeeper();
 			echo event_calendar_get_page_content_review_requests($page[1]);
 			break;
+		case 'get_fullcalendar_events':
+			echo event_calendar_get_page_content_fullcalendar_events($page[1],$page[2],$page[3],$page[4]);
+			break;
 		default:
 			return FALSE;
 	}
@@ -364,4 +367,26 @@ function event_calendar_entity_menu_prepare($hook, $type, $return, $params) {
 	}	
 	
 	return $return;
+}
+
+function event_calendar_handle_join($event, $object_type, $object) {
+	$group = $object['group'];
+	$user = $object['user'];
+	$user_guid = $user->getGUID();
+	$events = event_calendar_get_events_for_group($group->getGUID());
+	foreach ($events as $event) {
+		$event_id = $event->getGUID();
+		event_calendar_add_personal_event($event_id,$user_guid);
+	}
+}
+
+function event_calendar_handle_leave($event, $object_type, $object) {
+	$group = $object['group'];
+	$user = $object['user'];
+	$user_guid = $user->getGUID();
+	$events = event_calendar_get_events_for_group($group->getGUID());
+	foreach ($events as $event) {
+		$event_id = $event->getGUID();
+		event_calendar_remove_personal_event($event_id,$user_guid);
+	}
 }

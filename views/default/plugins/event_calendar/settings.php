@@ -79,6 +79,28 @@ $body .= elgg_view('input/radio',array('name'=>'params[listing_format]','value'=
 
 $body .= '<br />';
 
+$event_calendar_repeated_events = elgg_get_plugin_setting('repeated_events', 'event_calendar');
+if (!$event_calendar_repeated_events) {
+	$event_calendar_repeated_events = 'no';
+}
+
+$body .= elgg_echo('event_calendar:settings:repeated_events:title');
+$body .= '<br />';
+$body .= elgg_view('input/radio',array('name'=>'params[repeated_events]','value'=>$event_calendar_repeated_events,'options'=>$yn_options));
+
+$body .= '<br />';
+
+$event_calendar_reminders = elgg_get_plugin_setting('reminders', 'event_calendar');
+if (!$event_calendar_reminders) {
+	$event_calendar_reminders = 'no';
+}
+
+$body .= elgg_echo('event_calendar:settings:reminders:title');
+$body .= '<br />';
+$body .= elgg_view('input/radio',array('name'=>'params[reminders]','value'=>$event_calendar_reminders,'options'=>$yn_options));
+
+$body .= '<br />';
+
 $event_calendar_times = elgg_get_plugin_setting('times', 'event_calendar');
 if (!$event_calendar_times) {
 	$event_calendar_times = 'yes';
@@ -87,6 +109,17 @@ if (!$event_calendar_times) {
 $body .= elgg_echo('event_calendar:settings:times:title');
 $body .= '<br />';
 $body .= elgg_view('input/radio',array('name'=>'params[times]','value'=>$event_calendar_times,'options'=>$yn_options));
+
+$body .= '<br />';
+
+$event_calendar_restricted_times = elgg_get_plugin_setting('restricted_times', 'event_calendar');
+if (!$event_calendar_restricted_times) {
+	$event_calendar_restricted_times = 'no';
+}
+
+$body .= elgg_echo('event_calendar:settings:restricted_times:title');
+$body .= '<br />';
+$body .= elgg_view('input/radio',array('name'=>'params[restricted_times]','value'=>$event_calendar_restricted_times,'options'=>$yn_options));
 
 $body .= '<br />';
 
@@ -155,6 +188,17 @@ if (!$event_calendar_venue_view) {
 $body .= elgg_echo('event_calendar:settings:venue_view:title');
 $body .= '<br />';
 $body .= elgg_view('input/radio',array('name'=>'params[venue_view]','value'=>$event_calendar_venue_view,'options'=>$yn_options));
+
+$body .= '<br />';
+
+$event_calendar_fewer_fields = elgg_get_plugin_setting('fewer_fields', 'event_calendar');
+if (!$event_calendar_fewer_fields) {
+	$event_calendar_fewer_fields = 'no';
+}
+
+$body .= elgg_echo('event_calendar:settings:fewer_fields:title');
+$body .= '<br />';
+$body .= elgg_view('input/radio',array('name'=>'params[fewer_fields]','value'=>$event_calendar_fewer_fields,'options'=>$yn_options));
 
 $body .= '<br />';
 

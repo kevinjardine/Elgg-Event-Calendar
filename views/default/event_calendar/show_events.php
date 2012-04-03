@@ -10,16 +10,21 @@
  * 
  */
 
+elgg_load_library('elgg:event_calendar');
+
 $listing_format = $vars['listing_format'];
 
 if ($vars['events']) {
 	if ($listing_format == 'agenda') {
+		$vars['events'] = event_calendar_flatten_event_structure($vars['events']);
 		$event_list = elgg_view('event_calendar/agenda_view',$vars);
 	} else if ($listing_format == 'paged') {
+		$vars['events'] = event_calendar_flatten_event_structure($vars['events']);
 		$event_list = elgg_view('event_calendar/paged_view',$vars);
 	} else if ($listing_format == 'full') {
 		$event_list = elgg_view('event_calendar/full_calendar_view',$vars);
 	} else {
+		$vars['events'] = event_calendar_flatten_event_structure($vars['events']);
 		$options = array(
 			'list_class' => 'elgg-list-entity',
 			'full_view' => FALSE,
@@ -32,7 +37,12 @@ if ($vars['events']) {
 		$event_list = elgg_view_entity_list($vars['events'], $options);
 	}
 } else {
-	$event_list = '<p>'.elgg_echo('event_calendar:no_events_found').'</p>';
+	if ($listing_format == 'full') {
+		// show the empty calendar
+		$event_list = elgg_view('event_calendar/full_calendar_view',$vars);
+	} else {
+		$event_list = '<p>'.elgg_echo('event_calendar:no_events_found').'</p>';
+	}
 }
 if ($listing_format == 'paged' || $listing_format == 'full') {
 	echo $event_list;

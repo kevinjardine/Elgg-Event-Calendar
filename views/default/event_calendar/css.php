@@ -171,8 +171,102 @@ li.event-calendar-filter-menu-show-only {
 	margin-right: 10px;
 }
 
-.event-calendar-date-time-setter label {
+.event-calendar-medium-text {
+	width: 500px !important;
+}
+
+.event-calendar-edit-form-block label {
 	float: left;
-	width: 50px;
+	width: 90px;
 	margin-top: 5px;
+}
+
+.event-calendar-long-text {
+	width: 500px !important;
+}
+
+.event-calendar-edit-form-other-block .mceLayout  {
+	width: 500px !important;
+}
+
+.event-calendar-edit-form {
+	background-color: #FFFFFF;
+}
+
+.event-calendar-edit-form-block {
+	width: 90%;
+	background-color: #DDDDDD;
+	border-width:1px;
+	border-style:solid;
+	border-color:#bfbfbf;
+	padding: 5px;
+	margin-bottom: 10px;
+	clear: both;
+}
+
+.event-calendar-repeating-wrapper {
+	padding: 0;
+	margin-top: 5px;
+}
+.event-calendar-repeating-unselected {
+	font-size: 16px;
+	font-weight: bold;
+	color: #DDDDDD;
+	background-color: #AAAAAA;
+	border: 1px solid #444444;
+	padding: 5px;
+	width: 25px;
+	text-align: center;
+	display: inline-block;
+	margin: 0;
+}
+
+.event-calendar-repeating-unselected:hover {
+	text-decoration: none;
+}
+
+.event-calendar-repeating-selected {
+	font-size: 16px;
+	font-weight: bold;
+	color: #000000;
+	background-color: #FFFFFF;
+	border: 1px solid #000000;
+	padding: 5px;
+	width: 25px;
+	text-align: center;
+	display: inline-block;
+	margin: 0;
+}
+
+.event-calendar-repeating-selected:hover {
+	text-decoration: none;
+	color: #CCCCCC;
+}
+
+.event-calendar-edit-form-schedule-block ul.elgg-vertical li {
+	display: block !important;
+	clear: both;
+}
+
+.event-calendar-edit-form-block ul.elgg-vertical li label {
+	font-weight: normal;
+	width: 500px;
+}
+
+.event-calendar-edit-form-block h2 {
+	font-size: 18px;
+	color: #000000;
+}
+
+.event-calendar-edit-date-wrapper {
+	clear: both;
+	margin-left: 20px;
+}
+
+.event-calendar-edit-reminder-wrapper {
+	margin-top: 10px;
+}
+
+.event-calendar-description {
+	display: none;
 }

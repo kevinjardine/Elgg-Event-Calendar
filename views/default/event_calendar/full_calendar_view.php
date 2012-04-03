@@ -1,31 +1,6 @@
 <?php
 elgg_load_js('elgg.full_calendar');
 
-$events = $vars['events'];
-
-$event_array = array();
-$times_supported = elgg_get_plugin_setting('times','event_calendar') != 'no';
-
-foreach($events as $e) {
-	$event_item = array(
-		'guid' => $e->guid,
-		//'title' => '<a href="'.$e->url.'">'.$e->title.'</a>',
-		'title' => $e->title,
-		'url' => $e->getURL(),
-		'start_date' => $e->start_date,
-		'end_date' => $e->real_end_time,
-	);
-	if ($times_supported) {
-		$event_item['allDay'] = FALSE;
-	} else {
-		$event_item['allDay'] = TRUE;
-	}
-
-	$event_array[] = $event_item;
-}
-
-$json_events_string = json_encode($event_array);
-
 // TODO: is there an easy way to avoid embedding JS?
 ?>
 <script>
@@ -58,31 +33,40 @@ handleEventDrop = function(event,dayDelta,minuteDelta,allDay,revertFunc) {
     }
 };
 
-$(document).ready(function() {
-	var events = <?php echo $json_events_string; ?>;
-	var cal_events = [];
-	for (var i = 0; i < events.length; i++) {
-		cal_events.push({
-			guid: events[i].guid,
-			title : events[i].title,
-			url: events[i].url,
-			start : new Date(1000*events[i].start_date),
-			end : new Date(1000*events[i].end_date),
-			allDay: events[i].allDay
-		});
-	}
-	
+getISODate = function(d) {
+	var year = d.getFullYear();
+	var month = d.getMonth()+1;
+	month =	month < 10 ? '0' + month : month;
+	var day = d.getDay()+1;
+	day = day < 10 ? '0' + day : day;
+	return year +"-"+month+"-"+day;
+}
+
+handleGetEvents = function(start, end, callback) {	
+	var start_date = getISODate(start);
+	var end_date = getISODate(end);
+	var url = "event_calendar/get_fullcalendar_events/"+start_date+"/"+end_date+"/<?php echo $vars['filter']; ?>/<?php echo $vars['group_guid']; ?>";
+	elgg.getJSON(url, {success: 
+		function(events) {
+			callback(events);
+		}
+	});
+}
+
+$(document).ready(function() {	
 	$('#calendar').fullCalendar({
 		header: {
 			left: 'prev,next today',
 			center: 'title',
 			right: 'month,agendaWeek,agendaDay'
 		},
+		month: <?php echo date('n',strtotime($vars['start_date']))-1; ?>,
+		ignoreTimezone: true,
 		editable: true,
 		slotMinutes: 15,
 		eventDrop: handleEventDrop,
 		eventClick: handleEventClick,
-		events: cal_events
+		events: handleGetEvents
 	});
 });
 </script>
