@@ -265,10 +265,12 @@ if($event_calendar_hide_access == 'yes') {
 	$body .= elgg_view("input/access",array('name' => 'access_id','value'=>$access));
 	$body .= '</p>';
 }
-$body .= elgg_echo('event_calendar:share_ownership:label');
-$body .= '<br />';
-$body .= elgg_echo('event_calendar:share_ownership:description');
-$body .= elgg_view('input/entity_admins_dropdown',array('entity'=>$event));
+if (elgg_plugin_exists('entity_admins')) {
+	$body .= elgg_echo('event_calendar:share_ownership:label');
+	$body .= '<br />';
+	$body .= elgg_echo('event_calendar:share_ownership:description');
+	$body .= elgg_view('input/entity_admins_dropdown',array('entity'=>$event));
+}
 $body .= '</div>';
 
 if ($event_calendar_region_display == 'yes' || $event_calendar_type_display == 'yes' || $event_calendar_fewer_fields != 'yes') {
