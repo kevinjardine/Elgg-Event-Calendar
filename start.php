@@ -64,7 +64,7 @@ function event_calendar_init() {
 	elgg_extend_view('css/elgg', 'event_calendar/css');
 	
 	$event_calendar_listing_format = elgg_get_plugin_setting('listing_format', 'event_calendar');
-	if ($event_calendar_listing_format == 'full') {
+	if (elgg_plugin_exists('event_poll') || ($event_calendar_listing_format == 'full')) {
 		elgg_extend_view('css/elgg', 'fullcalendar/css');
 		$plugin_js = elgg_get_simplecache_url('js', 'event_calendar/fullcalendar');
 		elgg_register_js('elgg.full_calendar', $plugin_js);
@@ -286,6 +286,16 @@ function event_calendar_entity_menu_setup($hook, $type, $return, $params) {
 	$handler = elgg_extract('handler', $params, false);
 	if ($handler != 'event_calendar') {
 		return $return;
+	}
+	if (elgg_plugin_exists('event_poll') && $entity->canEdit() && $entity->schedule_type == 'poll') {
+		$options = array(
+			'name' => 'schedule',
+			'text' => elgg_echo('event_poll:schedule_button'),
+			'title' => elgg_echo('event_poll:schedule_button'),
+			'href' => 'event_poll/schedule/'.$entity->guid,
+			'priority' => 150,
+		);
+		$return[] = ElggMenuItem::factory($options);
 	}
 	$user_guid = elgg_get_logged_in_user_guid();
 	if ($user_guid) {

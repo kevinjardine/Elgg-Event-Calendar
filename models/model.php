@@ -55,7 +55,7 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 			$required_fields[] = 'spots';
 		}
 	} else {
-		$required_fields = array('title','start_date');
+		$required_fields = array('title');
 	}
 
 	if ($event_guid) {

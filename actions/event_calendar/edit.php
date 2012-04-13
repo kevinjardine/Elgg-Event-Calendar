@@ -34,6 +34,10 @@ if ($event) {
 		add_to_river('river/object/event_calendar/create','create',$user_guid,$event->guid);
 		system_message(elgg_echo('event_calendar:add_event_response'));
 	}
+	
+	if ($event->schedule_type == 'poll') {
+		forward('event_poll/add/'.$event->guid);
+	}
 	 
 	forward($event->getURL());
 } else {
