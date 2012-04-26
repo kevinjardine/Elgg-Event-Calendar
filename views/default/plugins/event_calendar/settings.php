@@ -445,4 +445,30 @@ $body .= elgg_echo('event_calendar:ical_auth_file_name:title');
 $body .= '<br />';
 $body .= elgg_view('input/text',array('name'=>'params[ical_auth_file_name]','value'=>$ical_auth_file_name, 'class'=>'event-calendar-ical-auth-setting'));
 
+$body .= '<br /><br />';
+
+$event_calendar_bbb_server_url = elgg_get_plugin_setting('bbb_server_url', 'event_calendar');
+
+$body .= elgg_echo('event_calendar:bbb_server_url');
+$body .= '<br />';
+$body .= elgg_view('input/text', array(
+	'name' => 'params[bbb_server_url]',
+	'value' => $event_calendar_bbb_server_url,
+	'class' => 'text_input',
+));
+
+$body .= '<br /><br />';
+
+$event_calendar_bbb_security_salt = elgg_get_plugin_setting('bbb_security_salt', 'event_calendar');
+
+$body .= elgg_echo('event_calendar:bbb_security_salt');
+$body .= '<br />';
+$body .= elgg_view('input/text', array(
+	'name' => 'params[bbb_security_salt]',
+	'value' => $event_calendar_bbb_security_salt,
+	'class' => 'text_input',
+));
+
+$body .= '<br /><br />';
+
 echo $body;

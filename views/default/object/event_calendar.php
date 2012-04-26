@@ -16,6 +16,10 @@ $full = elgg_extract('full_view', $vars, FALSE);
 
 if ($full) {
 	$body = elgg_view('event_calendar/strapline',$vars);
+	if ($event->web_conference) {
+		$body .= '<br />';
+		$body .= elgg_view('event_calendar/conference_button',array('event'=>$event));
+	}
 	$event_items = event_calendar_get_formatted_full_items($event);
 	$body .= '<br />';
 	

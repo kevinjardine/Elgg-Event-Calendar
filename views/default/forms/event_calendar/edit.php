@@ -26,6 +26,7 @@ $event_calendar_more_required = elgg_get_plugin_setting('more_required', 'event_
 $event_calendar_personal_manage = elgg_get_plugin_setting('personal_manage', 'event_calendar');
 $event_calendar_repeated_events = elgg_get_plugin_setting('repeated_events', 'event_calendar');
 $event_calendar_reminders = elgg_get_plugin_setting('reminders', 'event_calendar');
+$event_calendar_bbb_server_url = elgg_get_plugin_setting('bbb_server_url', 'event_calendar');
 
 if ($event_calendar_more_required == 'yes') {
 	$required_fields = array('title','venue','start_date','start_time',
@@ -168,9 +169,13 @@ $body .= elgg_view('event_calendar/container',array('container_guid'=>$vars['con
 $body .= '</p>';
 $body .= '<p class="event-calendar-description">'.$prefix['calendar'].elgg_echo('event_calendar:calendar_description').'</p>';
 
-if(elgg_plugin_exists('sched_conf')) {
+if($event_calendar_bbb_server_url) {
 	$body .= '<p>';
-	$body .= elgg_view('input/checkbox',array('name'=>'web_conference','value'=>$web_conference,'options_values'=>array('1')));
+	if ($fd['web_conference']) {
+		$body .= elgg_view('input/checkbox',array('name'=>'web_conference','value'=>1,'checked'=>'checked'));
+	} else {
+		$body .= elgg_view('input/checkbox',array('name'=>'web_conference','value'=>1));
+	}
 	$body .= elgg_echo('event_calendar:web_conference_label');
 	$body .= '</p>';
 }

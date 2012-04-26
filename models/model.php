@@ -152,6 +152,7 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	$event->send_reminder = get_input('send_reminder');
 	$event->reminder_number = get_input('reminder_number');
 	$event->reminder_interval = get_input('reminder_interval');
+	$event->web_conference = get_input('web_conference');
 	$event->real_end_time = event_calendar_get_end_time($event);
 	foreach ($required_fields as $fn) {
 		if (!trim($event->$fn)) {
@@ -160,6 +161,9 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 		}
 	}
 	if ($event->save()) {
+		if (!$event_guid && $event->web_conference) {
+			event_calendar_create_bbb_conf($event);
+		}
 		if ($group_guid && (elgg_get_plugin_setting('autogroup', 'event_calendar') == 'yes')) {
 			event_calendar_add_personal_events_from_group($event->guid,$group_guid);
 		}
@@ -173,12 +177,12 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 						event_calendar_add_personal_event($event->guid,$user_id);
 						if (elgg_get_plugin_setting('add_users_notify', 'event_calendar') == 'yes') {
 							notify_user($user_id, $CONFIG->site->guid, elgg_echo('event_calendar:add_users_notify:subject'),
-							sprintf(
-							elgg_echo('event_calendar:add_users_notify:body'),
-							$user->name,
-							$event->title,
-							$event->getURL()
-							)
+								sprintf(
+									elgg_echo('event_calendar:add_users_notify:body'),
+									$user->name,
+									$event->title,
+									$event->getURL()
+								)
 							);
 						}
 					}
@@ -1598,6 +1602,7 @@ function event_calendar_prepare_edit_form_vars($event = NULL) {
 		'event-calendar-repeating-saturday-value' => 0,
 		'event-calendar-repeating-sunday-value' => 0,
 		'personal_manage' => 'open',
+		'web_conference' => NULL,
 		'long_description' => NULL,
 		'access_id' => ACCESS_DEFAULT,
 		'group_guid' => NULL,
@@ -2210,3 +2215,65 @@ function event_calendar_queue_reminder($e) {
 		message_queue_set_for_sending($m->guid);
 	}
 }
+
+function event_calendar_create_bbb_conf($event) {
+	$bbb_security_salt = elgg_get_plugin_setting('bbb_security_salt','event_calendar');
+	$bbb_server_url = rtrim(elgg_get_plugin_setting('bbb_server_url','event_calendar'), '/') . '/';
+	if ($bbb_security_salt) {
+		$day_in_minutes = 60*24;
+		$duration = (int)(($event->real_end_time-$event->start_date)/60)+$day_in_minutes;
+		$title = urlencode($event->title);
+		$params = "name=$title&meetingID={$event->guid}&duration=$duration";
+		$checksum = sha1('create'.$params.$bbb_security_salt);
+		$params .= "&checksum=$checksum";
+		
+		// create curl resource
+	    $ch = curl_init();
+	
+	    // set url
+	    curl_setopt($ch, CURLOPT_URL, $bbb_server_url.'api/create?'.$params);
+	
+	    //return the transfer as a string
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	
+	    // $output contains the output string
+	    $output = curl_exec($ch);
+	
+	    // close curl resource to free up system resources
+	    curl_close($ch);
+	    
+	    /*error_log("BBB create request:");
+	    error_log($bbb_server_url.'api/create?'.$params);
+		
+	    error_log("BBB create response:");
+	    error_log($output);*/
+	    
+		$xml = new SimpleXMLElement($output);
+		if ($xml->returncode == 'SUCCESS') {
+			$event->bbb_attendee_password = (string) $xml->attendeePW;
+			$event->bbb_moderator_password = (string) $xml->moderatorPW;
+		} else {
+			register_error(elgg_echo('event_calendar:bbb_create_error',array($xml->message)));
+		}
+	} else {
+		register_error(elgg_echo('event_calendar:bbb_settings_error'));
+	}
+}
+
+function event_calendar_get_join_bbb_url($event) {
+	$bbb_security_salt = elgg_get_plugin_setting('bbb_security_salt','event_calendar');
+	$bbb_server_url = rtrim(elgg_get_plugin_setting('bbb_server_url','event_calendar'), '/') . '/';
+	$user = elgg_get_logged_in_user_entity();
+	$full_name = urlencode($user->name);
+	if ($event->canEdit()) {
+		$password = urlencode($event->bbb_moderator_password);
+	} else {
+		$password = urlencode($event->bbb_attendee_password);
+	}
+	$params = "fullName=$full_name&meetingID={$event->guid}&userID={$user->username}&password=$password";
+	$checksum = sha1('join'.$params.$bbb_security_salt);
+	$params .= "&checksum=$checksum";
+	$url = $bbb_server_url.'api/join?'.$params;
+	return $url;
+}
+
