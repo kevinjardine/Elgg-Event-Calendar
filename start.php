@@ -16,6 +16,8 @@ elgg_register_event_handler('init','system','event_calendar_init');
 function event_calendar_init() {
 
 	elgg_register_library('elgg:event_calendar', elgg_get_plugins_path() . 'event_calendar/models/model.php');
+	
+	elgg_register_plugin_hook_handler('cron', 'fiveminute', 'event_calendar_handle_reminders_cron',400);
 		
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('event_calendar','event_calendar_page_handler');
@@ -399,4 +401,9 @@ function event_calendar_handle_leave($event, $object_type, $object) {
 		$event_id = $event->getGUID();
 		event_calendar_remove_personal_event($event_id,$user_guid);
 	}
+}
+
+function event_calendar_handle_reminders_cron() {
+	elgg_load_library('elgg:event_calendar');
+	event_calendar_queue_reminders();
 }

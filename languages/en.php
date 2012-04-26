@@ -305,7 +305,19 @@ You can manage calendar requests for this event here:
 	'event_calendar:repeated_event:week_single' => "every week.",
 	'event_calendar:repeated_event:format' => "Starting on %s and repeated on %s",
 	'event_calendar:settings:repeated_events:title' => "Allow repeated events (currently only works properly in full calendar mode)",
-	'event_calendar:settings:reminders:title' => "Allow sending reminders (To be done - currently does not send reminders)",
+	'event_calendar:settings:reminders:title' => "Allow sending reminders",
+	'event_calendar:reminder:subject' => "Reminder for event: %s",
+	'event_calendar:reminder:body' => "The event
+
+%s 
+
+takes place at
+
+%s.
+	
+You can visit the event page here:
+%s
+	",
 		
 	/**
 	 * Event calendar river

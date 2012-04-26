@@ -85,7 +85,7 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	//$end_date = trim(get_input('end_date',''));
 	// convert start date from current server time to GMT
 	$start_date_text = gmdate("Y-m-d",$start_date);
-	$event->munged_start_date_string = $start_date_text." ".date_default_timezone_get();
+	//$event->munged_start_date_string = $start_date_text." ".date_default_timezone_get();
 	
 	$event->start_date = strtotime($start_date_text." ".date_default_timezone_get());
 	$end_date = trim(get_input('end_date',''));
@@ -93,7 +93,7 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	if ($end_date) {
 		$end_date_text = gmdate("Y-m-d",$end_date);		
 		$event->end_date = strtotime($end_date_text." ".date_default_timezone_get());
-		$event->munged_end_date_string = $end_date_text." ".date_default_timezone_get();
+		//$event->munged_end_date_string = $end_date_text." ".date_default_timezone_get();
 	} else {
 		$event->end_date = '';
 	}
@@ -189,7 +189,7 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	return $event;
 }
 
-function event_calendar_get_events_between($start_date,$end_date,$is_count,$limit=10,$offset=0,$container_guid=0,$region='-') {
+function event_calendar_get_events_between($start_date,$end_date,$is_count=FALSE,$limit=10,$offset=0,$container_guid=0,$region='-') {
 	if ($is_count) {
 		$count = event_calendar_get_entities_from_metadata_between2('start_date','end_date',
 		$start_date, $end_date, "object", "event_calendar", 0, $container_guid, $limit,$offset,"",0,false,true,$region);
@@ -1059,7 +1059,7 @@ function event_calendar_get_personal_events_for_user($user_guid,$limit) {
 // the old way used annotations, and the new Elgg 1.8 way uses relationships
 // for now this version attempts to bridge the gap by using both methods for older sites
 
-function event_calendar_get_users_for_event($event_guid,$limit,$offset,$is_count) {
+function event_calendar_get_users_for_event($event_guid,$limit,$offset=0,$is_count=FALSE) {
 	$options = array(
 		'type' => 'user',
 		'relationship' => 'personal_event',
@@ -2118,4 +2118,95 @@ function event_calendar_flatten_event_structure($events) {
 		}
 	}
 	return $flattened;
+}
+
+function event_calendar_queue_reminders() {
+	// game plan - get all events up to 60 days ahead
+	// with no reminder sent
+	// compute reminder period
+	// if <= current time, set reminder_queued flag and queue the
+	// notification message using the message_queue plugin
+	if (elgg_plugin_exists('message_queue')) {
+		$now = time();
+		// oops - this does not work for repeated events
+		// need extra stuff for that
+		/*$options = array(
+			'type' => 'object',
+			'subtype' => 'event_calendar',
+			'metadata_name_value_pairs' => array(
+				array('name' => 'reminder_queued', 'value' => 'no'),
+				array('name' => 'send_reminder', 'value' => 1),
+				array('name' => 'start_date', 'value' => $now + 60*24*60*60, 'operand' => '>='),
+			),
+			'limit' => 0,
+		);
+		$events = elgg_get_entities_from_metadata($options);
+		*/
+		$event_list = event_calendar_get_events_between($now,$now + 60*24*60*60,FALSE,0);
+
+		foreach($event_list as $es) {
+			$e = $es['event'];
+			if ($e->send_reminder) {
+				$reminder_period = 60*$e->reminder_interval*$e->reminder_number;
+				if ($e->repeats) {
+					// repeated events require more complex handing
+					foreach($es['data'] as $d) {
+						// if event falls in the reminder period
+						if ($d->start_time - $reminder_period >= $now) {
+							// and the reminder has not already been queued
+							if (!event_calendar_repeat_reminder_logged($e,$d->start_time)) {
+								// set the reminder queued flag
+								event_calendar_repeat_reminder_log($e,$d->start_time);
+								// queue the reminder for sending
+								event_calendar_queue_reminder($e);
+							}
+							break;
+						}
+					}
+				} else {
+					// if this is just a normal non-repeated event, then we just need to set a flag and queue the reminder
+					if (($e->reminder_queued != 'yes') && ($e->start_date - $now <= $reminder_period)) {
+						$e->reminder_queued = 'yes';
+						event_calendar_queue_reminder($e);
+					}
+				}
+			}			
+		}
+	}
+}
+
+function event_calendar_repeat_reminder_log($e,$start) {
+	// this simple log just uses annotations on the event
+	// TODO - remove log entries for past events
+	create_annotation($e->guid, 'repeat_reminder_log_item', $start, '',0,ACCESS_PUBLIC);	
+}
+
+function event_calendar_repeat_reminder_logged($e,$start) {
+	$options = array(
+		'guid' => $e->guid,
+		'annotation_name' => 'repeat_reminder_log_item',
+		'annotation_value' => $start,
+		'limit' => 1
+	);
+	
+	if (elgg_get_annotations($options)) {
+		return TRUE;
+	} else {
+		return FALSE;
+	}
+}
+
+function event_calendar_queue_reminder($e) {
+	elgg_load_library('elgg:message_queue');
+	$subject = elgg_echo('event_calendar:reminder:subject',array($e->title));
+	$time_string = event_calendar_get_formatted_time($e);
+	$body = elgg_echo('event_calendar:reminder:body',array($e->title,$time_string,$e->getURL()));
+	$m = message_queue_create_message($subject,$body);
+	if ($m) {
+		$users = event_calendar_get_users_for_event($e->guid,0);
+		foreach($users as $u) {
+			message_queue_add($m->guid,$u->guid);
+		}
+		message_queue_set_for_sending($m->guid);
+	}
 }
