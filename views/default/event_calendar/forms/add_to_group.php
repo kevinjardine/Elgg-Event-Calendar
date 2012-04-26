@@ -56,7 +56,7 @@ if ($remove_group) {
 
 if ($add_options || $remove_options) {
 	echo '<div class="contentWrapper" >';
-	$event_bit = elgg_view('input/hidden', array("internalname" => "event_id","value" => $event_id));
+	$event_bit = elgg_view('input/hidden', array("name" => "event_id","value" => $event_id));
 	if ($add_options) {
 		echo "<h4>".elgg_echo('event_calendar:add_to_group:add_group_title')."</h4>";
 		$add_pulldown = elgg_view("input/dropdown",array("name" => "group_id","options_values" => $add_options));
