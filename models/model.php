@@ -1519,11 +1519,14 @@ function event_calendar_get_page_content_edit($page_type,$guid) {
 		if (elgg_instanceof($event, 'object', 'event_calendar') && $event->canEdit()) {
 			$body_vars['event'] = $event;
 			$body_vars['form_data'] =  event_calendar_prepare_edit_form_vars($event);
+			
 			$event_container = get_entity($event->container_guid);
 			if (elgg_instanceof($event_container, 'group')) {
 				elgg_push_breadcrumb(elgg_echo('event_calendar:group_breadcrumb'), 'event_calendar/group/'.$event->container_guid);
+				$body_vars['group_guid'] = $event_container->guid;
 			} else {
 				elgg_push_breadcrumb(elgg_echo('event_calendar:show_events_title'),'event_calendar/list');
+				$body_vars['group_guid'] = 0;
 			}
 			elgg_push_breadcrumb($event->title,$event->getURL());
 			elgg_push_breadcrumb(elgg_echo('event_calendar:manage_event_title'));
@@ -1547,6 +1550,7 @@ function event_calendar_get_page_content_edit($page_type,$guid) {
 				$content = elgg_echo('event_calendar:no_group');
 			}
 		} else {
+			$body_vars['group_guid'] = 0;
 			elgg_push_breadcrumb(elgg_echo('event_calendar:show_events_title'),'event_calendar/list');
 
 			elgg_push_breadcrumb(elgg_echo('event_calendar:add_event_title'));

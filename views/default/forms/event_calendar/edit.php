@@ -140,7 +140,7 @@ $body = '<div class="event-calendar-edit-form">';
 
 $body .= elgg_view('input/hidden',array('name'=>'event_action', 'value'=>$event_action));
 $body .= elgg_view('input/hidden',array('name'=>'event_guid', 'value'=>$event_guid));
-$body .= elgg_view('input/hidden',array('name'=>'group_guid', 'value'=>$vars['group_guid']));
+//$body .= elgg_view('input/hidden',array('name'=>'group_guid', 'value'=>$vars['group_guid']));
 
 $body .= '<div class="event-calendar-edit-form-block event-calendar-edit-form-top-block">';
 
@@ -165,7 +165,7 @@ $body .= '</p>';
 $body .= '<p class="event-calendar-description">'.$prefix['event_tags'].elgg_echo('event_calendar:event_tags_description').'</p>';
 
 $body .= '<p><label>'.elgg_echo("event_calendar:calendar_label").'</label>';
-$body .= elgg_view('event_calendar/container',array('container_guid'=>$vars['container_guid']));
+$body .= elgg_view('event_calendar/container',array('container_guid'=>$vars['group_guid']));
 $body .= '</p>';
 $body .= '<p class="event-calendar-description">'.$prefix['calendar'].elgg_echo('event_calendar:calendar_description').'</p>';
 
