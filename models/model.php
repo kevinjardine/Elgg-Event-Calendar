@@ -970,7 +970,17 @@ $count = false, $region='-', $meta_max = '', $annotation_name = '')
 		if ($limit) {
 			$query .= " limit $offset, $limit"; // Add order and limit
 		}
-		return get_data($query, "entity_row_to_elggstar");
+		$entities = get_data($query, "entity_row_to_elggstar");
+		if (elgg_get_plugin_setting('add_to_group_calendar', 'event_calendar') == 'yes') {
+			if (get_entity($container_guid) instanceOf ElggGroup) {
+				$entities = event_calendar_get_entities_from_metadata_between_related($meta_start_name, $meta_end_name,
+					$meta_start_value, $meta_end_value, $entity_type,
+					$entity_subtype, $owner_guid, $container_guid,
+					0, 0, "", 0,
+					false, false, '-',$entities);
+			}
+		}
+		return $entities;
 	} else {
 		if ($row = get_data_row($query))
 		return $row->total;
