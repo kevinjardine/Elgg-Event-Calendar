@@ -358,7 +358,7 @@ if (!$event_calendar_region_list) {
 
 $body .= elgg_echo('event_calendar:settings:region_list:title');
 $body .= '<br />';
-$body .= elgg_view('event_calendar/input/longtext',array('name'=>'params[region_list]','value'=>$event_calendar_region_list));
+$body .= elgg_view('input/plaintext',array('name'=>'params[region_list]','value'=>$event_calendar_region_list));
 
 $body .= '<br />';
 
@@ -391,7 +391,7 @@ if (!$event_calendar_type_list) {
 
 $body .= elgg_echo('event_calendar:settings:type_list:title');
 $body .= '<br />';
-$body .= elgg_view('event_calendar/input/longtext',array('name'=>'params[type_list]','value'=>$event_calendar_type_list));
+$body .= elgg_view('input/plaintext',array('name'=>'params[type_list]','value'=>$event_calendar_type_list));
 
 $body .= '<br />';
 
