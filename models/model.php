@@ -1179,10 +1179,14 @@ function event_calendar_get_region($event) {
 function event_calendar_get_type($event) {
 	$event_calendar_type_list_handles = elgg_get_plugin_setting('type_list_handles', 'event_calendar');
 	$type = trim($event->event_type);
-	if ($event_calendar_type_list_handles == 'yes') {
-		$type = elgg_echo('event_calendar:type:'.$type);
-	}
-	return htmlspecialchars($type);
+	if ($type) {
+		if ($event_calendar_type_list_handles == 'yes') {
+			$type = elgg_echo('event_calendar:type:'.$type);
+		}
+		return htmlspecialchars($type);
+	} else {
+		return $type;
+	}	
 }
 
 function event_calendar_get_formatted_full_items($event) {
@@ -1205,10 +1209,13 @@ function event_calendar_get_formatted_full_items($event) {
 		$event_items[] = $item;
 	}
 	if ($event_calendar_type_display == 'yes') {
-		$item = new stdClass();
-		$item->title = elgg_echo('event_calendar:type_label');
-		$item->value = event_calendar_get_type($event);
-		$event_items[] = $item;
+		$event_type = event_calendar_get_type($event);
+		if ($event_type) {
+			$item = new stdClass();
+			$item->title = elgg_echo('event_calendar:type_label');
+			$item->value = event_calendar_get_type($event);
+			$event_items[] = $item;
+		}
 	}
 	$item = new stdClass();
 	$item->title = elgg_echo('event_calendar:fees_label');
