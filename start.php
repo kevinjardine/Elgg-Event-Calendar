@@ -190,6 +190,7 @@ function event_calendar_page_handler($page) {
 		case 'manage_users':
 			echo event_calendar_get_page_content_manage_users($page[1]);
 			break;
+		case 'schedule':
 		case 'add':
 			if (isset($page[1])) {
 				group_gatekeeper();

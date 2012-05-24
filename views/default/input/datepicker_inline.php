@@ -65,7 +65,6 @@ $("#<?php echo $vars['name']; ?>").datepicker({
         document.location.href = "<?php echo $link_bit; ?>".replace('%s', date.substring(0,10));
     },
     dateFormat: "yy-mm-dd",
-    <?php echo $vars['range_bit']; ?>
     defaultDate: "<?php echo $vars['start_date'] .' - '.$vars['end_date']; ?>",
     beforeShowDay: highlightWeek
 });
@@ -76,7 +75,7 @@ if ("<?php echo $vars['mode'] ?>" == "month") {
 	end_date += 1;
 }
 $("#<?php echo $vars['name']; ?>").datepicker("setDate", start_date, end_date);
-var done_loading = true;
+done_loading = true;
 });
 
 </script>

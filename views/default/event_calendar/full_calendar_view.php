@@ -14,7 +14,7 @@ handleEventClick = function(event) {
 
 handleEventDrop = function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 
-    if (!confirm("Are you sure about this change?")) {
+    if (!confirm("<?php echo elgg_echo('event_calendar:are_you_sure'); ?>")) {
         revertFunc();
     } else {
     	elgg.action('event_calendar/modify_full_calendar',

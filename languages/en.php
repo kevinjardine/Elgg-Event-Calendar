@@ -290,6 +290,7 @@ You can manage calendar requests for this event here:
 	'event_calendar:site_calendar' => "Site-wide calendar",
 	'event_calendar:calendar_label' => "Calendar",
 	'event_calendar:calendar_description' => "Calendar for this event.",
+	'event_calendar:are_you_sure' => "Are you sure about this change?",
 	'event_calendar:schedule:header' => "Schedule",
 	'event_calendar:permissions:header' => "Permissions",
 	'event_calendar:read_access' => "Read access",
@@ -298,6 +299,9 @@ You can manage calendar requests for this event here:
 	'event_calendar:share_ownership:description' => "Allow the following people to edit or delete this event, invite participants, etc.",
 	'event_calendar:settings:fewer_fields:title' => "Hide fees, contact, organiser and long description fields",
 	'event_calendar:settings:restricted_times:title' => "Restricted time to between 6am and 9pm (6:00 and 21:00)",
+	'event_calendar:add_event' => "Add event",
+	'event_calendar:schedule_event' => "Schedule event",
+	'event_calendar:list_polls' => "List event polls",
 	'event_calendar:edit_form:error:missing_title' => "Error: please supply the missing title.",
 	'event_calendar:repeated_event:week_interval' => "every %s weeks.",
 	'event_calendar:repeated_event:week_single' => "every week.",
@@ -305,6 +309,7 @@ You can manage calendar requests for this event here:
 	'event_calendar:settings:repeated_events:title' => "Allow repeated events (currently only works properly in full calendar mode)",
 	'event_calendar:settings:reminders:title' => "Allow sending reminders",
 	'event_calendar:reminder:subject' => "Reminder for event: %s",
+	'event_calendar:poll_suffix' => "(poll)",
 	'event_calendar:reminder:body' => "The event
 
 %s 

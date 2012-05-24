@@ -22,6 +22,22 @@ function event_calendar_get_event_for_edit($event_id) {
 	}
 }
 
+// converts to time in minutes since midnight
+function event_calendar_convert_to_time($hour,$minute,$meridian) {
+	if ($meridian) {
+		if ($meridian == 'am') {
+			if ($hour == 12) {
+				$hour = 0;
+			}
+		} else {
+			if ($hour < 12) {
+				$hour += 12;
+			}
+		}
+	}
+	return 60*$hour+$minute;
+}
+
 // returns the event or FALSE
 function event_calendar_set_event_from_form($event_guid,$group_guid) {
 
@@ -33,6 +49,7 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	$event_calendar_more_required = elgg_get_plugin_setting('more_required', 'event_calendar');
 	$event_calendar_personal_manage = elgg_get_plugin_setting('personal_manage', 'event_calendar');
 	$event_calendar_repeating_events = elgg_get_plugin_setting('repeating_events', 'event_calendar');
+	$schedule_type = get_input('schedule_type');
 
 	if ($event_calendar_more_required == 'yes') {
 		$required_fields = array('title','venue','start_date',
@@ -80,41 +97,47 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	$event->description = get_input('description');
 	$event->venue = get_input('venue');
 
-	$start_date = get_input('start_date');
-	$event->original_start_date = get_input('start_date');
-	//$end_date = trim(get_input('end_date',''));
-	// convert start date from current server time to GMT
-	$start_date_text = gmdate("Y-m-d",$start_date);
-	//$event->munged_start_date_string = $start_date_text." ".date_default_timezone_get();
+	if ($schedule_type != 'poll') {
+		$start_date_text = trim(get_input('start_date'));
+		/*$event->original_start_date = get_input('start_date');
+		//$end_date = trim(get_input('end_date',''));
+		// convert start date from current server time to GMT
+		$start_date_text = gmdate("Y-m-d",$start_date);
+		//$event->munged_start_date_string = $start_date_text." ".date_default_timezone_get();*/
+		
+		// TODO: is the timezone bit necessary?
+		$event->start_date = strtotime($start_date_text." ".date_default_timezone_get());
+		$end_date_text = trim(get_input('end_date',''));
+		//$event->original_end_date = get_input('end_date');
+		if ($end_date_text) {	
+			$event->end_date = strtotime($end_date_text." ".date_default_timezone_get());
+			//$event->munged_end_date_string = $end_date_text." ".date_default_timezone_get();
+		} else {
+			$event->end_date = '';
+		}
 	
-	$event->start_date = strtotime($start_date_text." ".date_default_timezone_get());
-	$end_date = trim(get_input('end_date',''));
-	$event->original_end_date = get_input('end_date');
-	if ($end_date) {
-		$end_date_text = gmdate("Y-m-d",$end_date);		
-		$event->end_date = strtotime($end_date_text." ".date_default_timezone_get());
-		//$event->munged_end_date_string = $end_date_text." ".date_default_timezone_get();
-	} else {
-		$event->end_date = '';
-	}
-
-	if ($event_calendar_times != 'no') {
-		$st = get_input('start_time','');
-		if (is_numeric($st)) {
-			$event->start_time = $st;
-		} else {
-			$event->start_time = '';
-		}
-		$et = get_input('end_time','');
-		if (is_numeric($et)) {
-			$event->end_time = $et;
-		} else {
-			$event->end_time = '';
-		}
-		if (is_numeric($event->start_time)) {
-			// Set start date to the Unix start time, if set.
-			// This allows sorting by date *and* time.
-			$event->start_date += $event->start_time*60;
+		if ($event_calendar_times != 'no') {
+			$hour = get_input('start_time_hour','');
+			$minute = get_input('start_time_minute','');
+			$meridian = get_input('start_time_meridian','');
+			if (is_numeric($hour) && is_numeric($minute)) {
+				$event->start_time = event_calendar_convert_to_time($hour,$minute,$meridian);
+			} else {
+				$event->start_time = '';
+			}
+			$hour = get_input('end_time_hour','');
+			$minute = get_input('end_time_minute','');
+			$meridian = get_input('end_time_meridian','');
+			if (is_numeric($hour) && is_numeric($minute)) {
+				$event->end_time = event_calendar_convert_to_time($hour,$minute,$meridian);
+			} else {
+				$event->end_time = '';
+			}
+			if (is_numeric($event->start_date) && is_numeric($event->start_time)) {
+				// Set start date to the Unix start time, if set.
+				// This allows sorting by date *and* time.
+				$event->start_date += $event->start_time*60;
+			}
 		}
 	}
 	if ($event_calendar_spots_display == 'yes') {
@@ -147,8 +170,7 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	$event->organiser = get_input('organiser');
 	$event->tags = string_to_tag_array(get_input('tags'));
 	$event->long_description = get_input('long_description');
-	$event->all_day = get_input('all_day');
-	$event->schedule_type = get_input('schedule_type');
+	$event->schedule_type = $schedule_type;
 	$event->send_reminder = get_input('send_reminder');
 	$event->reminder_number = get_input('reminder_number');
 	$event->reminder_interval = get_input('reminder_interval');
@@ -193,7 +215,8 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	return $event;
 }
 
-function event_calendar_get_events_between($start_date,$end_date,$is_count=FALSE,$limit=10,$offset=0,$container_guid=0,$region='-') {
+function event_calendar_get_events_between($start_date,$end_date,$is_count=FALSE,$limit=10,$offset=0,$container_guid=0,$region='-') {	
+	$polls_supported = elgg_is_active_plugin('event_poll');
 	if ($is_count) {
 		$count = event_calendar_get_entities_from_metadata_between2('start_date','end_date',
 		$start_date, $end_date, "object", "event_calendar", 0, $container_guid, $limit,$offset,"",0,false,true,$region);
@@ -203,6 +226,11 @@ function event_calendar_get_events_between($start_date,$end_date,$is_count=FALSE
 			$start_date, $end_date, "object", "event_calendar", 0, $container_guid, $limit,$offset,"",0,false,false,$region);
 		$repeating_events = event_calendar_get_repeating_events_between($start_date,$end_date,$container_guid,$region);
 		$all_events = event_calendar_merge_repeating_events($events, $repeating_events);
+		if ($polls_supported) {
+			elgg_load_library('elgg:event_poll');
+			$all_events = event_poll_merge_poll_events($all_events,$start_date,$end_date);
+		}
+		
 		return $all_events;
 	}
 }
@@ -1204,10 +1232,12 @@ function event_calendar_get_formatted_full_items($event) {
 	$event_calendar_region_display = elgg_get_plugin_setting('region_display', 'event_calendar');
 	$event_calendar_type_display = elgg_get_plugin_setting('type_display', 'event_calendar');
 	$event_items = array();
-	$item = new stdClass();
-	$item->title = elgg_echo('event_calendar:when_label');
-	$item->value = $time_bit;
-	$event_items[] = $item;
+	if ($time_bit) {
+		$item = new stdClass();
+		$item->title = elgg_echo('event_calendar:when_label');
+		$item->value = $time_bit;
+		$event_items[] = $item;
+	}
 	$item = new stdClass();
 	$item->title = elgg_echo('event_calendar:venue_label');
 	$item->value = htmlspecialchars($event->venue);
@@ -1244,6 +1274,9 @@ function event_calendar_get_formatted_full_items($event) {
 }
 
 function event_calendar_get_formatted_time($event) {
+	if (!$event->start_date) {
+		return '';
+	}
 	$date_format = 'j M Y';
 	$event_calendar_times = elgg_get_plugin_setting('times', 'event_calendar') != 'no';
 
@@ -1448,18 +1481,9 @@ function event_calendar_get_page_content_list($page_type,$container_guid,$start_
 		elgg_push_context('groups');
 		elgg_set_page_owner_guid($container_guid);
 		$user_guid = elgg_get_logged_in_user_guid();
-		$group_calendar = elgg_get_plugin_setting('group_calendar', 'event_calendar');
-		if (!$group_calendar || $group_calendar == 'members') {
-			if (elgg_get_page_owner_entity()->canWriteToContainer($user_guid)){
-				elgg_register_menu_item('title', array(
-					'name' => 'add',
-					'href' => "event_calendar/add/".$container_guid,
-					'text' => elgg_echo('event_calendar:add'),
-					'class' => 'elgg-button elgg-button-action',
-				));
-			}
-		} else if ($group_calendar == 'admin') {
-			if (elgg_is_admin_logged_in() || ($group->owner_guid == $user_guid)) {
+		// TODO - ideally avoid the check on the event_poll plugin, perhaps by having event_poll remove the menu item
+		if(event_calendar_can_add($container_guid)) {
+			if (!elgg_plugin_exists('event_poll')) {
 				elgg_register_menu_item('title', array(
 					'name' => 'add',
 					'href' => "event_calendar/add/".$container_guid,
@@ -1470,20 +1494,9 @@ function event_calendar_get_page_content_list($page_type,$container_guid,$start_
 		}
 	} else {
 		elgg_push_breadcrumb(elgg_echo('item:object:event_calendar'));
-		$site_calendar = elgg_get_plugin_setting('site_calendar', 'event_calendar');
-		if (!$site_calendar || $site_calendar == 'admin') {
-			// only admins can post directly to the site-wide calendar
-			if (elgg_is_admin_logged_in()) {
-				elgg_register_menu_item('title', array(
-					'name' => 'add',
-					'href' => "event_calendar/add",
-					'text' => elgg_echo('event_calendar:add'),
-					'class' => 'elgg-button elgg-button-action',
-				));
-			}
-		} else if ($site_calendar == 'loggedin') {
-			// any logged-in user can post to the site calendar
-			if (elgg_is_logged_in()) {
+		$user_guid = elgg_get_logged_in_user_guid();
+		if(event_calendar_can_add($container_guid)) {
+			if (!elgg_plugin_exists('event_poll')) {
 				elgg_register_menu_item('title', array(
 					'name' => 'add',
 					'href' => "event_calendar/add",
@@ -1535,7 +1548,7 @@ function event_calendar_get_page_content_edit($page_type,$guid) {
 		$event = get_entity((int)$guid);
 		if (elgg_instanceof($event, 'object', 'event_calendar') && $event->canEdit()) {
 			$body_vars['event'] = $event;
-			$body_vars['form_data'] =  event_calendar_prepare_edit_form_vars($event);
+			$body_vars['form_data'] =  event_calendar_prepare_edit_form_vars($event,$page_type);
 			
 			$event_container = get_entity($event->container_guid);
 			if (elgg_instanceof($event_container, 'group')) {
@@ -1554,6 +1567,7 @@ function event_calendar_get_page_content_edit($page_type,$guid) {
 		}
 	} else {
 		$title = elgg_echo('event_calendar:add_event_title');
+		
 		if ($guid) {
 			// add to group
 			$group = get_entity($guid);
@@ -1561,7 +1575,7 @@ function event_calendar_get_page_content_edit($page_type,$guid) {
 				$body_vars['group_guid'] = $guid;
 				elgg_push_breadcrumb(elgg_echo('event_calendar:group_breadcrumb'), 'event_calendar/group/'.$guid);
 				elgg_push_breadcrumb(elgg_echo('event_calendar:add_event_title'));
-				$body_vars['form_data'] = event_calendar_prepare_edit_form_vars();
+				$body_vars['form_data'] = event_calendar_prepare_edit_form_vars(NULL,$page_type);
 				$content = elgg_view_form('event_calendar/edit', $vars, $body_vars);
 			} else {
 				$content = elgg_echo('event_calendar:no_group');
@@ -1571,7 +1585,7 @@ function event_calendar_get_page_content_edit($page_type,$guid) {
 			elgg_push_breadcrumb(elgg_echo('event_calendar:show_events_title'),'event_calendar/list');
 
 			elgg_push_breadcrumb(elgg_echo('event_calendar:add_event_title'));
-			$body_vars['form_data'] = event_calendar_prepare_edit_form_vars();
+			$body_vars['form_data'] = event_calendar_prepare_edit_form_vars(NULL,$page_type);
 
 			$content = elgg_view_form('event_calendar/edit', $vars, $body_vars);
 		}
@@ -1590,17 +1604,22 @@ function event_calendar_get_page_content_edit($page_type,$guid) {
  * @param ElggObject       $event
  * @return array
  */
-function event_calendar_prepare_edit_form_vars($event = NULL) {
+function event_calendar_prepare_edit_form_vars($event = NULL, $page_type = '') {
 
 	// input names => defaults
+	$now = time();
+	$iso_date = date('Y-m-d',$now);
+	$now_midnight = strtotime($iso_date);
+	$start_time = floor(($now-$now_midnight)/60) + 60;
+	$start_time = floor($start_time/5)*5;
 	$values = array(
 		'title' => NULL,
 		'description' => NULL,
 		'venue' => NULL,
-		'start_date' => NULL,
-		'end_date' => NULL,
-		'start_time' => NULL,
-		'end_time' => NULL,
+		'start_date' => $now+60*60,
+		'end_date' => $now+2*60*60,
+		'start_time' => $start_time,
+		'end_time' => $start_time + 60,
 		'spots' => NULL,
 		'region' => '-',
 		'event_type' => '-',
@@ -1608,11 +1627,9 @@ function event_calendar_prepare_edit_form_vars($event = NULL) {
 		'contact' => NULL,
 		'organiser' => NULL,
 		'tags' => NULL,
-		'all_day' => 0,
 		'send_reminder' => NULL,
 		'reminder_number' => 1,
 		'reminder_interval' => 60,
-		'schedule_type' => 'fixed',
 		'repeats' => NULL,
 		'repeat_interval' => 1,
 		'event-calendar-repeating-monday-value' => 0,
@@ -1628,6 +1645,12 @@ function event_calendar_prepare_edit_form_vars($event = NULL) {
 		'access_id' => ACCESS_DEFAULT,
 		'group_guid' => NULL,
 	);
+	
+	if ($page_type == 'schedule') {
+		$values['schedule_type'] = 'poll';
+	} else {
+		$values['schedule_type'] = 'fixed';
+	}
 
 	if ($event) {
 		foreach (array_keys($values) as $field) {
@@ -2102,6 +2125,7 @@ function event_calendar_get_page_content_fullcalendar_events($start_date,$end_da
 	}
 	$event_array = array();
 	$times_supported = elgg_get_plugin_setting('times','event_calendar') != 'no';
+	$polls_supported = elgg_plugin_exists('event_poll');
 	foreach($events as $e) {
 		$event = $e['event'];
 		$event_data = $e['data'];
@@ -2115,10 +2139,15 @@ function event_calendar_get_page_content_fullcalendar_events($start_date,$end_da
 				'start' => date('c',$ed['start_time']),
 				'end' => date('c',$ed['end_time']),
 			);
-			if (!$times_supported || $event->all_day) {
+			if (!$times_supported || ($event->schedule_type == 'all_day')) {
 				$event_item['allDay'] = TRUE;
 			} else {
 				$event_item['allDay'] = FALSE;
+			}
+			
+			if ($polls_supported && isset($e['is_event_poll']) && $e['is_event_poll']) {
+				$event_item['className'] = 'event-poll-class';
+				$event_item['title'] .= ' '.elgg_echo('event_calendar:poll_suffix');
 			}
 		
 			$event_array[] = $event_item;
@@ -2298,3 +2327,45 @@ function event_calendar_get_join_bbb_url($event) {
 	return $url;
 }
 
+// returns TRUE if the given user can add an event to the given calendar
+// if group_guid is 0, this is assumed to be the site calendar
+function event_calendar_can_add($group_guid=0,$user_guid=0) {
+	if (!$user_guid) {
+		if (elgg_is_logged_in()) {
+			$user_guid = elgg_get_logged_in_user_guid();
+		} else {
+			return FALSE;
+		}
+	}
+	if ($group_guid) {
+		if (!event_calendar_activated_for_group($group_guid)) {
+			return FALSE;
+		}
+		$group = get_entity($group_guid);
+		if (elgg_instanceof($group,'group')) {
+			$group_calendar = elgg_get_plugin_setting('group_calendar', 'event_calendar');
+			if (!$group_calendar || $group_calendar == 'members') {
+				return $group->canWriteToContainer($user_guid);				
+			} else if ($group_calendar == 'admin') {
+				if ($group->canEdit($user_guid)) {
+					return TRUE;
+				} else {
+					return FALSE;
+				}
+			}
+		} else {
+			return FALSE;
+		}
+	} else {		
+		$site_calendar = elgg_get_plugin_setting('site_calendar', 'event_calendar');
+		if (!$site_calendar || $site_calendar == 'admin') {
+			// only admins can post directly to the site-wide calendar
+			return elgg_is_admin_user($user_guid);
+		} else if ($site_calendar == 'loggedin') {
+			// any logged-in user can post to the site calendar
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}

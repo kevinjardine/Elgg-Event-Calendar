@@ -10,6 +10,8 @@ elgg.event_calendar.init = function () {
 	$('.event-calendar-repeating-unselected').live('click',elgg.event_calendar.handleRepeatingSelect);
 	$('.event-calendar-repeating-selected').live('click',elgg.event_calendar.handleRepeatingUnselect);
 	$('#event-calendar-edit').submit(elgg.event_calendar.handleEditFormSubmit);
+	$('#event-calendar-edit-schedule-type').click(elgg.event_calendar.handleScheduleType);
+	elgg.event_calendar.handleScheduleType();
 
 	var all_day_field = $('[name="all_day"][type="checkbox"]');
 	if (all_day_field.is(':checked')) {
@@ -19,6 +21,28 @@ elgg.event_calendar.init = function () {
 		$('[name="end_time"]').attr('disabled','disabled');
 	}
 	all_day_field.change(elgg.event_calendar.handleAllDayField);
+}
+
+elgg.event_calendar.handleScheduleType = function(e) {
+	var st = $('#event-calendar-edit-schedule-type:checked').val();
+	if (st == 'poll') {
+		$(".event-calendar-edit-date-wrapper").hide();
+		$(".event-calendar-edit-reminder-wrapper").hide();
+		$(".event-calendar-edit-form-membership-block").hide();
+		$(".event-calendar-edit-form-share-block").hide();
+	} else {
+		$(".event-calendar-edit-date-wrapper").show();
+		$(".event-calendar-edit-reminder-wrapper").show();
+		$(".event-calendar-edit-form-membership-block").show();
+		$(".event-calendar-edit-form-share-block").show();
+		if (st == 'all_day') {
+			$("[name='start_time']").hide();
+			$("#event-calendar-to-time-wrapper").hide();
+		} else {
+			$("[name='start_time']").show();
+			$("#event-calendar-to-time-wrapper").show();
+		}
+	}
 }
 
 elgg.event_calendar.handleAllDayField = function(e) {
