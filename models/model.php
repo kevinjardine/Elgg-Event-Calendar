@@ -1855,7 +1855,7 @@ function event_calendar_generate_listing_params($page_type,$container_guid,$orig
 	return $params;
 }
 
-function event_calendar_get_page_content_view($event_guid) {
+function event_calendar_get_page_content_view($event_guid,$light_box = FALSE) {
 	// add personal calendar button and links
 	elgg_push_context('event_calendar:view');
 	$event = get_entity($event_guid);
@@ -1885,12 +1885,16 @@ function event_calendar_get_page_content_view($event_guid) {
 			$content .= elgg_view_comments($event);
 		}
 	}
-
-	$params = array('title' => $title, 'content' => $content,'filter' => '');
-
-	$body = elgg_view_layout("content", $params);
-
-	return elgg_view_page($title,$body);
+	
+	if ($light_box) {
+		return '<div class="event-calendar-lightbox">'.elgg_view_title($title).$content.'</div>';
+	} else {
+		$params = array('title' => $title, 'content' => $content,'filter' => '');
+	
+		$body = elgg_view_layout("content", $params);
+	
+		return elgg_view_page($title,$body);
+	}
 }
 
 function event_calendar_get_page_content_display_users($event_guid) {
@@ -2135,7 +2139,7 @@ function event_calendar_get_page_content_fullcalendar_events($start_date,$end_da
 				'id' => $event->guid,
 				'guid' => $event->guid,
 				'title' => $event->title,
-				'url' => $event->getURL(),
+				'url' => elgg_get_site_url().'event_calendar/view_light_box/'.$event->guid,
 				'start' => date('c',$ed['start_time']),
 				'end' => date('c',$ed['end_time']),
 			);

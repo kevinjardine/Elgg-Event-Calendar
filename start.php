@@ -184,6 +184,9 @@ function event_calendar_page_handler($page) {
 		case 'view':
 			echo event_calendar_get_page_content_view($page[1]);
 			break;
+		case 'view_light_box':
+			echo event_calendar_get_page_content_view($page[1],TRUE);
+			break;
 		case 'display_users':
 			echo event_calendar_get_page_content_display_users($page[1]);
 			break;
