@@ -202,7 +202,7 @@ function event_calendar_page_handler($page) {
 				gatekeeper();
 				$group_guid = 0;
 			}
-			echo event_calendar_get_page_content_edit($page_type,$group_guid);
+			echo event_calendar_get_page_content_edit($page_type,$group_guid,$page[2]);
 			break;
 		case 'edit':
 			gatekeeper();

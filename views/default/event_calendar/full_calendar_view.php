@@ -15,6 +15,28 @@ handleEventClick = function(event) {
     }
 };
 
+handleDayClick = function(date,allDay,jsEvent,view) {
+	var iso = getISODate(date);
+	var link = $('.elgg-menu-item-event-calendar-0add').find('a').attr('href');
+	var ss = link.split('/');
+	var link = $('.elgg-menu-item-event-calendar-0add').find('a').attr('href');
+	var ss = link.split('/');
+	var last_ss = ss[ss.length-1];
+	var group_guid;
+	if (last_ss == 'add') {
+		group_guid = 0;
+	} else if (last_ss.split('-').length == 3) {
+		group_guid = ss[ss.length-2];
+	} else {
+		group_guid = last_ss;
+	}
+	var url = elgg.get_site_url();
+	$('.elgg-menu-item-event-calendar-0add').find('a').attr('href',url+'event_calendar/add/'+group_guid+'/'+iso);
+	$('.elgg-menu-item-event-calendar-1schedule').find('a').attr('href',url+'event_calendar/schedule/'+group_guid+'/'+iso);
+	$('.fc-widget-content').removeClass('event-calendar-date-selected');
+	$(this).addClass('event-calendar-date-selected');
+}
+
 handleEventDrop = function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 
     if (!confirm("<?php echo elgg_echo('event_calendar:are_you_sure'); ?>")) {
@@ -54,6 +76,22 @@ handleGetEvents = function(start, end, callback) {
 			callback(events);
 		}
 	});
+	// reset date links and classes
+	$('.fc-widget-content').removeClass('event-calendar-date-selected');
+	var link = $('.elgg-menu-item-event-calendar-0add').find('a').attr('href');
+	var ss = link.split('/');
+	var last_ss = ss[ss.length-1];
+	var group_guid;
+	if (last_ss == 'add') {
+		group_guid = 0;
+	} else if (last_ss.split('-').length == 3) {
+		group_guid = ss[ss.length-2];
+	} else {
+		group_guid = last_ss;
+	}
+	var url = elgg.get_site_url();
+	$('.elgg-menu-item-event-calendar-0add').find('a').attr('href',url+'event_calendar/add/'+group_guid);
+	$('.elgg-menu-item-event-calendar-1schedule').find('a').attr('href',url+'event_calendar/schedule/'+group_guid);
 }
 
 $(document).ready(function() {	
@@ -69,6 +107,7 @@ $(document).ready(function() {
 		slotMinutes: 15,
 		eventDrop: handleEventDrop,
 		eventClick: handleEventClick,
+		dayClick: handleDayClick,
 		events: handleGetEvents
 	});
 });

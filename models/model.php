@@ -1533,7 +1533,7 @@ function event_calendar_get_page_content_list($page_type,$container_guid,$start_
 	return elgg_view_page($title,$body);
 }
 
-function event_calendar_get_page_content_edit($page_type,$guid) {
+function event_calendar_get_page_content_edit($page_type,$guid,$start_date='') {
 	elgg_load_js('elgg.event_calendar');
 	$vars = array();
 	$vars['id'] = 'event-calendar-edit';
@@ -1575,7 +1575,7 @@ function event_calendar_get_page_content_edit($page_type,$guid) {
 				$body_vars['group_guid'] = $guid;
 				elgg_push_breadcrumb(elgg_echo('event_calendar:group_breadcrumb'), 'event_calendar/group/'.$guid);
 				elgg_push_breadcrumb(elgg_echo('event_calendar:add_event_title'));
-				$body_vars['form_data'] = event_calendar_prepare_edit_form_vars(NULL,$page_type);
+				$body_vars['form_data'] = event_calendar_prepare_edit_form_vars(NULL,$page_type,$start_date);
 				$content = elgg_view_form('event_calendar/edit', $vars, $body_vars);
 			} else {
 				$content = elgg_echo('event_calendar:no_group');
@@ -1585,7 +1585,7 @@ function event_calendar_get_page_content_edit($page_type,$guid) {
 			elgg_push_breadcrumb(elgg_echo('event_calendar:show_events_title'),'event_calendar/list');
 
 			elgg_push_breadcrumb(elgg_echo('event_calendar:add_event_title'));
-			$body_vars['form_data'] = event_calendar_prepare_edit_form_vars(NULL,$page_type);
+			$body_vars['form_data'] = event_calendar_prepare_edit_form_vars(NULL,$page_type,$start_date);
 
 			$content = elgg_view_form('event_calendar/edit', $vars, $body_vars);
 		}
@@ -1604,20 +1604,25 @@ function event_calendar_get_page_content_edit($page_type,$guid) {
  * @param ElggObject       $event
  * @return array
  */
-function event_calendar_prepare_edit_form_vars($event = NULL, $page_type = '') {
+function event_calendar_prepare_edit_form_vars($event = NULL, $page_type = '', $start_date = '') {
 
 	// input names => defaults
 	$now = time();
 	$iso_date = date('Y-m-d',$now);
 	$now_midnight = strtotime($iso_date);
+	if ($start_date) {
+		$start_date = strtotime($start_date);
+	} else {
+		$start_date = $now+60*60;
+	}
 	$start_time = floor(($now-$now_midnight)/60) + 60;
 	$start_time = floor($start_time/5)*5;
 	$values = array(
 		'title' => NULL,
 		'description' => NULL,
 		'venue' => NULL,
-		'start_date' => $now+60*60,
-		'end_date' => $now+2*60*60,
+		'start_date' => $start_date,
+		'end_date' => $start_date+60*60,
 		'start_time' => $start_time,
 		'end_time' => $start_time + 60,
 		'spots' => NULL,

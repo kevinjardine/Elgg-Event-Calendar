@@ -275,3 +275,7 @@ li.event-calendar-filter-menu-show-only {
 	clear: both;
 	margin-bottom: 5px;
 }
+
+.event-calendar-date-selected {
+	background-color: #DDDDFF;
+}
