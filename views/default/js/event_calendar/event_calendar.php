@@ -15,10 +15,10 @@ elgg.event_calendar.init = function () {
 
 	var all_day_field = $('[name="all_day"][type="checkbox"]');
 	if (all_day_field.is(':checked')) {
-		$('[name="start_time"]').val(0);
-		$('[name="start_time"]').attr('disabled','disabled');
-		$('[name="end_time"]').val(0);
-		$('[name="end_time"]').attr('disabled','disabled');
+		//$('[name="start_time"]').val(0);
+		$('#event-calendar-start-time-wrapper').attr('disabled','disabled');
+		//$('[name="end_time"]').val(0);
+		$('#event-calendar-end-time-wrapper').attr('disabled','disabled');
 	}
 	all_day_field.change(elgg.event_calendar.handleAllDayField);
 }
@@ -36,11 +36,11 @@ elgg.event_calendar.handleScheduleType = function(e) {
 		$(".event-calendar-edit-form-membership-block").show();
 		$(".event-calendar-edit-form-share-block").show();
 		if (st == 'all_day') {
-			$("[name='start_time']").hide();
-			$("#event-calendar-to-time-wrapper").hide();
+			$("#event-calendar-start-time-wrapper").hide();
+			$("#event-calendar-end-time-wrapper").hide();
 		} else {
-			$("[name='start_time']").show();
-			$("#event-calendar-to-time-wrapper").show();
+			$("#event-calendar-start-time-wrapper").show();
+			$("#event-calendar-end-time-wrapper").show();
 		}
 	}
 }

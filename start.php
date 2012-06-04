@@ -298,7 +298,7 @@ function event_calendar_entity_menu_setup($hook, $type, $return, $params) {
 			'name' => 'schedule',
 			'text' => elgg_echo('event_poll:schedule_button'),
 			'title' => elgg_echo('event_poll:schedule_button'),
-			'href' => 'event_poll/schedule/'.$entity->guid,
+			'href' => 'event_poll/vote/'.$entity->guid,
 			'priority' => 150,
 		);
 		$return[] = ElggMenuItem::factory($options);
