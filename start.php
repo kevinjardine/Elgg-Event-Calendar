@@ -386,6 +386,7 @@ function event_calendar_entity_menu_prepare($hook, $type, $return, $params) {
 }
 
 function event_calendar_handle_join($event, $object_type, $object) {
+	elgg_load_library('elgg:event_calendar');
 	$group = $object['group'];
 	$user = $object['user'];
 	$user_guid = $user->getGUID();
@@ -397,6 +398,7 @@ function event_calendar_handle_join($event, $object_type, $object) {
 }
 
 function event_calendar_handle_leave($event, $object_type, $object) {
+	elgg_load_library('elgg:event_calendar');
 	$group = $object['group'];
 	$user = $object['user'];
 	$user_guid = $user->getGUID();
