@@ -2144,7 +2144,6 @@ function event_calendar_get_page_content_fullcalendar_events($start_date,$end_da
 				'id' => $event->guid,
 				'guid' => $event->guid,
 				'title' => $event->title,
-				'url' => elgg_get_site_url().'event_calendar/view_light_box/'.$event->guid,
 				'start' => date('c',$ed['start_time']),
 				'end' => date('c',$ed['end_time']),
 			);
@@ -2157,6 +2156,11 @@ function event_calendar_get_page_content_fullcalendar_events($start_date,$end_da
 			if ($polls_supported && isset($e['is_event_poll']) && $e['is_event_poll']) {
 				$event_item['className'] = 'event-poll-class';
 				$event_item['title'] .= ' '.elgg_echo('event_calendar:poll_suffix');
+				$event_item['is_event_poll'] = TRUE;
+				$event_item['url'] = elgg_get_site_url().'event_poll/vote/'.$event->guid;
+			} else {
+				$event_item['is_event_poll'] = FALSE;
+				$event_item['url'] = elgg_get_site_url().'event_calendar/view_light_box/'.$event->guid;
 			}
 		
 			$event_array[] = $event_item;

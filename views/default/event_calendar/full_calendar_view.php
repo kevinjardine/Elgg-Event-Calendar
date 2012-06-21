@@ -9,8 +9,12 @@ elgg_load_css('lightbox');
 
 handleEventClick = function(event) {
     if (event.url) {
-        //window.location.href = event.url;
-        $.fancybox({'href':event.url});
+        if (event.is_event_poll) {
+        	window.location.href = event.url;
+        } else {            
+        	//window.location.href = event.url;
+        	$.fancybox({'href':event.url});
+        }
         return false;
     }
 };
@@ -38,8 +42,10 @@ handleDayClick = function(date,allDay,jsEvent,view) {
 }
 
 handleEventDrop = function(event,dayDelta,minuteDelta,allDay,revertFunc) {
-
-    if (!confirm("<?php echo elgg_echo('event_calendar:are_you_sure'); ?>")) {
+	if (event.is_event_poll) {
+		alert("<?php echo elgg_echo('event_calendar:cannot_drag_polls'); ?>");
+		revertFunc();
+	} else if (!confirm("<?php echo elgg_echo('event_calendar:are_you_sure'); ?>")) {
         revertFunc();
     } else {
     	elgg.action('event_calendar/modify_full_calendar',
@@ -65,6 +71,12 @@ getISODate = function(d) {
 	var day = d.getDate();
 	day = day < 10 ? '0' + day : day;
 	return year +"-"+month+"-"+day;
+}
+
+handleEventRender = function(event, element, view) {
+	if (event.is_event_poll) {
+		element.draggable = false;
+	}
 }
 
 handleGetEvents = function(start, end, callback) {	
@@ -105,6 +117,7 @@ $(document).ready(function() {
 		ignoreTimezone: true,
 		editable: true,
 		slotMinutes: 15,
+		eventRender: handleEventRender,
 		eventDrop: handleEventDrop,
 		eventClick: handleEventClick,
 		dayClick: handleDayClick,

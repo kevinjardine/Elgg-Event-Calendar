@@ -50,7 +50,7 @@
 	'event_calendar:month_label' => "Month",
 	'event_calendar:group' => "Group calendar",
 	'event_calendar:new' => "Add event",
-	'event_calendar:submit' => "Submit",
+	'event_calendar:submit' => "Save and Continue",
 	'event_calendar:cancel' => "Cancel",
 	'event_calendar:widget_title' => "Event calendar",
 	'event_calendar:widget:description' => "Displays your events.",
@@ -310,6 +310,7 @@ You can manage calendar requests for this event here:
 	'event_calendar:settings:reminders:title' => "Allow sending reminders",
 	'event_calendar:reminder:subject' => "Reminder for event: %s",
 	'event_calendar:poll_suffix' => "(poll)",
+	'event_calendar:cannot_drag_polls' => "Cannot change event polls.",
 	'event_calendar:reminder:body' => "The event
 
 %s 
