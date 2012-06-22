@@ -7,6 +7,8 @@ elgg_load_css('lightbox');
 ?>
 <script>
 
+var goToDateFlag = 0;
+
 handleEventClick = function(event) {
     if (event.url) {
         if (event.is_event_poll) {
@@ -35,10 +37,20 @@ handleDayClick = function(date,allDay,jsEvent,view) {
 		group_guid = last_ss;
 	}
 	var url = elgg.get_site_url();
-	$('.elgg-menu-item-event-calendar-0add').find('a').attr('href',url+'event_calendar/add/'+group_guid+'/'+iso);
-	$('.elgg-menu-item-event-calendar-1schedule').find('a').attr('href',url+'event_calendar/schedule/'+group_guid+'/'+iso);
 	$('.fc-widget-content').removeClass('event-calendar-date-selected');
-	$(this).addClass('event-calendar-date-selected');
+	var current_iso = $('#event-calendar-selected-date').val();
+	if (current_iso == iso) {
+		// deselect		
+		$('#event-calendar-selected-date').val("");
+		$('.elgg-menu-item-event-calendar-0add').find('a').attr('href',url+'event_calendar/add/'+group_guid);
+		$('.elgg-menu-item-event-calendar-1schedule').find('a').attr('href',url+'event_calendar/schedule/'+group_guid);
+	} else {
+		$('#event-calendar-selected-date').val(iso);
+		$('.elgg-menu-item-event-calendar-0add').find('a').attr('href',url+'event_calendar/add/'+group_guid+'/'+iso);
+		$('.elgg-menu-item-event-calendar-1schedule').find('a').attr('href',url+'event_calendar/schedule/'+group_guid+'/'+iso);
+		
+		$(this).addClass('event-calendar-date-selected');
+	}
 }
 
 handleEventDrop = function(event,dayDelta,minuteDelta,allDay,revertFunc) {
@@ -79,7 +91,7 @@ handleEventRender = function(event, element, view) {
 	}
 }
 
-handleGetEvents = function(start, end, callback) {	
+handleGetEvents = function(start, end, callback) {
 	var start_date = getISODate(start);
 	var end_date = getISODate(end);
 	var url = "event_calendar/get_fullcalendar_events/"+start_date+"/"+end_date+"/<?php echo $vars['filter']; ?>/<?php echo $vars['group_guid']; ?>";
@@ -89,7 +101,7 @@ handleGetEvents = function(start, end, callback) {
 		}
 	});
 	// reset date links and classes
-	$('.fc-widget-content').removeClass('event-calendar-date-selected');
+	//$('.fc-widget-content').removeClass('event-calendar-date-selected');
 	var link = $('.elgg-menu-item-event-calendar-0add').find('a').attr('href');
 	var ss = link.split('/');
 	var last_ss = ss[ss.length-1];
@@ -104,6 +116,22 @@ handleGetEvents = function(start, end, callback) {
 	var url = elgg.get_site_url();
 	$('.elgg-menu-item-event-calendar-0add').find('a').attr('href',url+'event_calendar/add/'+group_guid);
 	$('.elgg-menu-item-event-calendar-1schedule').find('a').attr('href',url+'event_calendar/schedule/'+group_guid);
+}
+
+handleViewDisplay = function(view) {
+	// TODO: finish this, need to highlight selected date if any
+	var current_iso = $('#event-calendar-selected-date').val();
+	if (view == 'month') {
+		goToDateFlag = 0;
+	} else if (goToDateFlag == 0 && current_iso != "") {
+		goToDateFlag = 1;
+		var a = current_iso.split("-");
+		$('#calendar').fullCalendar('gotoDate',parseInt(a[0],10),parseInt(a[1],10)-1,parseInt(a[2],10));
+		//$('.fc-widget-content').removeClass('event-calendar-date-selected');
+		//$(".fc-widget-content[data-date='"+ciso+"']").addClass('event-calendar-date-selected');
+	}
+	
+	//$(".fc-widget-content[data-date='20120105']")
 }
 
 $(document).ready(function() {	
@@ -121,8 +149,10 @@ $(document).ready(function() {
 		eventDrop: handleEventDrop,
 		eventClick: handleEventClick,
 		dayClick: handleDayClick,
-		events: handleGetEvents
+		events: handleGetEvents,
+		viewDisplay: handleViewDisplay,
 	});
 });
 </script>
 <div id='calendar'></div>
+<input type="hidden" id="event-calendar-selected-date" />
