@@ -309,8 +309,6 @@ You can manage calendar requests for this event here:
 	'event_calendar:settings:repeated_events:title' => "Allow repeated events (currently only works properly in full calendar mode)",
 	'event_calendar:settings:reminders:title' => "Allow sending reminders",
 	'event_calendar:reminder:subject' => "Reminder for event: %s",
-	'event_calendar:poll_suffix' => "(poll)",
-	'event_calendar:cannot_drag_polls' => "Cannot change event polls.",
 	'event_calendar:reminder:body' => "The event
 
 %s 
@@ -332,6 +330,9 @@ You can visit the event page here:
 	'event_calendar:bbb_create_error' => "Error: unable to create BBB conference, message was: %s",
 	'event_calendar:bbb_settings_error' => "Error: must set conference URL and salt in plugin settings",
 	'event_calendar:join_conf_button' => "Join conference",
+			
+	'event_calendar:poll_suffix' => "(poll)",
+	'event_calendar:resend_poll_invitation' => "Do you want to alert poll invitees that the options have changed?",
 		
 	/**
 	 * Event calendar river

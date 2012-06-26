@@ -2091,28 +2091,34 @@ function getLastDayOfMonth($month,$year) {
 	return idate('d', mktime(0, 0, 0, ($month + 1), 0, $year));
 }
 
-// TODO - this is not quite right across daylight savings time divides
-// Possible solution: convert stored date to server date, do inc and then convert back to GMT
-
-function event_calendar_modify_full_calendar($event_guid,$day_delta,$minute_delta) {
+function event_calendar_modify_full_calendar($event_guid,$day_delta,$minute_delta,$start_time,$resend,$minutes,$iso_date) {
 	$event = get_entity($event_guid);
 	if (elgg_instanceof($event,'object','event_calendar') && $event->canEdit()) {
-		$event->start_date = strtotime("$day_delta days",$event->start_date)+60*$minute_delta;
-		if ($event->end_date) {
-			$event->end_date = strtotime("$day_delta days",$event->end_date);
-		}
-		$times = elgg_get_plugin_setting('times','event_calendar');
-		//$inc = 24*60*60*$day_delta+60*$minute_delta;
-		
-		//$event->real_end_time += $inc;
-		$event->real_end_time = strtotime("$day_delta days",$event->real_end_time)+60*$minute_delta;
-		if ($times != 'no') {
-			$event->start_time += $minute_delta;
-			if ($event->end_time) {
-				$event->end_time += $minute_delta;
+		if ($event->is_event_poll) {
+			if (elgg_is_active_plugin('event_poll')) {
+				elgg_load_library('elgg:event_poll');
+				return event_poll_change($event_guid,$day_delta,$minute_delta,$start_time,$resend,$minutes,$iso_date);
+			} else {
+				return FALSE;
 			}
+		} else {
+			$event->start_date = strtotime("$day_delta days",$event->start_date)+60*$minute_delta;
+			if ($event->end_date) {
+				$event->end_date = strtotime("$day_delta days",$event->end_date);
+			}
+			$times = elgg_get_plugin_setting('times','event_calendar');
+			//$inc = 24*60*60*$day_delta+60*$minute_delta;
+			
+			//$event->real_end_time += $inc;
+			$event->real_end_time = strtotime("$day_delta days",$event->real_end_time)+60*$minute_delta;
+			if ($times != 'no') {
+				$event->start_time += $minute_delta;
+				if ($event->end_time) {
+					$event->end_time += $minute_delta;
+				}
+			}
+			return TRUE;
 		}
-		return TRUE;
 	}
 	return FALSE;
 }
@@ -2134,14 +2140,13 @@ function event_calendar_get_page_content_fullcalendar_events($start_date,$end_da
 	}
 	$event_array = array();
 	$times_supported = elgg_get_plugin_setting('times','event_calendar') != 'no';
-	$polls_supported = elgg_plugin_exists('event_poll');
+	$polls_supported = elgg_is_active_plugin('event_poll');
 	foreach($events as $e) {
 		$event = $e['event'];
 		$event_data = $e['data'];
 		$c = count($event_data);
 		foreach($event_data as $ed) {
 			$event_item = array(
-				'id' => $event->guid,
 				'guid' => $event->guid,
 				'title' => $event->title,
 				'start' => date('c',$ed['start_time']),
@@ -2158,7 +2163,10 @@ function event_calendar_get_page_content_fullcalendar_events($start_date,$end_da
 				$event_item['title'] .= ' '.elgg_echo('event_calendar:poll_suffix');
 				$event_item['is_event_poll'] = TRUE;
 				$event_item['url'] = elgg_get_site_url().'event_poll/vote/'.$event->guid;
+				$event_item['minutes'] = $ed['minutes'];
+				$event_item['iso_date'] = $ed['iso_date'];
 			} else {
+				$event_item['id'] = $event->guid;
 				$event_item['is_event_poll'] = FALSE;
 				$event_item['url'] = elgg_get_site_url().'event_calendar/view_light_box/'.$event->guid;
 			}
