@@ -261,10 +261,16 @@ li.event-calendar-filter-menu-show-only {
 .event-calendar-edit-date-wrapper {
 	clear: both;
 	margin-left: 20px;
+	display: none;
 }
 
 .event-calendar-edit-reminder-wrapper {
 	margin-top: 10px;
+	display: none;
+}
+
+.event-calendar-edit-form-membership-block, .event-calendar-edit-form-share-block {
+	display: none;
 }
 
 .event-calendar-description {

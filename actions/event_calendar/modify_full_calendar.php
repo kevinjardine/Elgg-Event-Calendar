@@ -10,7 +10,7 @@ $iso_date = get_input('iso_date');
 $result = event_calendar_modify_full_calendar($event_guid,$day_delta,$minute_delta,$start_time,$resend,$minutes,$iso_date);
 if ($result) {
 	$response = array('success'=>TRUE);
-	// specially handling for event polls
+	// special handling for event polls
 	if (is_array($result)) {
 		$response['minutes'] = $result['minutes'];
 		$response['iso_date'] = $result['iso_date'];

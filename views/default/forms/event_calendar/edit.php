@@ -17,7 +17,6 @@ $event_calendar_repeating_events = elgg_get_plugin_setting('repeating_events', '
 $event_calendar_region_display = elgg_get_plugin_setting('region_display', 'event_calendar');
 $event_calendar_type_display = elgg_get_plugin_setting('type_display', 'event_calendar');
 $event_calendar_spots_display = elgg_get_plugin_setting('spots_display', 'event_calendar');
-//$event_calendar_add_users = elgg_get_plugin_setting('add_users', 'event_calendar');
 
 $event_calendar_more_required = elgg_get_plugin_setting('more_required', 'event_calendar');
 $event_calendar_bbb_server_url = elgg_get_plugin_setting('bbb_server_url', 'event_calendar');
@@ -70,14 +69,6 @@ $event_tags = $fd['tags'];
 $all_day = $fd['all_day'];
 $schedule_type = $fd['schedule_type'];
 $long_description = $fd['long_description'];
-
-/*if ($event_calendar_times != 'no') {
-	$start_time = $fd['start_time'];
-	$end_time = $fd['end_time'];
-}
-if ($event_calendar_personal_manage == 'by_event') {
-	$personal_manage = $fd['personal_manage'];
-}*/
 
 $body = '<div class="event-calendar-edit-form">';
 
@@ -134,43 +125,6 @@ $body .= elgg_view('input/radio',array('id'=>'event-calendar-edit-schedule-type'
 
 $vars['prefix'] = $prefix;
 
-/*
-$body .= '<div class="event-calendar-edit-date-wrapper">';
-$body .= elgg_view('event_calendar/datetime_edit', 
-	array(
-		'start_date' => $start_date,
-		'end_date' => $end_date,
-		'start_time' => $start_time,
-		'end_time' => $end_time,
-		'prefix' => $prefix,
-));
-if ($event_calendar_repeated_events == 'yes') {
-	$body .= elgg_view('event_calendar/repeat_form_element',$vars);
-}
-if ($event_calendar_reminders == 'yes') {
-	$body .= '<div class="event-calendar-edit-reminder-wrapper">';
-	if ($send_reminder) {
-		$body .= elgg_view('input/checkbox',array('name'=>'send_reminder','checked' => 'checked','value'=>1));
-	} else {
-		$body .= elgg_view('input/checkbox',array('name'=>'send_reminder','value'=>1));
-	}
-	$body .= elgg_echo('elgg_calendar:send_reminder_label'). ' ';
-	$numbers = array();
-	for ($i=1;$i<60;$i++) {
-		$numbers[$i] = $i;
-	}
-	$intervals = array(
-		1 => elgg_echo('event_calendar:interval:minute'),
-		60 => elgg_echo('event_calendar:interval:hour'),
-		60*24 => elgg_echo('event_calendar:interval:day'),
-	);
-	
-	$body .= elgg_view('input/dropdown',array('name'=>'reminder_number','options_values'=>$numbers,'value'=>$reminder_number));
-	$body .= elgg_view('input/dropdown',array('name'=>'reminder_interval','options_values'=>$intervals,'value'=>$reminder_interval));
-	$body .= elgg_echo('elgg_calendar:send_reminder_before');
-	$body .= '</div>';
-}*/
-
 $body .= elgg_view('event_calendar/schedule_section',$vars);
 
 if ($event_calendar_spots_display == 'yes') {
@@ -183,49 +137,9 @@ if ($event_calendar_spots_display == 'yes') {
 $body .= '<div class="event-calendar-edit-bottom"></div>';
 $body .= '</div>';
 
-// the following feature has been superceded by the manage subscribers feature
-
-/*if ($event_calendar_add_users == 'yes') {
-	$body .= '<p><label>'.elgg_echo("event_calendar:add_user_label").'<br />';
-	$body .= elgg_view("input/adduser",array('name' => 'adduser','internalid' => 'do_adduser','width'=> 200, 'minChars'=>2));
-	$body .= '</label></p><br /><br />';
-	$body .= '<p class="description">'.elgg_echo('event_calendar:add_user_description').'</p>';
-}*/
-
 $body .= elgg_view('event_calendar/personal_manage_section',$vars);
 
-/*if ($event_calendar_personal_manage == 'by_event') {
-	$body .= '<div class="event-calendar-edit-form-block event-calendar-edit-form-membership-block">';
-	$body .= '<h2>'.elgg_echo('event_calendar:personal_manage:label').'</h2>';
-	$body .= elgg_view("input/radio",array('name' => 'personal_manage','value'=>$personal_manage,'options'=>$personal_manage_options));
-	//$body .= '<p class="event-calendar-description">'.$prefix['personal_manage'].elgg_echo('event_calendar:personal_manage:description').'</p>';
-	$body .= '<br clear="both" />';
-	$body .= '</div>';
-}*/
-
 $body .= elgg_view('event_calendar/share_section',$vars);
-
-/*$body .= '<div class="event-calendar-edit-form-block event-calendar-edit-form-share-block">';
-$body .= '<h2>'.elgg_echo('event_calendar:permissions:header').'</h2>';
-if($event_calendar_hide_access == 'yes') {
-	$event_calendar_default_access = elgg_get_plugin_setting('default_access', 'event_calendar');
-	if($event_calendar_default_access) {
-		$body .= elgg_view("input/hidden",array('name' => 'access_id','value'=>$event_calendar_default_access));
-	} else {
-		$body .= elgg_view("input/hidden",array('name' => 'access_id','value'=>ACCESS_DEFAULT));
-	}
-} else {
-	$body .= '<p><label>'.elgg_echo('event_calendar:read_access').'</label>';
-	$body .= elgg_view("input/access",array('name' => 'access_id','value'=>$access));
-	$body .= '</p>';
-}
-if (elgg_plugin_exists('entity_admins')) {
-	$body .= elgg_echo('event_calendar:share_ownership:label');
-	$body .= '<br />';
-	$body .= elgg_echo('event_calendar:share_ownership:description');
-	$body .= elgg_view('input/entity_admins_dropdown',array('entity'=>$event));
-}
-$body .= '</div>';*/
 
 if ($event_calendar_region_display == 'yes' || $event_calendar_type_display == 'yes' || $event_calendar_fewer_fields != 'yes') {
 	$body .= '<div class="event-calendar-edit-form-block event-calendar-edit-form-other-block">';
