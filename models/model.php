@@ -1150,12 +1150,12 @@ function event_calendar_security_fields() {
 	return "__elgg_token=$token&__elgg_ts=$ts";
 }
 
-function event_calendar_get_events_for_group($group_guid) {
+function event_calendar_get_events_for_group($group_guid, $limit = 0) {
 	$options = array(
 		'type' => 'object',
 		'subtype' => 'event_calendar',
 		'container_guid' => $group_guid,
-		'limit' => 0,
+		'limit' => $limit,
 	);
 	return elgg_get_entities($options);
 }
