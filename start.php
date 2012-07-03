@@ -73,7 +73,7 @@ function event_calendar_init() {
 	}
 
 	//add a widget
-	elgg_register_widget_type('event_calendar',elgg_echo("event_calendar:widget_title"),elgg_echo('event_calendar:widget:description'));
+	elgg_register_widget_type('event_calendar',elgg_echo("event_calendar:widget_title"),elgg_echo('event_calendar:widget:description'), 'all,groups');
 
 	// add the event calendar group tool option
 	$event_calendar_group_default = elgg_get_plugin_setting('group_default', 'event_calendar');
