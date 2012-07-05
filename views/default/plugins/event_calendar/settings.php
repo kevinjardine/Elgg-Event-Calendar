@@ -112,7 +112,7 @@ $body .= elgg_view('input/radio',array('name'=>'params[times]','value'=>$event_c
 
 $body .= '<br />';
 
-$event_calendar_restricted_times = elgg_get_plugin_setting('restricted_times', 'event_calendar');
+/*$event_calendar_restricted_times = elgg_get_plugin_setting('restricted_times', 'event_calendar');
 if (!$event_calendar_restricted_times) {
 	$event_calendar_restricted_times = 'no';
 }
@@ -121,7 +121,7 @@ $body .= elgg_echo('event_calendar:settings:restricted_times:title');
 $body .= '<br />';
 $body .= elgg_view('input/radio',array('name'=>'params[restricted_times]','value'=>$event_calendar_restricted_times,'options'=>$yn_options));
 
-$body .= '<br />';
+$body .= '<br />';*/
 
 $event_calendar_time_format = elgg_get_plugin_setting('timeformat', 'event_calendar');
 if (!$event_calendar_time_format) {
