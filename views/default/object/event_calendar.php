@@ -11,6 +11,8 @@
  * 
  */
 
+elgg_load_library('elgg:event_calendar');
+
 $event = $vars['entity'];
 $full = elgg_extract('full_view', $vars, FALSE);
 
