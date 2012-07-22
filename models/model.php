@@ -1483,27 +1483,23 @@ function event_calendar_get_page_content_list($page_type,$container_guid,$start_
 		$user_guid = elgg_get_logged_in_user_guid();
 		// TODO - ideally avoid the check on the event_poll plugin, perhaps by having event_poll remove the menu item
 		if(event_calendar_can_add($container_guid)) {
-			if (!elgg_plugin_exists('event_poll')) {
-				elgg_register_menu_item('title', array(
-					'name' => 'add',
-					'href' => "event_calendar/add/".$container_guid,
-					'text' => elgg_echo('event_calendar:add'),
-					'class' => 'elgg-button elgg-button-action',
-				));
-			}
+			elgg_register_menu_item('title', array(
+				'name' => 'add',
+				'href' => "event_calendar/add/".$container_guid,
+				'text' => elgg_echo('event_calendar:add'),
+				'class' => 'elgg-button elgg-button-action',
+			));
 		}
 	} else {
 		elgg_push_breadcrumb(elgg_echo('item:object:event_calendar'));
 		$user_guid = elgg_get_logged_in_user_guid();
 		if(event_calendar_can_add($container_guid)) {
-			if (!elgg_plugin_exists('event_poll')) {
-				elgg_register_menu_item('title', array(
-					'name' => 'add',
-					'href' => "event_calendar/add",
-					'text' => elgg_echo('event_calendar:add'),
-					'class' => 'elgg-button elgg-button-action',
-				));
-			}
+			elgg_register_menu_item('title', array(
+				'name' => 'add',
+				'href' => "event_calendar/add",
+				'text' => elgg_echo('event_calendar:add'),
+				'class' => 'elgg-button elgg-button-action',
+			));
 		}
 	}	
 
