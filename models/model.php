@@ -1879,7 +1879,7 @@ function event_calendar_get_page_content_view($event_guid,$light_box = FALSE) {
 		}
 
 		elgg_push_breadcrumb($event->title);
-		$content = elgg_view_entity($event, array('full_view' => true));
+		$content = elgg_view_entity($event, array('full_view' => true,'light_box'=>$light_box));
 		//check to see if comment are on - TODO - add this feature to all events
 		if ($event->comments_on != 'Off') {
 			$content .= elgg_view_comments($event);

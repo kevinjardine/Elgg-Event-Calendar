@@ -59,9 +59,17 @@ if ($full) {
 	} else {
 		echo '<p>'.$event->description.'</p>';
 	}
+	if ($vars['light_box'] == TRUE) {
+		$event_calendar_add_users = elgg_get_plugin_setting('add_users', 'event_calendar');
+		if ($event_calendar_add_users == 'yes') {
+			$url =  "event_calendar/manage_users/$event->guid";
+			echo '<p>'.elgg_view('output/url',array('text'=> elgg_echo('event_calendar:manage_users:breadcrumb'), 'href'=>$url)).'</p>';
+		}
+	}
 	if (elgg_get_plugin_setting('add_to_group_calendar', 'event_calendar') == 'yes') {
 		echo elgg_view('event_calendar/forms/add_to_group',array('event' => $event));
 	}
+	
 } else {
 	
 	$time_bit = event_calendar_get_formatted_time($event);
