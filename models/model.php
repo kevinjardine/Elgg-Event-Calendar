@@ -1486,7 +1486,7 @@ function event_calendar_get_page_content_list($page_type,$container_guid,$start_
 				'name' => 'add',
 				'href' => "event_calendar/add/".$container_guid,
 				'text' => elgg_echo('event_calendar:add'),
-				'class' => 'elgg-button elgg-button-action',
+				'class' => 'elgg-button elgg-button-action event-calendar-button-add',
 			));
 		}
 	} else {
@@ -1497,7 +1497,7 @@ function event_calendar_get_page_content_list($page_type,$container_guid,$start_
 				'name' => 'add',
 				'href' => "event_calendar/add",
 				'text' => elgg_echo('event_calendar:add'),
-				'class' => 'elgg-button elgg-button-action',
+				'class' => 'elgg-button elgg-button-action event-calendar-button-add',
 			));
 		}
 	}	

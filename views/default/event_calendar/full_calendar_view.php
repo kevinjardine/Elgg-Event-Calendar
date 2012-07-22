@@ -43,10 +43,12 @@ handleDayClick = function(date,allDay,jsEvent,view) {
 		// deselect		
 		$('#event-calendar-selected-date').val("");
 		$('.elgg-menu-item-event-calendar-0add').find('a').attr('href',url+'event_calendar/add/'+group_guid);
+		$('.event-calendar-button-add').attr('href',url+'event_calendar/add/'+group_guid);
 		$('.elgg-menu-item-event-calendar-1schedule').find('a').attr('href',url+'event_calendar/schedule/'+group_guid);
 	} else {
 		$('#event-calendar-selected-date').val(iso);
 		$('.elgg-menu-item-event-calendar-0add').find('a').attr('href',url+'event_calendar/add/'+group_guid+'/'+iso);
+		$('.event-calendar-button-add').attr('href',url+'event_calendar/add/'+group_guid+'/'+iso);
 		$('.elgg-menu-item-event-calendar-1schedule').find('a').attr('href',url+'event_calendar/schedule/'+group_guid+'/'+iso);
 		
 		$(this).addClass('event-calendar-date-selected');
