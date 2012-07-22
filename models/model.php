@@ -1481,7 +1481,6 @@ function event_calendar_get_page_content_list($page_type,$container_guid,$start_
 		elgg_push_context('groups');
 		elgg_set_page_owner_guid($container_guid);
 		$user_guid = elgg_get_logged_in_user_guid();
-		// TODO - ideally avoid the check on the event_poll plugin, perhaps by having event_poll remove the menu item
 		if(event_calendar_can_add($container_guid)) {
 			elgg_register_menu_item('title', array(
 				'name' => 'add',
