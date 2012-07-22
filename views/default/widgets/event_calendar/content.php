@@ -20,8 +20,12 @@
 		$num = 5;
 		
     // Get the events
-
-	$events = event_calendar_get_personal_events_for_user(elgg_get_page_owner_guid(),$num);
+  $owner = elgg_get_page_owner_entity();
+  if(elgg_instanceof($owner, 'group')) {
+    $events = event_calendar_get_events_for_group(elgg_get_page_owner_guid(),$num);
+  } else {
+    $events = event_calendar_get_personal_events_for_user(elgg_get_page_owner_guid(),$num);
+  }
 		
 	// If there are any events to view, view them
 	if (is_array($events) && sizeof($events) > 0) {
