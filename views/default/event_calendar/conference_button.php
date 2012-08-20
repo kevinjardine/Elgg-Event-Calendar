@@ -9,12 +9,12 @@ $event = $vars['event'];
 if ($event) {
 	elgg_load_library('elgg:event_calendar');
 	$user_guid = elgg_get_logged_in_user_guid();
-	$termination_time = $event->real_end_time + 60*60*24;
+	$termination_time = strtotime("1 day",$event->real_end_time);
 	if ($termination_time < time()) {
 		$in_time_window = FALSE;
 	} else if ($event->canEdit()) {
 		$in_time_window = TRUE;
-	} else if (event_calendar_has_personal_event($event->guid, $user_guid) && ($event->start_date - 15*60) >= time()) {
+	} else if (event_calendar_has_personal_event($event->guid, $user_guid) && (strtotime('-15 minutes',$event->start_date) <= time())) {
 		$in_time_window = TRUE;
 	} else {
 		$in_time_window = FALSE;
