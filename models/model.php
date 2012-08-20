@@ -2287,7 +2287,10 @@ function event_calendar_create_bbb_conf($event) {
 	$bbb_server_url = rtrim(elgg_get_plugin_setting('bbb_server_url','event_calendar'), '/') . '/';
 	if ($bbb_security_salt) {
 		$day_in_minutes = 60*24;
-		$duration = (int)(($event->real_end_time-$event->start_date)/60)+$day_in_minutes;
+		$now = time();
+		// fix duration bug
+		# $duration = (int)(($event->real_end_time-$event->start_date)/60)+$day_in_minutes;
+		$duration = (int)(($event->real_end_time-$now)/60)+$day_in_minutes;
 		$title = urlencode($event->title);
 		$params = "name=$title&meetingID={$event->guid}&duration=$duration";
 		$checksum = sha1('create'.$params.$bbb_security_salt);
