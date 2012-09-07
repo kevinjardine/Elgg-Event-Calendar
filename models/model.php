@@ -2381,14 +2381,18 @@ function event_calendar_create_bbb_conf($event) {
 	// fix duration bug
 	# $duration = (int)(($event->real_end_time-$event->start_date)/60)+$day_in_minutes;
 	$duration = (int)(($event->real_end_time-$now)/60)+$day_in_minutes;
-	$title = urlencode($event->title);
-	$output = event_calendar_bbb_api('create',array('meetingID'=>$event->guid,'name'=>$title,'duration'=>$duration));
-	if ($output) {	    
-		$xml = new SimpleXMLElement($output);
-		if ($xml->returncode == 'SUCCESS') {
-			$event->bbb_attendee_password = (string) $xml->attendeePW;
-			$event->bbb_moderator_password = (string) $xml->moderatorPW;
-			return TRUE;
+	if ($duration > 0) {
+		$title = urlencode($event->title);
+		$output = event_calendar_bbb_api('create',array('meetingID'=>$event->guid,'name'=>$title,'duration'=>$duration));
+		if ($output) {	    
+			$xml = new SimpleXMLElement($output);
+			if ($xml->returncode == 'SUCCESS') {
+				$event->bbb_attendee_password = (string) $xml->attendeePW;
+				$event->bbb_moderator_password = (string) $xml->moderatorPW;
+				return TRUE;
+			} else {
+				return FALSE;
+			}
 		} else {
 			return FALSE;
 		}
