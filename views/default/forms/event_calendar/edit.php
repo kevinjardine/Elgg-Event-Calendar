@@ -7,7 +7,7 @@ $schedule_options = array(
 	elgg_echo('event_calendar:schedule_type:fixed')=>'fixed',
 );
 
-if (elgg_plugin_exists('event_poll')) {
+if (elgg_is_active_plugin('event_poll')) {
 	$schedule_options = array_merge(array(elgg_echo('event_calendar:schedule_type:poll')=>'poll'),$schedule_options);
 }	
 

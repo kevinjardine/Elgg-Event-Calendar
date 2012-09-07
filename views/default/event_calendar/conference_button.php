@@ -2,7 +2,7 @@
 // A non-admin / non-event-creator only sees the button if they have the event on his/her personal calendar 
 // and it is at most 15 minutes before the conference starts.
 
-// The button is removed for everyone (even admins) one day after the conference ends.
+// The button is removed for everyone (even admins) one day after the event end time.
 
 $event = $vars['event'];
 
@@ -21,10 +21,11 @@ if ($event) {
 	}
 	if ( $in_time_window ) {
 		$button = elgg_view('output/url', array(
-			'href' => event_calendar_get_join_bbb_url($event),
+			'href' => 'action/event_calendar/join_conference?event_guid='.$event->guid,
 			'text' => elgg_echo('event_calendar:join_conf_button'),
 			'class' => 'elgg-button elgg-button-action',
 			'target' => '_blank',
+			'is_action' => TRUE,
 		));
 	
 		echo '<div class="event-calendar-conf-join-button">'.$button.'</div>';

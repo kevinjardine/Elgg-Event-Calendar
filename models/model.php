@@ -184,7 +184,9 @@ function event_calendar_set_event_from_form($event_guid,$group_guid) {
 	}
 	if ($event->save()) {
 		if (!$event_guid && $event->web_conference) {
-			event_calendar_create_bbb_conf($event);
+			if (!event_calendar_create_bbb_conf($event)) {
+				register_error(elgg_echo('event_calendar:conference_create_error'));
+			}
 		}
 		if ($group_guid && (elgg_get_plugin_setting('autogroup', 'event_calendar') == 'yes')) {
 			event_calendar_add_personal_events_from_group($event->guid,$group_guid);
@@ -2282,7 +2284,7 @@ function event_calendar_queue_reminder($e) {
 	}
 }
 
-function event_calendar_create_bbb_conf($event) {
+/*function event_calendar_create_bbb_conf($event) {
 	$bbb_security_salt = elgg_get_plugin_setting('bbb_security_salt','event_calendar');
 	$bbb_server_url = rtrim(elgg_get_plugin_setting('bbb_server_url','event_calendar'), '/') . '/';
 	if ($bbb_security_salt) {
@@ -2311,11 +2313,11 @@ function event_calendar_create_bbb_conf($event) {
 	    // close curl resource to free up system resources
 	    curl_close($ch);
 	    
-	    /*error_log("BBB create request:");
-	    error_log($bbb_server_url.'api/create?'.$params);
+	    #error_log("BBB create request:");
+	    #error_log($bbb_server_url.'api/create?'.$params);
 		
-	    error_log("BBB create response:");
-	    error_log($output);*/
+	    #error_log("BBB create response:");
+	    #error_log($output);
 	    
 		$xml = new SimpleXMLElement($output);
 		if ($xml->returncode == 'SUCCESS') {
@@ -2327,6 +2329,108 @@ function event_calendar_create_bbb_conf($event) {
 	} else {
 		register_error(elgg_echo('event_calendar:bbb_settings_error'));
 	}
+}*/
+
+// utility function for BBB api calls
+function event_calendar_bbb_api($api_function,$params=NULL) {
+	
+	$bbb_security_salt = elgg_get_plugin_setting('bbb_security_salt','event_calendar');
+	$bbb_server_url = rtrim(elgg_get_plugin_setting('bbb_server_url','event_calendar'), '/') . '/';
+	if ($bbb_security_salt) {
+		if (isset($params) && is_array($params) && count($params) > 0) {
+			$query = array();
+			foreach($params as $k => $v) {
+				$query[] = $k.'='.rawurlencode($v);
+			}
+			$qs = implode('&',$query);
+		} else {
+			$qs = '';
+		}
+		$checksum = sha1($api_function.$qs.$bbb_security_salt);
+		if ($qs) {
+			$qs .= "&checksum=$checksum";
+		}
+		
+		// create curl resource
+	    $ch = curl_init();
+	
+	    // set url
+	    curl_setopt($ch, CURLOPT_URL, $bbb_server_url.'api/'.$api_function.'?'.$qs);
+	
+	    //return the transfer as a string
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	
+	    // $output contains the output string
+	    $output = curl_exec($ch);
+	
+	    // close curl resource to free up system resources
+	    curl_close($ch);
+	    
+	    error_log("BBB api call: ".$api_function);
+	    error_log(print_r($params,TRUE));		
+	    error_log("BBB response: \n".$output);
+		return $output;
+	} else {
+		return FALSE;
+	}		
+}
+
+function event_calendar_create_bbb_conf($event) {
+	$day_in_minutes = 60*24;
+	$now = time();
+	// fix duration bug
+	# $duration = (int)(($event->real_end_time-$event->start_date)/60)+$day_in_minutes;
+	$duration = (int)(($event->real_end_time-$now)/60)+$day_in_minutes;
+	$title = urlencode($event->title);
+	$output = event_calendar_bbb_api('create',array('meetingID'=>$event->guid,'name'=>$title,'duration'=>$duration));
+	if ($output) {	    
+		$xml = new SimpleXMLElement($output);
+		if ($xml->returncode == 'SUCCESS') {
+			$event->bbb_attendee_password = (string) $xml->attendeePW;
+			$event->bbb_moderator_password = (string) $xml->moderatorPW;
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	} else {
+		return FALSE;
+	}
+}
+
+// checks to see if a BBB conference is actually running
+function event_calendar_is_conference_running($event) {
+	$output = event_calendar_bbb_api('isMeetingRunning',array('meetingID'=>$event->guid));	
+	if (!$output) {
+		return FALSE;
+	} else {
+		$xml = new SimpleXMLElement($output);
+		if ($xml->returncode == 'SUCCESS' && $xml->running == 'true') {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+}
+
+// checks to see if a BBB conference exists
+function event_calendar_conference_exists($event) {
+	$output = event_calendar_bbb_api('getMeetingInfo',array('meetingID'=>$event->guid,'password'=>$event->bbb_moderator_password));	
+	if (!$output) {
+		return FALSE;
+	} else {
+		$xml = new SimpleXMLElement($output);
+		if ($xml->returncode == 'SUCCESS' && $xml->meetingID == $event->guid) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+}
+
+// forwards to the join link
+// this function assumes that the conference is running
+function event_calendar_join_conference($event) {
+	forward(event_calendar_get_join_bbb_url($event));
 }
 
 function event_calendar_get_join_bbb_url($event) {

@@ -328,7 +328,9 @@ You can visit the event page here:
 	'event_calendar:bbb_server_url' => "Big Blue Button server URL (must end with slash)",
 	'event_calendar:bbb_security_salt' => "Big Blue Button security salt",
 	'event_calendar:bbb_create_error' => "Error: unable to create BBB conference, message was: %s",
+	'event_calendar:conference_create_error' => "Error: unable to create web conference.",
 	'event_calendar:bbb_settings_error' => "Error: must set conference URL and salt in plugin settings",
+	'event_calendar:couldnotjoin' => "Error: unable to join conference.",
 	'event_calendar:join_conf_button' => "Join conference",
 			
 	'event_calendar:poll_suffix' => "(poll)",
