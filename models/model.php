@@ -293,8 +293,8 @@ function event_calendar_get_repeating_event_structure($events, $start_date, $end
 	$dow = array('monday','tuesday','wednesday','thursday','friday','saturday','sunday');
 	$repeating_events = array();
 	if ($events) {
-		$incs = array();
 		foreach($events as $e) {
+			$incs = array();
 			$repeat_data = array();
 			$day_num = date('N',$e->start_date)-1;
 			for($d=0;$d<7;$d++) {
