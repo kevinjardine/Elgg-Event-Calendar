@@ -9,7 +9,16 @@
  * @link http://radagast.biz/
  * 
  */
+
+elgg_load_library('elgg:event_calendar');
 if ($vars['events']) {
-	echo elgg_view_entity_list($vars['events'], $vars['count'], $vars['offset'], $vars['limit'], false, false);
+	$options = array(
+		'count' => $vars['count'],
+		'offset' => 0,
+		'limit' => 15,
+		'list_type_toggle' => FALSE,
+		'pagination' => FALSE,
+	);
+	// echo elgg_view_entity_list($vars['events'], $vars['count'], $vars['offset'], $vars['limit'], false, false);
+	echo elgg_view_entity_list(event_calendar_flatten_event_structure($vars['events']), $options);
 }
-?>
