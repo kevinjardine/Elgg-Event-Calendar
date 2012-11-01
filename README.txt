@@ -1,3 +1,7 @@
+THIS VERSION IS DEPRECATED. USE THE VERSION IN
+
+https://github.com/kevinjardine/Elgg-Event-Calendar/tree/full
+
 /**
  * Manage and display events
  * 
