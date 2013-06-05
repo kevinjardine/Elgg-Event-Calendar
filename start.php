@@ -42,9 +42,10 @@ function event_calendar_init() {
 	if (function_exists('elgg_register_tag_metadata_name')) {
 		elgg_register_tag_metadata_name('event_tags');
 	}
-	
+
 	// register the plugin's JavaScript
 	$plugin_js = elgg_get_simplecache_url('js', 'event_calendar/event_calendar');
+	elgg_register_simplecache_view('js/event_calendar/event_calendar');
 	elgg_register_js('elgg.event_calendar', $plugin_js);
 
 	//add to group profile page
@@ -69,6 +70,7 @@ function event_calendar_init() {
 	if (elgg_is_active_plugin('event_poll') || ($event_calendar_listing_format == 'full')) {
 		elgg_extend_view('css/elgg', 'fullcalendar/css');
 		$plugin_js = elgg_get_simplecache_url('js', 'event_calendar/fullcalendar');
+		elgg_register_simplecache_view('js/event_calendar/fullcalendar');
 		elgg_register_js('elgg.full_calendar', $plugin_js);
 	}
 
