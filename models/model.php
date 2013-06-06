@@ -2167,7 +2167,11 @@ function event_calendar_get_page_content_fullcalendar_events($start_date,$end_da
 				$event_item['is_event_poll'] = FALSE;
 				$event_item['url'] = elgg_get_site_url().'event_calendar/view_light_box/'.$event->guid;
 			}
-		
+
+			// Allow other plugins to modify the data
+			$params = array('entity' => $event);
+			$event_item = elgg_trigger_plugin_hook('prepare', 'event_calendar:json', $params, $event_item);
+
 			$event_array[] = $event_item;
 		}
 	}
