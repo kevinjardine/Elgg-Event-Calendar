@@ -392,6 +392,9 @@ if (!$event_calendar_type_list) {
 $body .= elgg_echo('event_calendar:settings:type_list:title');
 $body .= '<br />';
 $body .= elgg_view('input/plaintext',array('name'=>'params[type_list]','value'=>$event_calendar_type_list));
+$body .= '<p class="elgg-text-help">';
+$body .= elgg_echo('event_calendar:settings:type_list:desc');
+$body .= '</p>';
 
 $body .= '<br />';
 

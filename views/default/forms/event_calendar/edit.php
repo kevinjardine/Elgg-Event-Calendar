@@ -167,31 +167,42 @@ if ($event_calendar_region_display == 'yes' || $event_calendar_type_display == '
 			$body .= '<p class="event-calendar-description">'.$prefix['region'].elgg_echo('event_calendar:region_description').'</p>';
 		}
 	}
-	
+
 	if ($event_calendar_type_display == 'yes') {
 		$type_list = trim(elgg_get_plugin_setting('type_list', 'event_calendar'));
 		$type_list_handles = elgg_get_plugin_setting('type_list_handles', 'event_calendar');
+
 		// make sure that we are using Unix line endings
-		$type_list = str_replace("\r\n","\n",$type_list);
-		$type_list = str_replace("\r","\n",$type_list);
+		$type_list = str_replace("\r\n", "\n", $type_list);
+		$type_list = str_replace("\r", "\n", $type_list);
+
 		if ($type_list) {
 			$options = array();
 			$options[] = '-';
-			foreach(explode("\n",$type_list) as $type_item) {
-				$type_item = trim($type_item);
+
+			foreach (explode("\n", $type_list) as $type_item) {
+				$type_item = explode('|', $type_item);
+				$type_name = trim($type_item[0]);
+
 				if ($type_list_handles == 'yes') {
-					$options[$type_item] = elgg_echo('event_calendar:type:'.$type_item);
+					// Use translation system to resolve the type names
+					$options[$type_name] = elgg_echo("event_calendar:type:$type_name");
 				} else {
-					$options[$type_item] = $type_item;
+					$options[$type_name] = $type_name;
 				}			
 			}
+
 			$body .= '<p><label>'.elgg_echo("event_calendar:type_label").'</label>';
-			$body .= elgg_view("input/dropdown",array('name' => 'event_type','value'=>$event_type,'options_values'=>$options));
+			$body .= elgg_view("input/dropdown", array(
+				'name' => 'event_type',
+				'value' => $event_type,
+				'options_values' => $options
+			));
 			$body .= '</p>';
 			$body .= '<p class="event-calendar-description">'.$prefix['event_type'].elgg_echo('event_calendar:type_description').'</p>';
 		}
 	}
-	
+
 	if ($event_calendar_fewer_fields != 'yes') {
 	
 		$body .= '<p><label>'.elgg_echo("event_calendar:fees_label").'</label>';

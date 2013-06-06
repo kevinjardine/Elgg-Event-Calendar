@@ -2137,7 +2137,9 @@ function event_calendar_get_page_content_fullcalendar_events($start_date,$end_da
 	}
 	$event_array = array();
 	$times_supported = elgg_get_plugin_setting('times','event_calendar') != 'no';
+	$type_display = elgg_get_plugin_setting('type_display', 'event_calendar');
 	$polls_supported = elgg_is_active_plugin('event_poll');
+
 	foreach($events as $e) {
 		$event = $e['event'];
 		$event_data = $e['data'];
@@ -2154,7 +2156,16 @@ function event_calendar_get_page_content_fullcalendar_events($start_date,$end_da
 			} else {
 				$event_item['allDay'] = FALSE;
 			}
-			
+
+			if ($type_display == 'yes' && $event->event_type) {
+				$color = event_calendar_map_type_to_color($event->event_type);
+
+				if ($color) {
+					$event_item['backgroundColor'] = $color;
+					$event_item['borderColor'] = $color;
+				}
+			}
+
 			if ($polls_supported && isset($e['is_event_poll']) && $e['is_event_poll']) {
 				$event_item['className'] = 'event-poll-class';
 				$event_item['title'] .= ' '.elgg_echo('event_calendar:poll_suffix');
@@ -2499,4 +2510,34 @@ function event_calendar_can_add($group_guid=0,$user_guid=0) {
 	}
 
 	return FALSE;
+}
+
+/**
+ * Return a color associated with given event type
+ * 
+ * @param  string         $type_name Type of the event (e.g. "meeting")
+ * @return string|boolean $color     Color value (e.g. "#FF0000" or "red") or false
+ */
+function event_calendar_map_type_to_color($type_name) {
+	$type_list = trim(elgg_get_plugin_setting('type_list', 'event_calendar'));
+
+	// Make sure that we are using Unix line endings
+	$type_list = str_replace("\r\n", "\n", $type_list);
+	$type_list = str_replace("\r", "\n", $type_list);
+	$types = explode("\n", $type_list);
+
+	foreach ($types as $type) {
+		$type = explode("|", $type);
+
+		if (isset($type[1])) {
+			$name = $type[0];
+			$color = $type[1];
+
+			if ($name == $type_name) {
+				return $color;
+			}
+		}
+	}
+
+	return false;
 }
