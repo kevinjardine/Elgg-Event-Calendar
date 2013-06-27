@@ -15,6 +15,11 @@
  *
  * Date: Mon Feb 6 22:40:40 2012 -0800
  *
+ *
+ * Added string handlers to allow language translations
+ * Manel Zaera, manelzaera@gmail.com
+ * 2013-06-27
+ *
  */
  
 (function($, undefined) {
@@ -47,35 +52,35 @@ var defaults = {
 	
 	// time formats
 	titleFormat: {
-		month: 'MMMM yyyy',
-		week: "MMM d[ yyyy]{ '&#8212;'[ MMM] d yyyy}",
-		day: 'dddd, MMM d, yyyy'
+		month: '<?=elgg_echo('event_calendar:title:format:month')?>',
+		week: "<?=elgg_echo('event_calendar:title:format:week')?>",
+		day: '<?=elgg_echo('event_calendar:title:format:day')?>'
 	},
 	columnFormat: {
-		month: 'ddd',
-		week: 'ddd M/d',
-		day: 'dddd M/d'
+		month: '<?=elgg_echo('event_calendar:column:format:month')?>',
+		week: '<?=elgg_echo('event_calendar:column:format:week')?>',
+		day: '<?=elgg_echo('event_calendar:column:format:day')?>'
 	},
 	timeFormat: { // for event elements
-		'': 'h(:mm)t' // default
+		'': '<?=elgg_echo('event_calendar:time:format')?>' // default
 	},
 	
 	// locale
 	isRTL: false,
 	firstDay: 0,
-	monthNames: ['January','February','March','April','May','June','July','August','September','October','November','December'],
-	monthNamesShort: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-	dayNames: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-	dayNamesShort: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+	monthNames: ['<?=elgg_echo('event_calendar:month:january')?>','<?=elgg_echo('event_calendar:month:february')?>','<?=elgg_echo('event_calendar:month:march')?>','<?=elgg_echo('event_calendar:month:april')?>','<?=elgg_echo('event_calendar:month:may')?>','<?=elgg_echo('event_calendar:month:june')?>','<?=elgg_echo('event_calendar:month:july')?>','<?=elgg_echo('event_calendar:month:august')?>','<?=elgg_echo('event_calendar:month:september')?>','<?=elgg_echo('event_calendar:month:october')?>','<?=elgg_echo('event_calendar:month:november')?>','<?=elgg_echo('event_calendar:month:december')?>'],
+	monthNamesShort: ['<?=elgg_echo('event_calendar:month:short:january')?>','<?=elgg_echo('event_calendar:month:short:february')?>','<?=elgg_echo('event_calendar:month:short:march')?>','<?=elgg_echo('event_calendar:month:short:april')?>','<?=elgg_echo('event_calendar:month:short:may')?>','<?=elgg_echo('event_calendar:month:short:june')?>','<?=elgg_echo('event_calendar:month:short:july')?>','<?=elgg_echo('event_calendar:month:short:august')?>','<?=elgg_echo('event_calendar:month:short:september')?>','<?=elgg_echo('event_calendar:month:short:october')?>','<?=elgg_echo('event_calendar:month:short:november')?>','<?=elgg_echo('event_calendar:month:short:december')?>'],	
+	dayNames: ['<?=elgg_echo('event_calendar:day:sunday')?>','<?=elgg_echo('event_calendar:day:monday')?>','<?=elgg_echo('event_calendar:day:tuesday')?>','<?=elgg_echo('event_calendar:day:wednesday')?>','<?=elgg_echo('event_calendar:day:thursday')?>','<?=elgg_echo('event_calendar:day:friday')?>','<?=elgg_echo('event_calendar:day:saturday')?>'],
+	dayNamesShort: ['<?=elgg_echo('event_calendar:day:short:sunday')?>','<?=elgg_echo('event_calendar:day:short:monday')?>','<?=elgg_echo('event_calendar:day:short:tuesday')?>','<?=elgg_echo('event_calendar:day:short:wednesday')?>','<?=elgg_echo('event_calendar:day:short:thursday')?>','<?=elgg_echo('event_calendar:day:short:friday')?>','<?=elgg_echo('event_calendar:day:short:saturday')?>'],
 	buttonText: {
 		prev: '&nbsp;&#9668;&nbsp;',
 		next: '&nbsp;&#9658;&nbsp;',
 		prevYear: '&nbsp;&lt;&lt;&nbsp;',
 		nextYear: '&nbsp;&gt;&gt;&nbsp;',
-		today: 'today',
-		month: 'month',
-		week: 'week',
-		day: 'day'
+		today: '<?=elgg_echo('event_calendar:today')?>',
+		month: '<?=elgg_echo('event_calendar:month')?>',
+		week: '<?=elgg_echo('event_calendar:week')?>',
+		day: '<?=elgg_echo('event_calendar:day')?>'
 	},
 	
 	// jquery-ui theming
@@ -2804,7 +2809,7 @@ function AgendaDayView(element, calendar) {
 
 setDefaults({
 	allDaySlot: true,
-	allDayText: 'all-day',
+	allDayText: '<?=elgg_echo('event_calendar:allday')?>',
 	firstHour: 6,
 	slotMinutes: 30,
 	defaultEventMinutes: 120,
