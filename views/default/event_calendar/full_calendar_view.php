@@ -13,7 +13,7 @@ handleEventClick = function(event) {
     if (event.url) {
         if (event.is_event_poll) {
         	window.location.href = event.url;
-        } else {            
+        } else {
         	//window.location.href = event.url;
         	$.fancybox({'href':event.url});
         }
@@ -40,7 +40,7 @@ handleDayClick = function(date,allDay,jsEvent,view) {
 	$('.fc-widget-content').removeClass('event-calendar-date-selected');
 	var current_iso = $('#event-calendar-selected-date').val();
 	if (current_iso == iso) {
-		// deselect		
+		// deselect
 		$('#event-calendar-selected-date').val("");
 		$('.elgg-menu-item-event-calendar-0add').find('a').attr('href',url+'event_calendar/add/'+group_guid);
 		$('.event-calendar-button-add').attr('href',url+'event_calendar/add/'+group_guid);
@@ -50,13 +50,13 @@ handleDayClick = function(date,allDay,jsEvent,view) {
 		$('.elgg-menu-item-event-calendar-0add').find('a').attr('href',url+'event_calendar/add/'+group_guid+'/'+iso);
 		$('.event-calendar-button-add').attr('href',url+'event_calendar/add/'+group_guid+'/'+iso);
 		$('.elgg-menu-item-event-calendar-1schedule').find('a').attr('href',url+'event_calendar/schedule/'+group_guid+'/'+iso);
-		
+
 		$(this).addClass('event-calendar-date-selected');
 	}
 }
 
 handleEventDrop = function(event,dayDelta,minuteDelta,allDay,revertFunc) {
-	
+
 	if (!event.is_event_poll && !confirm("<?php echo elgg_echo('event_calendar:are_you_sure'); ?>")) {
         revertFunc();
     } else {
@@ -108,8 +108,9 @@ handleGetEvents = function(start, end, callback) {
 	var start_date = getISODate(start);
 	var end_date = getISODate(end);
 	var url = "event_calendar/get_fullcalendar_events/"+start_date+"/"+end_date+"/<?php echo $vars['filter']; ?>/<?php echo $vars['group_guid']; ?>";
-	elgg.getJSON(url, {success: 
+	elgg.getJSON(url, {success:
 		function(events) {
+		  //alert(JSON.stringify(events));
 			callback(events);
 		}
 	});
@@ -145,11 +146,11 @@ handleViewDisplay = function(view) {
 		//$('.fc-widget-content').removeClass('event-calendar-date-selected');
 		//$(".fc-widget-content[data-date='"+ciso+"']").addClass('event-calendar-date-selected');
 	}
-	
+
 	//$(".fc-widget-content[data-date='20120105']")
 }
 
-$(document).ready(function() {	
+$(document).ready(function() {
 	$('#calendar').fullCalendar({
 		header: {
 			left: 'prev,next today',
@@ -165,7 +166,7 @@ $(document).ready(function() {
 		eventClick: handleEventClick,
 		dayClick: handleDayClick,
 		events: handleGetEvents,
-		viewDisplay: handleViewDisplay,
+		viewDisplay: handleViewDisplay
 	});
 });
 </script>

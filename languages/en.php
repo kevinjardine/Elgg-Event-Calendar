@@ -1,7 +1,7 @@
 <?php
 
 	$english = array(
-	
+
 	'item:object:event_calendar' => "Event calendar",
 	'tag_names:event_tags' => "Tags",
 	'event_calendar:optional' => "Optional.",
@@ -82,7 +82,7 @@
 	'event_calendar:add_to_the_calendar_error' => "This event could not added to this person's calendar. "
 				."(Perhaps the event is full or is scheduled at the same time as another event in this person's calendar?)",
 	'event_calendar:remove_from_the_calendar_response' => "Event removed from this person's calendar.",
-				
+
 	'event_calendar:users_for_event_menu_title' => "People listing this event on their personal calendars",
 	'event_calendar:users_for_event_title' => "Personal calendars for \"%s'\"",
 	'event_calendar:personal_event_calendars_link' => "On %s calendars",
@@ -101,7 +101,7 @@
 	'event_calendar:settings:no' => "no",
 	'event_calendar:settings:site_calendar:title' => "Site calendar",
 	'event_calendar:settings:site_calendar:admin' => "yes, only admins can post events",
-	'event_calendar:settings:site_calendar:loggedin' => "yes, any logged-in user can post an event",	
+	'event_calendar:settings:site_calendar:loggedin' => "yes, any logged-in user can post an event",
 	'event_calendar:settings:group_calendar:title' => "Group calendars",
 	'event_calendar:settings:group_calendar:admin' => "yes, only admins and group owners can post events",
 	'event_calendar:settings:group_calendar:members' => "yes, any group member can post an event",
@@ -152,21 +152,21 @@
 	'event_calendar:settings:add_users:title' => "Allow event creators and site admins to add their event to other personal calendars.",
 	'event_calendar:add_user_label' => "Add users",
 	'event_calendar:add_user_description' => "Add this event to personal calendars by typing two or more characters in the above text autocomplete field to select a user. "
-		."You can add multiple users by clicking the \"+\" link. (You must submit this form to actually add the event to the calendars.)",		
+		."You can add multiple users by clicking the \"+\" link. (You must submit this form to actually add the event to the calendars.)",
 	'event_calendar:settings:add_users_notify:title' => "Email users who have had an event added to their personal calendar by an admin or event creator.",
 	'event_calendar:add_users_notify:subject' => "A new event has been added to your personal calendar",
 	'event_calendar:add_users_notify:body' => "%s,\n\nThe \"%s\" event has been added to your calendar.\n\nYou can view it here: \n\n%s\n",
-		
+
 	'event_calendar:settings:region_list_handles:title' => "The region strings above are string handles. Use the Elgg translation system to resolve them.",
 	'event_calendar:settings:type_list_handles:title' => "The type strings above are string handles. Use the Elgg translation system to resolve them.",
-		
+
 	'event_calendar:settings:personal_manage:title' => "Calendar permissions",
 	'event_calendar:settings:personal_manage:description' => "Determines whether people can add events to their personal calendars (open), "
 			."need to request the event creator to do so (closed), have no option at all (private), or allow event creators to determine this for each event (by event). "
 			."Note if you set this to private you should probably activate the option above to allow event creators and site admins to "
 			."add their events to other personal calendars.",
 	'event_calendar:strapline' => "Posted %s by %s",
-		
+
 	'event_calendar:request_event_response' => "Your request to be added to this event has been sent.",
 	'event_calendar:request_event_error' => "Error: Could not send your request to be added to this event.",
 	'event_calendar:request_subject' => "You have received an event request",
@@ -180,7 +180,7 @@ You can manage calendar requests for this event here:
 
 %s
 ",
-		
+
 	'event_calendar:review_requests_error' => "This event either does not exist or you do not have the authority to approve requests for it.",
 	'event_calendar:review_requests_request_none' => "There are no requests to review for this event.",
 	'event_calendar:request:remove:check' => 'Are you sure you want to reject this request?',
@@ -195,12 +195,12 @@ You can manage calendar requests for this event here:
 	'event_calendar:review_requests:accept:title' => "Accept this request",
 	'event_calendar:review_requests:error:approve' => "Error: could not approve this request.",
 	'event_calendar:review_requests:error:reject' => "Error: could not reject this request.",
-		
+
 	'event_calendar:settings:hide_access:title' => "Hide event access drop down",
 	'event_calendar:settings:default_access:title' => "If the event access is hidden, what should it default to?",
 	'event_calendar:settings:hide_end:title' => "Hide end time and date fields",
 	'event_calendar:settings:more_required:title' => "Make all visible fields except long description required.",
-		
+
 	'event_calendar:add_to_group:remove_group_title' => "Remove this event from group",
 	'event_calendar:add_to_group:remove_group_button' => "Remove from group",
 	'event_calendar:remove_from_group:success' => "Event removed from group calendar",
@@ -208,30 +208,30 @@ You can manage calendar requests for this event here:
 	'event_calendar:add_to_group:add_group_button' => "Add to group",
 	'event_calendar:add_to_group:success' => "Event added to group calendar",
 	'event_calendar:settings:add_to_group_calendar:title' => "Allow group admins to add any existing event to a group calendar",
-		
+
 	'event_calendar:group_breadcrumb' => "Group calendar",
 	'event_calendar:no_group' => "There is no such group.",
 	'event_calendar:generic_error_title' => "Error",
 	'event_calendar:error_event_edit' => "Error: there is no such event or you do not have permission to edit it.",
 	'event_calendar:add' => "Add",
-		
+
 	'feed:ical' => "iCal feed for this page",
 	'event_calendar:ical_popup_message' => "You can use the following URL to get an iCalendar feed of the public events from this listing page: ",
 	'event_calendar:ical_auth_file_name:title' => "Location of iCal authentication file on local file system (experimental - not needed for public feeds)",
 
 	'event_calendar:owner:permissions_error' => "You do not have permission to view that page.",
 	'event_calendar:feature_not_activated' => "This feature is not activated",
-		
+
 	'event_calendar:show_all' => "Show all",
 	'event_calendar:show_open' => "Show open",
 	'event_calendar:show_mine' => "My calendar",
 	'event_calendar:show_friends' => "My friends' calendars",
 	'event_calendar:show_only' => "Show only those on:",
-		
+
 	'event_calendar:listing_title:all' => "All events",
 	'event_calendar:listing_title:open' => "Open events",
 	'event_calendar:listing_title:mine' => "My calendar",
-	'event_calendar:listing_title:friends' => "Friends' calendars",	
+	'event_calendar:listing_title:friends' => "Friends' calendars",
 	'event_calendar:manage_users:title' => "Manage subscribers for \"%s\"",
 	'event_calendar:manage_users:breadcrumb' => "Manage subscribers",
 	'event_calendar:manage_users:description' => "Add or remove events from personal calendars.",
@@ -242,7 +242,8 @@ You can manage calendar requests for this event here:
 	'event_calendar:remove_from_group_members:error' => "Error: could not remove this event from the personal calendars of group members.",
 	'event_calendar:add_to_group_members:button' => "Add to all",
 	'event_calendar:remove_from_group_members:button' => "Remove from all",
-		
+	'event_calander:end_before_start:error' => "Error: the end time of an event must take place after the start.",
+
 	'event_calendar:manage_subscribers:success' => "Personal calendars updated.",
 	'event_calendar:manage_subscribers:error' => "Error: could not update personal calendars.",
 	'event_calendar:personal_manage:open' => "open",
@@ -255,7 +256,7 @@ You can manage calendar requests for this event here:
 	'event_calendar:personal_manage:by_event:open' => "Open. People can freely add this event to their personal calendars.",
 	'event_calendar:personal_manage:by_event:closed' => "Closed. People can request to add this event to their personal calendars. You can review and approve requests.",
 	'event_calendar:personal_manage:by_event:private' => "Private. You or another event administrator must add this event to personal calendars. There is no way for other users to add or request this event.",
-			
+
 	'event_calendar:settings:full_calendar:title' => "Support full calendar",
 	'event_calendar:modify_full_calendar:error' => "Error: could not modify full calendar",
 	'event_calendar:from_label' => "From:",
@@ -264,6 +265,7 @@ You can manage calendar requests for this event here:
 	'event_calendar:time_format:12hour' => "12 hour (am/pm)",
 	'event_calendar:time_format:24hour' => "24 hour",
 	'event_calendar:all_day_label' => "All-day event",
+	'event_calendar:all_day_bit' => "(all day)",
 	'event_calendar:repeat_interval_label' => "Repeat every",
 	'event_calendar:repeat_weeks' => "week(s)",
 	'event_calendar:on_these_days' => "on these days:",
@@ -312,20 +314,20 @@ You can manage calendar requests for this event here:
 	'event_calendar:reminder:subject' => "Reminder for event: %s",
 	'event_calendar:reminder:body' => "The event
 
-%s 
+%s
 
 takes place at
 
 %s.
-	
+
 You can visit the event page here:
 %s
 	",
-			
+
 	/**
 	 * BBB support
 	*/
-			
+
 	'event_calendar:bbb_server_url' => "Big Blue Button server URL (must end with slash)",
 	'event_calendar:bbb_security_salt' => "Big Blue Button security salt",
 	'event_calendar:bbb_create_error' => "Error: unable to create BBB conference, message was: %s",
@@ -333,14 +335,14 @@ You can visit the event page here:
 	'event_calendar:bbb_settings_error' => "Error: must set conference URL and salt in plugin settings",
 	'event_calendar:couldnotjoin' => "Error: unable to join conference.",
 	'event_calendar:join_conf_button' => "Join conference",
-			
+
 	'event_calendar:poll_suffix' => "(poll)",
 	'event_calendar:resend_poll_invitation' => "Do you want to alert poll invitees that the options have changed?",
-		
+
 	/**
 	 * Event calendar river
 	 **/
-			 
+
 	//generic terms to use
 
 	'river:update:object:event_calendar' => "%s updated the event %s",
@@ -350,13 +352,13 @@ You can visit the event page here:
     'event_calendar:river:updated' => "%s updated",
     'event_calendar:river:annotated1' => "%s added",
 	'event_calendar:river:annotated2' => "to his/her personal calendar.",
-	 
+
 	//these get inserted into the river links to take the user to the entity
     'event_calendar:river:create' => "a new event titled",
     'event_calendar:river:the_event' => "an event titled",
 
 	);
-					
+
 	add_translation("en",$english);
 
 ?>

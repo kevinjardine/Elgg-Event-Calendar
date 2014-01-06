@@ -1,6 +1,7 @@
 <?php
 $event = $vars['event'];
 $fd = $vars['form_data'];
+echo '<div class="event-calendar-repeat-section">';
 if ($fd['repeats'] == 'yes') {
 	echo elgg_view('input/checkbox',array('name'=>'repeats','value'=>'yes','checked'=>'checked'));
 } else {
@@ -41,3 +42,4 @@ echo ' '.elgg_echo('event_calendar:on_these_days');
 <input type="hidden" name="event-calendar-repeating-friday-value" value="<?php echo $fd['event-calendar-repeating-friday-value']; ?>">
 <input type="hidden" name="event-calendar-repeating-saturday-value" value="<?php echo $fd['event-calendar-repeating-saturday-value']; ?>">
 <input type="hidden" name="event-calendar-repeating-sunday-value" value="<?php echo $fd['event-calendar-repeating-sunday-value']; ?>">
+</div>
